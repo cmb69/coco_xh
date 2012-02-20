@@ -79,7 +79,7 @@ To be able to edit the additional content with an editor, you have to insert
 <span class="code">&lt;?php echo also_enable();?&gt;</span> <em>before</em>
 <span class="code">&lt;?php echo head();?&gt;</span></p>
 <p>To have additional content on your site, just insert
-<span class="code">&lt;?php echo also('my_content');&gt;</span>
+<span class="code">&lt;?php echo also('my_content');?&gt;</span>
 in the place where you want, e.g. instead of a newsbox.
 Instead of 'my_content' you can choose any name,
 as long as it consists of lower-case letters (a-z), digits and underscores only.
@@ -91,7 +91,7 @@ Note that the tinyMCE shipped with CMSimple_XH 1.5 and 1.5.1 doesn't work with A
 so currently only CKEditor can be used.
 If you want to use another toolbar than the one you have configured for the main content editor,
 just give the name of the toolbar as second parameter, e.g.
-<span class="code">&lt;?php echo also('small_content', 'sidebar');&gt;.</p>
+<span class="code">&lt;?php echo also('small_content', 'sidebar');?&gt;.</p>
 <p>The additional content is stored in Also_XH's data folder
 in an (X)HTML file with the name given as first parameter, e.g. my_content.htm.
 The structure is similar to that of CMSimple's content.
