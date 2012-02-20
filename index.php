@@ -85,9 +85,11 @@ function also_data_folder() {
  * Returns the content of page $i.
  * (version for a single content file)
  *
+ * @param string $name  The name of the content.
+ * @param int $i  The number of the page.
  * @return string
  */
-function content_fetch_complete($name, $i) { // TODO: cache 1 content file for search
+function content_fetch_complete($name, $i) { // TODO: cache last content file for search
     global $cf, $pd_router;
 
     $pd = $pd_router->find_page($i);
@@ -131,6 +133,9 @@ function content_fetch_complete($name, $i) { // TODO: cache 1 content file for s
  * Saves $text as content of page $i.
  * (version for a single content file)
  *
+ * @param string $name  The name of the content.
+ * @param int $i  The number of the page.
+ * @param string $text  The new content of this page.
  * @return void
  */
 function content_save_complete($name, $i, $text) {

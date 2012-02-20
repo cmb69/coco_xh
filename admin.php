@@ -20,7 +20,7 @@ define('ALSO_VERSION', '1alpha2');
 
 
 /**
- * Returns plugin version information.
+ * Returns the plugin's version information view.
  *
  * @return string  The (X)HTML.
  */
@@ -124,6 +124,11 @@ function also_system_check() { // RELEASE-TODO
 //}
 
 
+/**
+ * Returns the main administration view.
+ *
+ * @return string  (X)HTML
+ */
 function also_admin_main() {
     global $sn;
 
@@ -136,6 +141,10 @@ function also_admin_main() {
     return $o;
 }
 
+
+/**
+ * Handle the plugin administration.
+ */
 if (!empty($also)) {
     $o .= print_plugin_admin('off');
     switch ($admin) {
