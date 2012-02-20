@@ -71,7 +71,11 @@ when hovering over the help icon with your mouse.</p>
 <p>Localization is done in "Plugin Language".
 You can translate the character strings to your own language,
 or customize them according to your needs.</p>
-<p>The look of the Also_XH can be customized in "Plugin Stylesheet".</p>
+<p>The look of the Also_XH can be customized in "Plugin Stylesheet".
+This is mainly thought for styling the back-end (which is not yet implemented).
+The styling of the additional content should be done by (modifying) the template
+and its stylesheet. But as each textarea has an id (necessary for the editors),
+you can use this id to style the textarea in the plugin stylesheet, if you prefer.</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
 <h2><a name="usage">Usage</a></h2>
@@ -93,6 +97,10 @@ so you have to update to a newer version.
 If you want to use another toolbar than the one you have configured for the main content editor,
 just give the name of the toolbar as second parameter, e.g.
 <span class="code">&lt;?php echo also('small_content', 'sidebar');?&gt;.</p>
+<p>The width and height of the textarea/editor default to 100% of its container.
+The height can be changed by a third parameter to the also call, e.g.
+<span class="code">&lt;?php echo also('my_content', 'sidebar', '500px');?&gt;</span>.
+If you want to change the width, you can do so in the plugin's stylesheet.</p>
 <p>The additional content is stored in Also_XH's data folder
 in an (X)HTML file with the name given as first parameter, e.g. my_content.htm.
 The structure is similar to that of CMSimple's content.

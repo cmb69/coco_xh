@@ -1,1 +1,6 @@
 /* utf8-marker: äöüß */
+
+/* to style also('my_content') use */
+#also_text_my_content {
+    width: 100% !important;
+}

@@ -166,10 +166,15 @@ function content_save_complete($name, $i, $text) {
 
 
 /**
+ * Returns the content view depending on the mode.
  *
- * @return string
+ * @access public
+ * @param string $name  The name of the content.
+ * @param string $config  The config of the editor.
+ * @param string $height  The height of the editor as CSS length.
+ * @return string  The (X)HTML
  */
-function also($name, $config = FALSE) {
+function also($name, $config = FALSE, $height = '100%') {
     global $adm, $edit, $s, $cl, $e, $tx, $plugin_tx;
 
     if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
@@ -182,9 +187,10 @@ function also($name, $config = FALSE) {
 	    content_save_complete($name, $s, stsl($_POST['also_text_'.$name]));
 	}
 	$id = 'also_text_'.$name;
+	$style = 'width:100%; height:'.$height;
 	$er = function_exists('editor_replace') ? editor_replace($id, $config) : FALSE;
 	$o .= '<form action="" method="POST">'."\n"
-		.'<textarea id="'.$id.'" name="also_text_'.$name.'">'.content_fetch_complete($name, $s).'</textarea>'."\n"
+		.'<textarea id="'.$id.'" name="also_text_'.$name.'" style="'.$style.'">'.content_fetch_complete($name, $s).'</textarea>'."\n"
 		.(!$er ? tag('input type="submit" class="submit" value="'.ucfirst($tx['action']['save']).'"') : '')
 		.'</form>'."\n";
 	if ($er) {
@@ -199,7 +205,10 @@ function also($name, $config = FALSE) {
 
 
 /**
+ * Includes the editor in the <head>.
  *
+ * @access public
+ * @return void
  */
 function also_enable() {
     global $adm, $edit;
