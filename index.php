@@ -178,13 +178,13 @@ function also($name, $config = FALSE) {
     if ($s < 0 || $s >= $cl) {return '';}
     $o = '';
     if ($adm && $edit) {
-	if (isset($_POST['also_text'])) {
-	    content_save_complete($name, $s, stsl($_POST['also_text']));
+	if (isset($_POST['also_text_'.$name])) {
+	    content_save_complete($name, $s, stsl($_POST['also_text_'.$name]));
 	}
-	$id = 'also_text'.$name;
+	$id = 'also_text_'.$name;
 	$er = function_exists('editor_replace') ? editor_replace($id, $config) : FALSE;
 	$o .= '<form action="" method="POST">'."\n"
-		.'<textarea id="'.$id.'" name="also_text">'.content_fetch_complete($name, $s).'</textarea>'."\n"
+		.'<textarea id="'.$id.'" name="also_text_'.$name.'">'.content_fetch_complete($name, $s).'</textarea>'."\n"
 		.(!$er ? tag('input type="submit" class="submit" value="'.ucfirst($tx['action']['save']).'"') : '')
 		.'</form>'."\n";
 	if ($er) {
