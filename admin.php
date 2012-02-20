@@ -16,7 +16,7 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 }
 
 
-define('ALSO_VERSION', '1alpha1');
+define('ALSO_VERSION', '1alpha2');
 
 
 /**

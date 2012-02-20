@@ -170,7 +170,7 @@ function content_save_complete($name, $i, $text) {
  * @return string
  */
 function also($name, $config = FALSE) {
-    global $adm, $edit, $s, $cl, $e, $plugin_tx;
+    global $adm, $edit, $s, $cl, $e, $tx, $plugin_tx;
 
     if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
 	return '<div class="cmsimplecore_warning">'.$plugin_tx['also']['error_invalid_name'].'</div>'."\n";
@@ -182,14 +182,14 @@ function also($name, $config = FALSE) {
 	    content_save_complete($name, $s, stsl($_POST['also_text']));
 	}
 	$id = 'also_text'.$name;
+	$er = function_exists('editor_replace') ? editor_replace($id, $config) : FALSE;
 	$o .= '<form action="" method="POST">'."\n"
 		.'<textarea id="'.$id.'" name="also_text">'.content_fetch_complete($name, $s).'</textarea>'."\n"
-		.tag('input type="submit" class="submit"') // TODO: conditionally keep submit for compatibility < 1.5
+		.(!$er ? tag('input type="submit" class="submit" value="'.ucfirst($tx['action']['save']).'"') : '')
 		.'</form>'."\n";
-	if (function_exists('editor_replace')) {
+	if ($er) {
 	    $o .= '<script type="text/javascript">'."\n".'/* <![CDATA[ */'."\n"
-		    .editor_replace($id, $config)."\n"
-		    .'/* ]]> */'."\n".'</script>'."\n";
+		    .$er."\n".'/* ]]> */'."\n".'</script>'."\n";
 	}
     } else {
 	$o .= evaluate_scripting(content_fetch_complete($name, $s));
