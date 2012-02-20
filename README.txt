@@ -1,4 +1,4 @@
-Coontent_XH -- a CMSimple_XH plugin
+Also_XH -- a CMSimple_XH plugin
 Copyright (C) 2012 Christoph M. Becker
 
 This program is free software: you can redistribute it and/or modify

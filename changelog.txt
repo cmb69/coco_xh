@@ -7,12 +7,14 @@ TODO
     tip: use with userfields ($name parameter) for subadmin pages
     idea: publish subadmin content (semi-)automatically ?? (draw-back: "can't" change heading!)
 
-    import/export of coontent
+    import/export of content
     credit Gert for the brillant idea
 
     move admin only functions to admin.php
     System check: SAFE_MODE & REGISTER_GLOBALS
 
+Version 1alpha2 - released TODO
+cmb	changed plugin's name to Also_XH
 
-Version 1alpha1 - released TODO
+Version 1alpha1 - released 2012-02-17
 cmb	initial release
