@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<!-- utf8-marker: äöüß -->
+<html>
+
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<meta name="content-language" content="de">
+<title>Coontent_XH - Manual</title>
+<link rel="stylesheet" type="text/css" href="./stylesheet.css">
+</head>
+
+<body>
+
+<h1>Coontent_XH - a CMSimple_XH Plugin</h1>
+<img src="../coontent.png" style="display:block; float:left; margin-right:20px">
+<p style="text-align:justify">Coontent_XH facilitates to have an arbitrary amount of additional contents on your website.
+These are similar to newsboxes, but instead have different content for every page.
+Coontent_XH is comparable to the <a href="http://cmsimplewiki.com/doku.php/plugins/also">Also</a> plugin,
+but allows editing with the chosen editor instead of a textarea (CMSimple_XH &ge; 1.5 only).</p>
+
+<ul id="nav">
+<li><a href="#notice">Important Notice</a></li>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#settings">Settings</a></li>
+<li><a href="#usage">Usage</a></li>
+<!--<li><a href="#limitations">Limitations</a></li>-->
+<li><a href="#license">License</a></li>
+<li><a href="#credits">Credits</a></li>
+</ul>
+
+<div id="body">
+
+<p><strong>Please do read this documentation! Support might not be given otherwise.
+It's generally a good idea to read the documentation,
+<em>before</em> you encounter any problems!</strong></p>
+
+<h2><a name="notice">Important Notice</a></h2>
+<p><strong>Coontent_XH is in an early state of development, so many things might change.
+Furthermore it couldn't be tested so far in various environments.
+It is a so called ALPHA version. Use with utmost caution!</strong></p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h2><a name="requirements">Requirements</a></h2>
+<p>Coontent_XH is a plugin for CMSimple_XH &ge; 1.2.
+It requires a UTF-8 encoded version.</p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h2><a name="installation">Installation</a></h2>
+<p>The installation is done as with many other CMSimple_XH plugins.
+See the <a href="http://www.cmsimple-xh.com/wiki/doku.php/manuals:users_manual:plugins:installation">
+CMSimple_XH wiki</a> for further details.</p>
+<ol>
+<li><strong>Backup the data on your server.</strong></li>
+<li>Unzip the distribution on your computer.</li>
+<li>Upload the whole directory coontent/ to your server into CMSimple_XH's plugins directory.</li>
+<li>Set write permissions to the subdirectories config/, css/, languages/ and the plugin's data folder.</li>
+<li><strong>Switch to "Coontent" in the back-end to check if all requirements are fulfilled.</strong></li>
+</ol>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h2><a name="settings">Settings</a></h2>
+<p>The plugin's configuration is done as with many other
+CMSimple_XH plugins in the website's back-end.
+Select "Coontent" from "Plugins".</p>
+<p>You can change the default settings of Coontent_XH in "Plugin Config".
+Hints for the options will be displayed
+when hovering over the help icon with your mouse.</p>
+<p>Localization is done in "Plugin Language".
+You can translate the character strings to your own language,
+or customize them according to your needs.</p>
+<p>The look of the Coontent_XH can be customized in "Plugin Stylesheet".</p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h2><a name="usage">Usage</a></h2>
+<p>Coontent_XH is used from the template.
+To be able to edit the additional content with an editor, you have to insert
+<span class="code">&lt;?php echo coontent_enable();?&gt;</span> <em>before</em>
+<span class="code">&lt;?php echo head();?&gt;</span></p>
+<p>To have additional content on your site, just insert
+<span class="code">&lt;?php echo coontent('my_content');&gt;</span>
+in the place where you want, e.g. instead of a newsbox.
+Instead of 'my_content' you can choose any name,
+as long as it consists of lower-case letters (a-z), digits and underscores only.
+You can have as many additional contents as you like,
+as long as you give them different names.</p>
+<p>If you are in edit mode, you can edit the additional content,
+either with a textarea or from CMSimple_XH 1.5 on with the installed editor.
+Note that the tinyMCE shipped with CMSimple_XH 1.5 and 1.5.1 doesn't work with Coontent_XH,
+so currently only CKEditor can be used.
+If you want to use another toolbar than the one you have configured for the main content editor,
+just give the name of the toolbar as second parameter, e.g.
+<span class="code">&lt;?php echo coontent('small_content', 'sidebar');&gt;.</p>
+<p>The additional content is stored in Coontent_XH's data folder
+in an (X)HTML file with the name given as first parameter, e.g. my_content.htm.
+The structure is similar to that of CMSimple's content.
+The pages are seperated by &lt;h1&gt;, &lt;h2&gt; or &lt;h3&gt; according to their menu level.
+The name of the page headings are inserted for better readability only;
+they are ignored by Coontent_XH.
+Instead the link to the pages is made with the id given for the headings.
+You should not alter these id's in any way!
+Inserting new pages by inserting new headings is not possible;
+these will simply be ignored.</p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<!--<h2><a name="limitations">Limitations</a></h2>
+<div class="toplink"><a href="#">back to top</a></div>
+-->
+<h2><a name="license">License</a></h2>
+<p>Coontent_XH is licensed under
+<a href="http://www.gnu.org/licenses/gpl.html">GPLv3</a>.</p>
+<p>&copy; 2012 Christoph M. Becker</p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+<h2><a name="credits">Credits</a></h2>
+<p>Coontent_XH was inspired by Ricardo Serpell's
+<a href="http://cmsimplewiki.com/doku.php/plugins/also">Also plugin</a>.</p>
+<p>The plugin icon is designed by <a href="http://www.graphicrating.com/">Andy Gongea</a>.
+Many thanks for publishing this icon as freeware.</p>
+<p>This plugin uses free applications icons from <a href="http://www.aha-soft.com/">Aha-Soft</a>.
+Many thanks for making these icons freely available.</p>
+<p>Many thanks to the community at the <a href="http://www.cmsimpleforum.com">CMSimple forum</a>
+for tips, suggestions and testing.
+Particularly my thanks go to snafu and Ulrich, who pointed out the usefulness of Also
+and changed my mind on where to store those data.</p>
+<p>And last but not least many thanks to all developers of
+<a href="http://www.cmsimple-xh.com">CMSimple_XH</a>
+without whom this amazing CMS wouldn't exist.</p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+</div>
+
+</body>
+
+</html>

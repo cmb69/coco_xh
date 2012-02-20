@@ -1,0 +1,18 @@
+TODO
+    search
+    back-end: clean up (superfluous files) and manually remove whole subcontents
+    import/export: multiple files <-> 1 file per subcontent (maybe even alternative config option)
+
+    extend for subadmin use
+    tip: use with userfields ($name parameter) for subadmin pages
+    idea: publish subadmin content (semi-)automatically ?? (draw-back: "can't" change heading!)
+
+    import/export of coontent
+    credit Gert for the brillant idea
+
+    move admin only functions to admin.php
+    System check: SAFE_MODE & REGISTER_GLOBALS
+
+
+Version 1alpha1 - released TODO
+cmb	initial release
