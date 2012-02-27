@@ -14,7 +14,7 @@ TODO
     System check: SAFE_MODE & REGISTER_GLOBALS
 
 Version 1alpha2 - released TODO
-cmb	changed plugin's name to Also_XH
+cmb	changed plugin's name to Coco_XH
 
 Version 1alpha1 - released 2012-02-17
 cmb	initial release

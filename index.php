@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Front-End of Also_XH.
+ * Front-End of Coco_XH.
  *
  * Copyright (c) 2012 Christoph M. Becker (see license.txt)
  */
@@ -30,13 +30,13 @@ if (!function_exists('evaluate_scripting')) {
  *
  * @return string
  */
-function also_data_folder() {
+function coco_data_folder() {
     global $pth, $sl, $cf, $plugin_cf;
 
-    $pcf = $plugin_cf['also'];
+    $pcf = $plugin_cf['coco'];
 
     if ($pcf['folder_data'] == '') {
-	$fn = $pth['folder']['plugins'].'also/data/';
+	$fn = $pth['folder']['plugins'].'coco/data/';
     } else {
 	$fn = $pth['folder']['base'].$pcf['folder_data'];
     }
@@ -64,15 +64,15 @@ function also_data_folder() {
 // *
 // * @return string
 // */
-//function also_fetch($name, $i) {
+//function coco_fetch($name, $i) {
 //    global $pd_router;
 //
 //    $text = '';
 //    $pd = $pd_router->find_page($i);
-//    if (empty($pd['also_id'])) {
+//    if (empty($pd['coco_id'])) {
 //	return $text;
 //    } else {
-//	$fn = also_data_folder().$pd['also_id'].(empty($name) ? '' : '-').$name.'.htm';
+//	$fn = coco_data_folder().$pd['coco_id'].(empty($name) ? '' : '-').$name.'.htm';
 //	if (!is_readable($fn) || ($text = file_get_contents($fn)) === FALSE) {
 //	    e('cntopen', 'file', $fn);
 //	}
@@ -93,14 +93,14 @@ function content_fetch_complete($name, $i) { // TODO: cache last content file fo
     global $cf, $pd_router;
 
     $pd = $pd_router->find_page($i);
-    if (empty($pd['also_id'])) {return '';}
-    $fn = also_data_folder().$name.'.htm';
+    if (empty($pd['coco_id'])) {return '';}
+    $fn = coco_data_folder().$name.'.htm';
     if (!is_readable($fn) || ($text = file_get_contents($fn)) === FALSE) {
 	e('cntopen', 'file', $fn);
 	return FALSE;
     }
     $ml = $cf['menu']['levels'];
-    preg_match('/<h[1-'.$ml.'].*?id="'.$pd['also_id'].'".*?>.*?<\/h[1-'.$ml.']>'
+    preg_match('/<h[1-'.$ml.'].*?id="'.$pd['coco_id'].'".*?>.*?<\/h[1-'.$ml.']>'
 	    .'(.*?)<h[1-'.$ml.']/isu', $text, $matches);
     return trim($matches[1]);
 }
@@ -112,15 +112,15 @@ function content_fetch_complete($name, $i) { // TODO: cache last content file fo
 // *
 // * @return void
 // */
-// function also_save($name, $i, $text) {
+// function coco_save($name, $i, $text) {
 //    global $pd_router;
 //
 //    $pd = $pd_router->find_page($i);
-//    if (empty($pd['also_id'])) {
-//	$pd['also_id'] = uniqid();
+//    if (empty($pd['coco_id'])) {
+//	$pd['coco_id'] = uniqid();
 //	$pd_router->update($i, $pd);
 //    }
-//    $fn = also_data_folder().$pd['also_id'].(empty($name) ? '' : '-').$name.'.htm';
+//    $fn = coco_data_folder().$pd['coco_id'].(empty($name) ? '' : '-').$name.'.htm';
 //    if (($fp = fopen($fn, 'w')) === FALSE
 //	    || fwrite($fp, $text) === FALSE) {
 //	e('cntwriteto', 'file', $fn);
@@ -141,22 +141,22 @@ function content_fetch_complete($name, $i) { // TODO: cache last content file fo
 function content_save_complete($name, $i, $text) {
     global $cl, $l, $h, $cf, $pd_router;
 
-    $fn = also_data_folder().$name.'.htm';
+    $fn = coco_data_folder().$name.'.htm';
     $old = is_readable($fn) ? file_get_contents($fn) : '';
     $ml = $cf['menu']['levels'];
     $cnt = '<html>'."\n".'<body>'."\n";
     for ($j = 0; $j < $cl; $j++) {
 	$pd = $pd_router->find_page($j);
-	if (empty($pd['also_id'])) {
-	    $pd['also_id'] = uniqid();
+	if (empty($pd['coco_id'])) {
+	    $pd['coco_id'] = uniqid();
 	    $pd_router->update($j, $pd);
 	}
-	$cnt .= '<h'.$l[$j].' id="'.$pd['also_id'].'">'.$h[$j].'</h'.$l[$j].'>'."\n";
+	$cnt .= '<h'.$l[$j].' id="'.$pd['coco_id'].'">'.$h[$j].'</h'.$l[$j].'>'."\n";
 	if ($j == $i) {
 	    $text = trim(preg_replace('/<h'.$ml.'.*?>.*?<\/h'.$ml.'>/isu', '', $text));
 	    if (!empty($text)) {$cnt .= $text."\n";}
 	} else {
-	    preg_match('/<h[1-'.$ml.'].*?id="'.$pd['also_id'].'".*?>.*?<\/h[1-'.$ml.']>'
+	    preg_match('/<h[1-'.$ml.'].*?id="'.$pd['coco_id'].'".*?>.*?<\/h[1-'.$ml.']>'
 		    .'(.*?)<h[1-'.$ml.']/isu', $old, $matches);
 	    $cnt .= isset($matches[1]) && ($match = trim($matches[1])) != '' ? $match."\n" : '';
 	}
@@ -179,23 +179,23 @@ function content_save_complete($name, $i, $text) {
  * @param string $height  The height of the editor as CSS length.
  * @return string  The (X)HTML
  */
-function also($name, $config = FALSE, $height = '100%') {
+function coco($name, $config = FALSE, $height = '100%') {
     global $adm, $edit, $s, $cl, $e, $tx, $plugin_tx;
 
     if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
-	return '<div class="cmsimplecore_warning">'.$plugin_tx['also']['error_invalid_name'].'</div>'."\n";
+	return '<div class="cmsimplecore_warning">'.$plugin_tx['coco']['error_invalid_name'].'</div>'."\n";
     }
     if ($s < 0 || $s >= $cl) {return '';}
     $o = '';
     if ($adm && $edit) {
-	if (isset($_POST['also_text_'.$name])) {
-	    content_save_complete($name, $s, stsl($_POST['also_text_'.$name]));
+	if (isset($_POST['coco_text_'.$name])) {
+	    content_save_complete($name, $s, stsl($_POST['coco_text_'.$name]));
 	}
-	$id = 'also_text_'.$name;
+	$id = 'coco_text_'.$name;
 	$style = 'width:100%; height:'.$height;
 	$er = function_exists('editor_replace') ? editor_replace($id, $config) : FALSE;
 	$o .= '<form action="" method="POST">'."\n"
-		.'<textarea id="'.$id.'" name="also_text_'.$name.'" style="'.$style.'">'.content_fetch_complete($name, $s).'</textarea>'."\n"
+		.'<textarea id="'.$id.'" name="coco_text_'.$name.'" style="'.$style.'">'.content_fetch_complete($name, $s).'</textarea>'."\n"
 		.(!$er ? tag('input type="submit" class="submit" value="'.ucfirst($tx['action']['save']).'"') : '')
 		.'</form>'."\n";
 	if ($er) {
@@ -215,7 +215,7 @@ function also($name, $config = FALSE, $height = '100%') {
  * @access public
  * @return void
  */
-function also_enable() {
+function coco_enable() {
     global $adm, $edit;
 
     if ($adm && $edit && function_exists('include_editor')) {
@@ -225,9 +225,9 @@ function also_enable() {
 
 
 /**
- * Register the also id in the page data.
+ * Register the coco id in the page data.
  */
-$pd_router->add_interest('also_id');
+$pd_router->add_interest('coco_id');
 
 
 //if ($f == 'search') {

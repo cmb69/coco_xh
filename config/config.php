@@ -1,7 +1,7 @@
 <?php
 
-$plugin_cf['also']['utf8-marker']="äöüß";
+$plugin_cf['coco']['utf8-marker']="äöüß";
 
-$plugin_cf['also']['folder_data']="";
+$plugin_cf['coco']['folder_data']="";
 
 ?>

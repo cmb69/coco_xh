@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Back-End of Also_XH.
+ * Back-End of Coco_XH.
  *
  * Copyright (c) 2012 Christoph M. Becker (see license.txt)
  */
@@ -16,7 +16,7 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 }
 
 
-define('ALSO_VERSION', '1alpha2');
+define('COCO_VERSION', '1alpha2');
 
 
 /**
@@ -24,9 +24,9 @@ define('ALSO_VERSION', '1alpha2');
  *
  * @return string  The (X)HTML.
  */
-function also_version() {
-    return '<h1><a href="http://3-magi.net/?CMSimple_XH/Also_XH">Also_XH</a></h1>'."\n"
-	    .'<p>Version: '.ALSO_VERSION.'</p>'."\n"
+function coco_version() {
+    return '<h1><a href="http://3-magi.net/?CMSimple_XH/Coco_XH">Coco_XH</a></h1>'."\n"
+	    .'<p>Version: '.COCO_VERSION.'</p>'."\n"
 	    .'<p>Copyright &copy; 2012 <a href="http://3-magi.net">Christoph M. Becker</a></p>'."\n"
 	    .'<p style="text-align: justify">This program is free software: you can redistribute it and/or modify'
 	    .' it under the terms of the GNU General Public License as published by'
@@ -47,18 +47,18 @@ function also_version() {
  *
  * @return string  The (X)HTML.
  */
-function also_system_check() { // RELEASE-TODO
+function coco_system_check() { // RELEASE-TODO
     global $pth, $tx, $plugin_tx;
 
-    define('ALSO_PHP_VERSION', '4.3.0');
-    $ptx = $plugin_tx['also'];
-    $imgdir = $pth['folder']['plugins'].'also/images/';
+    define('COCO_PHP_VERSION', '4.3.0');
+    $ptx = $plugin_tx['coco'];
+    $imgdir = $pth['folder']['plugins'].'coco/images/';
     $ok = tag('img src="'.$imgdir.'ok.png" alt="ok"');
     $warn = tag('img src="'.$imgdir.'warn.png" alt="warning"');
     $fail = tag('img src="'.$imgdir.'fail.png" alt="failure"');
     $htm = tag('hr').'<h4>'.$ptx['syscheck_title'].'</h4>'
-	    .(version_compare(PHP_VERSION, ALSO_PHP_VERSION) >= 0 ? $ok : $fail)
-	    .'&nbsp;&nbsp;'.sprintf($ptx['syscheck_phpversion'], ALSO_PHP_VERSION)
+	    .(version_compare(PHP_VERSION, COCO_PHP_VERSION) >= 0 ? $ok : $fail)
+	    .'&nbsp;&nbsp;'.sprintf($ptx['syscheck_phpversion'], COCO_PHP_VERSION)
 	    .tag('br').tag('br')."\n";
     foreach (array('pcre') as $ext) {
 	$htm .= (extension_loaded($ext) ? $ok : $fail)
@@ -69,9 +69,9 @@ function also_system_check() { // RELEASE-TODO
     $htm .= (!get_magic_quotes_runtime() ? $ok : $fail)
 	    .'&nbsp;&nbsp;'.$ptx['syscheck_magic_quotes'].tag('br').tag('br')."\n";
     foreach (array('config/', 'css/', 'languages/') as $folder) {
-	$folders[] = $pth['folder']['plugins'].'also/'.$folder;
+	$folders[] = $pth['folder']['plugins'].'coco/'.$folder;
     }
-    $folders[] = also_data_folder();
+    $folders[] = coco_data_folder();
     foreach ($folders as $folder) {
 	$htm .= (is_writable($folder) ? $ok : $warn)
 		.'&nbsp;&nbsp;'.sprintf($ptx['syscheck_writable'], $folder).tag('br')."\n";
@@ -85,18 +85,18 @@ function also_system_check() { // RELEASE-TODO
 // *
 // * @return void
 // */
-//function also_join() {
+//function coco_join() {
 //    global $cl, $l, $h, $pd_router;
 //
 //    $cnt = '';
 //    for ($i = 0; $i < $cl; $i++) {
 //	$pd = $pd_router->find_page($i);
-//	$id = !empty($pd['also_id']) ? $pd['also_id'] : '';
+//	$id = !empty($pd['coco_id']) ? $pd['coco_id'] : '';
 //	$cnt .= '<h'.$l[$i].' id="'.$id.'">'.$h[$i].'</h'.$l[$i].'>'."\n"
-//		//.'<!-- also_id '.'-->'."\n"
-//		.also_fetch('main', $i);
+//		//.'<!-- coco_id '.'-->'."\n"
+//		.coco_fetch('main', $i);
 //    }
-//    $fn = also_data_folder().'main.htm';
+//    $fn = coco_data_folder().'main.htm';
 //    if (($fp = fopen($fn, 'w')) === FALSE
 //	    || fwrite($fp, $cnt) === FALSE) {
 //	e('cntwriteto', 'file', $fn);
@@ -105,7 +105,7 @@ function also_system_check() { // RELEASE-TODO
 //}
 
 
-//function also_import_content() { //TODO: must read content again (may be altered by other plugins already)
+//function coco_import_content() { //TODO: must read content again (may be altered by other plugins already)
 //    global $c, $cl, $cf, $pd_router;
 //
 //    for ($i = 0; $i < $cl; $i++) {
@@ -113,13 +113,13 @@ function also_system_check() { // RELEASE-TODO
 //	$heading = $matches[1]."\n";
 //	$body = ltrim($matches[2]);
 //	if (count($matches)!=3) {var_dump($c[$i]);}
-//	also_save('main', $i, $body);
+//	coco_save('main', $i, $body);
 //    }
 //
 //}
 //
 //
-//function also_export_content() {
+//function coco_export_content() {
 //
 //}
 
@@ -129,13 +129,13 @@ function also_system_check() { // RELEASE-TODO
  *
  * @return string  (X)HTML
  */
-function also_admin_main() {
+function coco_admin_main() {
     global $sn;
 
-    $url = $sn.'?also&amp;admin=plugin_main&amp;action=';
+    $url = $sn.'?coco&amp;admin=plugin_main&amp;action=';
     $o = '<div>'
-	    .'<a href="'.$url.'import_content">Content -> Also</a>'
-	    .'<a href="'.$url.'export_content">Also -> Content</a>'
+	    .'<a href="'.$url.'import_content">Content -> Co-content</a>'
+	    .'<a href="'.$url.'export_content">Co-content -> Content</a>'
 	    .'<a href="'.$url.'join">Join</a>'
 	    .'</div>';
     return $o;
@@ -145,22 +145,22 @@ function also_admin_main() {
 /**
  * Handle the plugin administration.
  */
-if (!empty($also)) {
+if (!empty($coco)) {
     $o .= print_plugin_admin('off');
     switch ($admin) {
 	case '':
-	    $o .= also_version().also_system_check();
+	    $o .= coco_version().coco_system_check();
 	    break;
 	//case 'plugin_main':
 	//    switch ($action) {
 	//	case 'import_content':
-	//	    $o .= also_import_content();
+	//	    $o .= coco_import_content();
 	//	    break;
 	//	case 'join':
-	//	    $o .= also_join();
+	//	    $o .= coco_join();
 	//	    break;
 	//	default:
-	//	    $o .= also_admin_main();
+	//	    $o .= coco_admin_main();
 	//    }
 	//    break;
 	default:
