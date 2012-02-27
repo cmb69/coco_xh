@@ -13,8 +13,17 @@ TODO
     move admin only functions to admin.php
     System check: SAFE_MODE & REGISTER_GLOBALS
 
-Version 1alpha2 - released TODO
+Version 1alpha2 - released 2012-02-27
 cmb	changed plugin's name to Coco_XH
+cmb	fixed faulty code examples in manual (reported by snafu and Gert)
+cmb	changed: save button is only shown, if no editor is available
+cmb	documented possibility to use scripting
+cmb	fixed bug: multiple editors didn't work independently (reported by Gert)
+cmb	added $height parameter to also() (suggested by Gert); updated manual accordingly
+cmb	removed necessity to insert function call to template to enable editing
+cmb	updated manual accordingly
+cmb	added screenshots
+cmb	cleaned up some code
 
 Version 1alpha1 - released 2012-02-17
 cmb	initial release
