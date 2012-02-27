@@ -210,24 +210,18 @@ function coco($name, $config = FALSE, $height = '100%') {
 
 
 /**
- * Includes the editor in the <head>.
- *
- * @access public
- * @return void
- */
-function coco_enable() {
-    global $adm, $edit;
-
-    if ($adm && $edit && function_exists('include_editor')) {
-	include_editor();
-    }
-}
-
-
-/**
  * Register the coco id in the page data.
  */
 $pd_router->add_interest('coco_id');
+
+
+/**
+ * Include the editor in the <head>.
+ *
+ */
+if ($plugin_cf['coco']['enabled'] && $adm && $edit && function_exists('include_editor')) {
+    include_editor();
+}
 
 
 //if ($f == 'search') {
