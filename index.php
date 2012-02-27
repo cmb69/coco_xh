@@ -219,9 +219,9 @@ $pd_router->add_interest('coco_id');
  * Include the editor in the <head>.
  *
  */
-if ($plugin_cf['coco']['enabled'] && $adm && $edit && function_exists('include_editor')) {
-    include_editor();
-}
+//if ($plugin_cf['coco']['enabled'] && $adm && $edit && function_exists('include_editor')) {
+//    include_editor();
+//}
 
 
 //if ($f == 'search') {
