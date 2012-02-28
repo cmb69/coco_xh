@@ -89,7 +89,7 @@ function coco_data_folder() {
  * @param int $i  The number of the page.
  * @return string
  */
-function content_fetch_complete($name, $i) { // TODO: cache last content file for search
+function coco_fetch_complete($name, $i) { // TODO: cache last content file for search
     global $cf, $pd_router;
 
     $pd = $pd_router->find_page($i);
@@ -138,7 +138,7 @@ function content_fetch_complete($name, $i) { // TODO: cache last content file fo
  * @param string $text  The new content of this page.
  * @return void
  */
-function content_save_complete($name, $i, $text) {
+function coco_save_complete($name, $i, $text) {
     global $cl, $l, $h, $cf, $pd_router;
 
     $fn = coco_data_folder().$name.'.htm';
@@ -189,13 +189,13 @@ function coco($name, $config = FALSE, $height = '100%') {
     $o = '';
     if ($adm && $edit) {
 	if (isset($_POST['coco_text_'.$name])) {
-	    content_save_complete($name, $s, stsl($_POST['coco_text_'.$name]));
+	    coco_save_complete($name, $s, stsl($_POST['coco_text_'.$name]));
 	}
 	$id = 'coco_text_'.$name;
 	$style = 'width:100%; height:'.$height;
 	$er = function_exists('editor_replace') ? editor_replace($id, $config) : FALSE;
 	$o .= '<form action="" method="POST">'."\n"
-		.'<textarea id="'.$id.'" name="coco_text_'.$name.'" style="'.$style.'">'.content_fetch_complete($name, $s).'</textarea>'."\n"
+		.'<textarea id="'.$id.'" name="coco_text_'.$name.'" style="'.$style.'">'.coco_fetch_complete($name, $s).'</textarea>'."\n"
 		.(!$er ? tag('input type="submit" class="submit" value="'.ucfirst($tx['action']['save']).'"') : '')
 		.'</form>'."\n";
 	if ($er) {
@@ -203,7 +203,13 @@ function coco($name, $config = FALSE, $height = '100%') {
 		    .$er."\n".'/* ]]> */'."\n".'</script>'."\n";
 	}
     } else {
-	$o .= evaluate_scripting(content_fetch_complete($name, $s));
+	$text = evaluate_scripting(coco_fetch_complete($name, $s));
+	if (isset($_GET['search'])) {
+	    $words = explode(',', urldecode($_GET['search']));
+	    $words = array_map(create_function('$w', 'return "&".$w."(?!([^<]+)?>)&isU";'), $words);
+	    $text = preg_replace($words, '<span class="highlight_search">\\0</span>', $text);
+	}
+	$o .= $text;
     }
     return $o;
 }
@@ -226,6 +232,7 @@ $pd_router->add_interest('coco_id');
 
 //if ($f == 'search') {
 //    $o .= 'Nix gefunden!';
+//    $o .= print_r(coco_search_content(stsl($_POST['search'])), TRUE);
 //    $f = '';
 //}
 

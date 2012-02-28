@@ -1,5 +1,6 @@
 TODO
-    search
+    improve search (handle more than 1 word correctly, cache cocos, eval_script)
+
     back-end: clean up (superfluous files) and manually remove whole subcontents
     import/export: multiple files <-> 1 file per subcontent (maybe even alternative config option)
 
