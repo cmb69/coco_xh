@@ -8,6 +8,7 @@ TODO
 Version 1beta1 - released TODO
 cmb	cleaned up code
 cmb	implemented search.php that will search co-contents as well
+cmb	implemented backup of co-contents on logout
 
 Version 1alpha2 - released 2012-02-27
 cmb	changed plugin's name to Coco_XH

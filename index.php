@@ -126,6 +126,36 @@ function coco_set($name, $i, $text) {
 
 
 /**
+ *
+ */
+function coco_backup() {
+    global $cf, $tx, $backupDate;
+
+    $dir = coco_data_folder();
+    if (!isset($backupDate)) {$backupDate = date("Ymd_His");}
+    $o = '';
+    foreach (array('left', 'right') as $coco) {// TODO: coco_cocos()
+	$fn = $dir.$backupDate.'_'.$coco.'.htm';
+	if (copy($dir.$coco.'.htm', $fn)) {
+	    $o .= '<p>'.ucfirst($tx['filetype']['backup']).' '.$fn.' '.$tx['result']['created'].'</p>'."\n";
+	    $bus = glob($dir.'????????_??????_'.$coco.'.htm');
+	    for ($i = 0; $i < count($bus) - $cf['backup']['numberoffiles']; $i++) {
+		if (unlink($bus[$i])) {
+		    $o .= '<p>'.ucfirst($tx['filetype']['backup']).' '.$bus[$i].' '.$tx['result']['deleted'].'</p>'."\n";
+		} else {
+		    e('cntdelete', 'backup', $bus[$i]);
+		}
+	    }
+	} else {
+	    e('cntsave', 'backup', $fn);
+	}
+
+    }
+    return $o;
+}
+
+
+/**
  * Returns the co-content view depending on the mode.
  *
  * @access public
@@ -177,8 +207,8 @@ function coco($name, $config = FALSE, $height = '100%') {
 $pd_router->add_interest('coco_id');
 
 
-if ($logout) {
-    $o .= 'Backup created ;-)';
+if ($logout && $_COOKIE['status'] == 'adm' && logincheck()) {
+    $o .= coco_backup();
 }
 
 ?>
