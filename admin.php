@@ -7,16 +7,13 @@
  */
 
 
-// utf8-marker: äöüß
-
-
 if (!defined('CMSIMPLE_XH_VERSION')) {
     header('HTTP/1.0 403 Forbidden');
     exit;
 }
 
 
-define('COCO_VERSION', '1alpha2');
+define('COCO_VERSION', '1beta1');
 
 
 /**
@@ -24,7 +21,7 @@ define('COCO_VERSION', '1alpha2');
  *
  * @return string  The (X)HTML.
  */
-function coco_version() {
+function coco_version() { // TODO plugin icon
     return '<h1><a href="http://3-magi.net/?CMSimple_XH/Coco_XH">Coco_XH</a></h1>'."\n"
 	    .'<p>Version: '.COCO_VERSION.'</p>'."\n"
 	    .'<p>Copyright &copy; 2012 <a href="http://3-magi.net">Christoph M. Becker</a></p>'."\n"
@@ -56,7 +53,7 @@ function coco_system_check() { // RELEASE-TODO
     $ok = tag('img src="'.$imgdir.'ok.png" alt="ok"');
     $warn = tag('img src="'.$imgdir.'warn.png" alt="warning"');
     $fail = tag('img src="'.$imgdir.'fail.png" alt="failure"');
-    $htm = tag('hr').'<h4>'.$ptx['syscheck_title'].'</h4>'
+    $htm = '<h4>'.$ptx['syscheck_title'].'</h4>'
 	    .(version_compare(PHP_VERSION, COCO_PHP_VERSION) >= 0 ? $ok : $fail)
 	    .'&nbsp;&nbsp;'.sprintf($ptx['syscheck_phpversion'], COCO_PHP_VERSION)
 	    .tag('br').tag('br')."\n";
@@ -80,68 +77,6 @@ function coco_system_check() { // RELEASE-TODO
 }
 
 
-///**
-// * Joins multiple content files to one.
-// *
-// * @return void
-// */
-//function coco_join() {
-//    global $cl, $l, $h, $pd_router;
-//
-//    $cnt = '';
-//    for ($i = 0; $i < $cl; $i++) {
-//	$pd = $pd_router->find_page($i);
-//	$id = !empty($pd['coco_id']) ? $pd['coco_id'] : '';
-//	$cnt .= '<h'.$l[$i].' id="'.$id.'">'.$h[$i].'</h'.$l[$i].'>'."\n"
-//		//.'<!-- coco_id '.'-->'."\n"
-//		.coco_fetch('main', $i);
-//    }
-//    $fn = coco_data_folder().'main.htm';
-//    if (($fp = fopen($fn, 'w')) === FALSE
-//	    || fwrite($fp, $cnt) === FALSE) {
-//	e('cntwriteto', 'file', $fn);
-//    }
-//    if ($fp !== FALSE) {fclose($fp);}
-//}
-
-
-//function coco_import_content() { //TODO: must read content again (may be altered by other plugins already)
-//    global $c, $cl, $cf, $pd_router;
-//
-//    for ($i = 0; $i < $cl; $i++) {
-//	preg_match('/^(.*<\/h[1-'.$cf['menu']['levels'].']>)(.*)$/isu', $c[$i], $matches);
-//	$heading = $matches[1]."\n";
-//	$body = ltrim($matches[2]);
-//	if (count($matches)!=3) {var_dump($c[$i]);}
-//	coco_save('main', $i, $body);
-//    }
-//
-//}
-//
-//
-//function coco_export_content() {
-//
-//}
-
-
-/**
- * Returns the main administration view.
- *
- * @return string  (X)HTML
- */
-function coco_admin_main() {
-    global $sn;
-
-    $url = $sn.'?coco&amp;admin=plugin_main&amp;action=';
-    $o = '<div>'
-	    .'<a href="'.$url.'import_content">Content -> Co-content</a>'
-	    .'<a href="'.$url.'export_content">Co-content -> Content</a>'
-	    .'<a href="'.$url.'join">Join</a>'
-	    .'</div>';
-    return $o;
-}
-
-
 /**
  * Handle the plugin administration.
  */
@@ -149,20 +84,8 @@ if (!empty($coco)) {
     $o .= print_plugin_admin('off');
     switch ($admin) {
 	case '':
-	    $o .= coco_version().coco_system_check();
+	    $o .= coco_version().tag('hr').coco_system_check();
 	    break;
-	//case 'plugin_main':
-	//    switch ($action) {
-	//	case 'import_content':
-	//	    $o .= coco_import_content();
-	//	    break;
-	//	case 'join':
-	//	    $o .= coco_join();
-	//	    break;
-	//	default:
-	//	    $o .= coco_admin_main();
-	//    }
-	//    break;
 	default:
 	    $o .= plugin_admin_common($action, $admin, $plugin);
     }

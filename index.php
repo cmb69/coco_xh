@@ -6,8 +6,6 @@
  * Copyright (c) 2012 Christoph M. Becker (see license.txt)
  */
 
-// utf8-marker: äöüß
-
 
 if (!defined('CMSIMPLE_XH_VERSION')) {
     header('HTTP/1.0 403 Forbidden');
@@ -16,7 +14,7 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 
 
 /**
- * Compatibility for CMSimple_XH < 1.5
+ * Compatibility with CMSimple_XH < 1.5
  */
 if (!function_exists('evaluate_scripting')) {
     function evaluate_scripting($text) {
@@ -58,87 +56,44 @@ function coco_data_folder() {
 }
 
 
-///**
-// * Returns the content of page $i.
-// * (version for multiple content files)
-// *
-// * @return string
-// */
-//function coco_fetch($name, $i) {
-//    global $pd_router;
-//
-//    $text = '';
-//    $pd = $pd_router->find_page($i);
-//    if (empty($pd['coco_id'])) {
-//	return $text;
-//    } else {
-//	$fn = coco_data_folder().$pd['coco_id'].(empty($name) ? '' : '-').$name.'.htm';
-//	if (!is_readable($fn) || ($text = file_get_contents($fn)) === FALSE) {
-//	    e('cntopen', 'file', $fn);
-//	}
-//	return $text;
-//    }
-//}
-
-
 /**
- * Returns the content of page $i.
- * (version for a single content file)
+ * Returns the co-content of page $i.
  *
- * @param string $name  The name of the content.
+ * @param string $name  The name of the co-content.
  * @param int $i  The number of the page.
  * @return string
  */
-function coco_fetch_complete($name, $i) { // TODO: cache last content file for search
+function coco_get($name, $i) {
     global $cf, $pd_router;
+    static $curname = NULL;
+    static $text = NULL;
 
     $pd = $pd_router->find_page($i);
     if (empty($pd['coco_id'])) {return '';}
-    $fn = coco_data_folder().$name.'.htm';
-    if (!is_readable($fn) || ($text = file_get_contents($fn)) === FALSE) {
-	e('cntopen', 'file', $fn);
-	return FALSE;
+    if ($name != $curname) {
+	$curname = $name;
+	$fn = coco_data_folder().$name.'.htm';
+	if (!is_readable($fn) || ($text = file_get_contents($fn)) === FALSE) {
+	    e('cntopen', 'file', $fn);
+	    return FALSE;
+	}
     }
     $ml = $cf['menu']['levels'];
     preg_match('/<h[1-'.$ml.'].*?id="'.$pd['coco_id'].'".*?>.*?<\/h[1-'.$ml.']>'
-	    .'(.*?)<h[1-'.$ml.']/isu', $text, $matches);
+	    .'(.*?)<(h[1-'.$ml.']|\/body)/isu', $text, $matches);
     return trim($matches[1]);
 }
 
 
-///**
-// * Saves $text as content of page $i.
-// * (version for multiple content files)
-// *
-// * @return void
-// */
-// function coco_save($name, $i, $text) {
-//    global $pd_router;
-//
-//    $pd = $pd_router->find_page($i);
-//    if (empty($pd['coco_id'])) {
-//	$pd['coco_id'] = uniqid();
-//	$pd_router->update($i, $pd);
-//    }
-//    $fn = coco_data_folder().$pd['coco_id'].(empty($name) ? '' : '-').$name.'.htm';
-//    if (($fp = fopen($fn, 'w')) === FALSE
-//	    || fwrite($fp, $text) === FALSE) {
-//	e('cntwriteto', 'file', $fn);
-//    }
-//    if ($fp !== FALSE) {fclose($fp);}
-//}
-
-
 /**
- * Saves $text as content of page $i.
- * (version for a single content file)
+ * Saves $text as co-content of page $i.
  *
- * @param string $name  The name of the content.
+ * @param string $name  The name of the co-content.
  * @param int $i  The number of the page.
- * @param string $text  The new content of this page.
+ * @param string $text  The new co-content of this page.
  * @return void
  */
-function coco_save_complete($name, $i, $text) {
+function coco_set($name, $i, $text) {
     global $cl, $l, $h, $cf, $pd_router;
 
     $fn = coco_data_folder().$name.'.htm';
@@ -171,10 +126,10 @@ function coco_save_complete($name, $i, $text) {
 
 
 /**
- * Returns the content view depending on the mode.
+ * Returns the co-content view depending on the mode.
  *
  * @access public
- * @param string $name  The name of the content.
+ * @param string $name  The name of the co-content.
  * @param string $config  The config of the editor.
  * @param string $height  The height of the editor as CSS length.
  * @return string  The (X)HTML
@@ -189,13 +144,14 @@ function coco($name, $config = FALSE, $height = '100%') {
     $o = '';
     if ($adm && $edit) {
 	if (isset($_POST['coco_text_'.$name])) {
-	    coco_save_complete($name, $s, stsl($_POST['coco_text_'.$name]));
+	    coco_set($name, $s, stsl($_POST['coco_text_'.$name]));
 	}
 	$id = 'coco_text_'.$name;
 	$style = 'width:100%; height:'.$height;
 	$er = function_exists('editor_replace') ? editor_replace($id, $config) : FALSE;
 	$o .= '<form action="" method="POST">'."\n"
-		.'<textarea id="'.$id.'" name="coco_text_'.$name.'" style="'.$style.'">'.coco_fetch_complete($name, $s).'</textarea>'."\n"
+		.'<textarea id="'.$id.'" name="coco_text_'.$name.'" style="'.$style.'">'
+		.htmlspecialchars(coco_get($name, $s)).'</textarea>'."\n"
 		.(!$er ? tag('input type="submit" class="submit" value="'.ucfirst($tx['action']['save']).'"') : '')
 		.'</form>'."\n";
 	if ($er) {
@@ -203,10 +159,10 @@ function coco($name, $config = FALSE, $height = '100%') {
 		    .$er."\n".'/* ]]> */'."\n".'</script>'."\n";
 	}
     } else {
-	$text = evaluate_scripting(coco_fetch_complete($name, $s));
+	$text = evaluate_scripting(coco_get($name, $s));
 	if (isset($_GET['search'])) {
-	    $words = explode(',', urldecode($_GET['search']));
-	    $words = array_map(create_function('$w', 'return "&".$w."(?!([^<]+)?>)&isU";'), $words);
+	    $words = explode(',', htmlspecialchars(urldecode($_GET['search']), ENT_NOQUOTES));
+	    $words = array_map(create_function('$w', 'return "/".preg_quote($w, "/")."(?!([^<]+)?>)/isU";'), $words);
 	    $text = preg_replace($words, '<span class="highlight_search">\\0</span>', $text);
 	}
 	$o .= $text;
@@ -221,19 +177,8 @@ function coco($name, $config = FALSE, $height = '100%') {
 $pd_router->add_interest('coco_id');
 
 
-/**
- * Include the editor in the <head>.
- *
- */
-//if ($plugin_cf['coco']['enabled'] && $adm && $edit && function_exists('include_editor')) {
-//    include_editor();
-//}
-
-
-//if ($f == 'search') {
-//    $o .= 'Nix gefunden!';
-//    $o .= print_r(coco_search_content(stsl($_POST['search'])), TRUE);
-//    $f = '';
-//}
+if ($logout) {
+    $o .= 'Backup created ;-)';
+}
 
 ?>

@@ -1,18 +1,13 @@
 TODO
-    improve search (handle more than 1 word correctly, cache cocos, eval_script)
+    make backups
 
-    back-end: clean up (superfluous files) and manually remove whole subcontents
-    import/export: multiple files <-> 1 file per subcontent (maybe even alternative config option)
+    info about search.php
+    credit Peter
+    limitation: not for huge co-contents (preg_match restriction)
 
-    extend for subadmin use
-    tip: use with userfields ($name parameter) for subadmin pages
-    idea: publish subadmin content (semi-)automatically ?? (draw-back: "can't" change heading!)
-
-    import/export of content
-    credit Gert for the brillant idea
-
-    move admin only functions to admin.php
-    System check: SAFE_MODE & REGISTER_GLOBALS
+Version 1beta1 - released TODO
+cmb	cleaned up code
+cmb	implemented search.php that will search co-contents as well
 
 Version 1alpha2 - released 2012-02-27
 cmb	changed plugin's name to Coco_XH
