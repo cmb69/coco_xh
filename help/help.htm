@@ -58,6 +58,8 @@ CMSimple_XH wiki</a> for further details.</p>
 <li>Unzip the distribution on your computer.</li>
 <li>Upload the whole directory coco/ to your server into CMSimple_XH's plugins directory.</li>
 <li>Set write permissions to the subdirectories config/, css/, languages/ and the plugin's data folder.</li>
+<li>Protect Coco_XH's data folder against direct access by any means your webserver provides.
+An .htaccess file for Apache servers is already distributed in the default data folder.</li>
 <li><strong>Switch to "Coco" in the back-end to check if all requirements are fulfilled.</strong></li>
 </ol>
 <div class="toplink"><a href="#">back to top</a></div>
@@ -74,9 +76,7 @@ You can translate the character strings to your own language,
 or customize them according to your needs.</p>
 <p>The look of the Coco_XH can be customized in "Plugin Stylesheet".
 This is mainly meant for styling the back-end.
-The styling of the co-content should be done by modifying the template and its stylesheet.
-But as each textarea has an id (necessary for the editors),
-you can use this id to style the textarea in the plugin stylesheet, if you prefer.</p>
+The styling of the co-content should be done by modifying the template and its stylesheet.</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
 <h2><a name="usage">Usage</a></h2>
@@ -91,26 +91,26 @@ as long as you give them different names.</p>
 <div><img src="view-mode.png" width="100%" alt="view-mode"></div>
 <p>If you are in edit mode, you can edit the co-content,
 either with a textarea or from CMSimple_XH 1.5 on with the configured editor.
-Note that tinyMCE 1.0 (shipped with CMSimple_XH 1.5 and 1.5.1) doesn't work with Coco_XH,
-so you have to update to a newer version.
+Note that tinyMCE for CMSimple_XH 1.0 (shipped with CMSimple_XH 1.5 and 1.5.1)
+doesn't work with Coco_XH, so you have to update to a newer version.
 If you want to use another toolbar than the one you have configured for the main content editor,
 just give the name of the toolbar as second parameter, e.g.</p>
 <div class="code">&lt;?php echo coco('small_content', 'sidebar');?&gt;</div>
 <p>The screenshot shows the co-contents in edit mode:</p>
 <div><img src="edit-mode.png" width="100%" alt="edit-mode"></div>
-<p>The width and height of the textarea/editor default to 100% of its container.
+<p>The width and height of the textarea resp. the editor default to 100% of its container.
 The height can be changed by a third parameter to the coco() call, e.g.</p>
 <div class="code">&lt;?php echo coco('my_content', 'sidebar', '500px');?&gt;</div>
-<p>If you want to change the width, you can do so in the plugin's stylesheet.</p>
+<p>If you want to change the width, you can do so in the stylesheet.</p>
 <p>The co-contents are stored in Coco_XH's data folder
 in an (X)HTML file with the name given as first parameter, e.g. my_content.htm.
 The structure is similar to that of CMSimple's content.htm file.
 The pages are separated by &lt;h1&gt;, &lt;h2&gt; or &lt;h3&gt; according to their menu level.
-The name of the page headings are inserted for better readability only;
+The names of the page headings are inserted for better readability only;
 they are ignored by Coco_XH.
-Instead the link to the pages is made with the id given for the headings.
-You should not alter these ids in any way!
-Inserting new pages by inserting new headings is not possible;
+Instead the link to the page is made with the id given for the heading.
+You must not alter these ids in any way!
+Creating new pages by inserting new headings is not possible;
 these will simply be ignored.</p>
 <p>Note that a backup of all co-contents is automatically made on logout.
 This is done the same way as CMSimple makes backups of the content.
@@ -126,7 +126,7 @@ The search will work the same as in CMSimple_XH 1.5.x.</p>
 <h3><a name="usage-administration">Administration</a></h3>
 <p>You can administrate the co-contents in Plugins&rarr;Coco&rarr;Co-Contents.
 Currently it's only possible to delete co-content files that you don't need any more.
-It's important to delete those files as they will automatically being searched by the search function;
+It's however important to delete those files as they will automatically being searched by the search function;
 besides taking time it might give wrong search results.</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
@@ -150,11 +150,11 @@ Many thanks for publishing this icon as freeware.</p>
 Many thanks for making these icons freely available.</p>
 <p>Many thanks to the community at the <a href="http://www.cmsimpleforum.com">CMSimple forum</a>
 for tips, suggestions and testing.
-Particularly my thanks go to snafu and Ulrich, who pointed out the usefulness of Coco
+Particularly my thanks go to snafu and Ulrich, who pointed out the usefulness of Also
 and changed my mind on where to store those data,
 and to Gert and snafu who reported the first bugs and suggested the new name.</p>
 <p>And last but not least many thanks to <a href="http://www.harteg.dk/">Peter Harteg</a>,
-the father of CMSimple, and all developers of <a href="http://www.cmsimple-xh.com">CMSimple_XH</a>
+the "father" of CMSimple, and all developers of <a href="http://www.cmsimple-xh.com">CMSimple_XH</a>
 without whom this amazing CMS wouldn't exist.</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
