@@ -1,6 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
-<!-- utf8-marker: äöüß -->
 <html>
 
 <head>
@@ -25,7 +24,10 @@ and scripting to be used.</p>
 <li><a href="#requirements">Requirements</a></li>
 <li><a href="#installation">Installation</a></li>
 <li><a href="#settings">Settings</a></li>
-<li><a href="#usage">Usage</a></li>
+<li><a href="#usage">Usage</a><ul>
+<li><a href="#usage-searching">Searching</a></li>
+<li><a href="#usage-administration">Administration</a></li>
+</ul></li>
 <!--<li><a href="#limitations">Limitations</a></li>-->
 <li><a href="#license">License</a></li>
 <li><a href="#credits">Credits</a></li>
@@ -38,9 +40,8 @@ It's generally a good idea to read the documentation,
 <em>before</em> you encounter any problems!</strong></p>
 
 <h2><a name="notice">Important Notice</a></h2>
-<p><strong>Coco_XH is in an early state of development, so many things might change.
-Furthermore it couldn't be tested so far in various environments.
-It is a so called ALPHA version. Use with utmost caution!</strong></p>
+<p><strong>Coco_XH couldn't be tested so far in various environments.
+It is a so called BETA version. Use with caution!</strong></p>
 <div class="toplink"><a href="#">back to top</a></div>
 
 <h2><a name="requirements">Requirements</a></h2>
@@ -72,33 +73,35 @@ when hovering over the help icon with your mouse.</p>
 You can translate the character strings to your own language,
 or customize them according to your needs.</p>
 <p>The look of the Coco_XH can be customized in "Plugin Stylesheet".
-This is mainly thought for styling the back-end (which is not yet implemented though).
+This is mainly meant for styling the back-end.
 The styling of the co-content should be done by modifying the template and its stylesheet.
 But as each textarea has an id (necessary for the editors),
 you can use this id to style the textarea in the plugin stylesheet, if you prefer.</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
 <h2><a name="usage">Usage</a></h2>
-<p>To have co-content on your site, just insert in your template
-<span class="code">&lt;?php echo coco('my_content');?&gt;</span>
-in the place where you want, e.g. instead of a newsbox.
+<p>To have co-content on your site, just insert in your template</p>
+<div class="code">&lt;?php echo coco('my_content');?&gt;</div>
+<p>in the place where you want, e.g. instead of a newsbox.
 Instead of 'my_content' you can choose any name,
 as long as it consists of lower-case letters (a-z), digits and underscores only.
 You can have as many co-contents as you like,
 as long as you give them different names.</p>
+<p>The screenshot shows two co-contents:</p>
 <div><img src="view-mode.png" width="100%" alt="view-mode"></div>
 <p>If you are in edit mode, you can edit the co-content,
 either with a textarea or from CMSimple_XH 1.5 on with the configured editor.
 Note that tinyMCE 1.0 (shipped with CMSimple_XH 1.5 and 1.5.1) doesn't work with Coco_XH,
 so you have to update to a newer version.
 If you want to use another toolbar than the one you have configured for the main content editor,
-just give the name of the toolbar as second parameter, e.g.
-<span class="code">&lt;?php echo coco('small_content', 'sidebar');?&gt;.</p>
+just give the name of the toolbar as second parameter, e.g.</p>
+<div class="code">&lt;?php echo coco('small_content', 'sidebar');?&gt;</div>
+<p>The screenshot shows the co-contents in edit mode:</p>
 <div><img src="edit-mode.png" width="100%" alt="edit-mode"></div>
 <p>The width and height of the textarea/editor default to 100% of its container.
-The height can be changed by a third parameter to the coco() call, e.g.
-<span class="code">&lt;?php echo coco('my_content', 'sidebar', '500px');?&gt;</span>.
-If you want to change the width, you can do so in the plugin's stylesheet.</p>
+The height can be changed by a third parameter to the coco() call, e.g.</p>
+<div class="code">&lt;?php echo coco('my_content', 'sidebar', '500px');?&gt;</div>
+<p>If you want to change the width, you can do so in the plugin's stylesheet.</p>
 <p>The co-contents are stored in Coco_XH's data folder
 in an (X)HTML file with the name given as first parameter, e.g. my_content.htm.
 The structure is similar to that of CMSimple's content.htm file.
@@ -109,15 +112,33 @@ Instead the link to the pages is made with the id given for the headings.
 You should not alter these ids in any way!
 Inserting new pages by inserting new headings is not possible;
 these will simply be ignored.</p>
+<p>Note that a backup of all co-contents is automatically made on logout.
+This is done the same way as CMSimple makes backups of the content.
+If you want to restore a backup, you have to do it via FTP.</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
-<!--<h2><a name="limitations">Limitations</a></h2>
+<h3><a name="usage-searching">Searching</a></h3>
+<p>If you want CMSimple_XH's search function to search your co-contents too,
+you have to replace cmsimple/search.php with plugins/coco/search.php.
+The search will work the same as in CMSimple_XH 1.5.x.</p>
 <div class="toplink"><a href="#">back to top</a></div>
--->
+
+<h3><a name="usage-administration">Administration</a></h3>
+<p>You can administrate the co-contents in Plugins&rarr;Coco&rarr;Co-Contents.
+Currently it's only possible to delete co-content files that you don't need any more.
+It's important to delete those files as they will automatically being searched by the search function;
+besides taking time it might give wrong search results.</p>
+<div class="toplink"><a href="#">back to top</a></div>
+
+
+<!--<h2><a name="limitations">Limitations</a></h2>-->
+<!--<div class="toplink"><a href="#">back to top</a></div>-->
+
 <h2><a name="license">License</a></h2>
 <p>Coco_XH is licensed under
 <a href="http://www.gnu.org/licenses/gpl.html">GPLv3</a>.</p>
 <p>&copy; 2012 Christoph M. Becker</p>
+<p>Slovak translation &copy; 2012 Dr. Martin Sereday</p>
 <div class="toplink"><a href="#">back to top</a></div>
 
 <h2><a name="credits">Credits</a></h2>
@@ -132,8 +153,8 @@ for tips, suggestions and testing.
 Particularly my thanks go to snafu and Ulrich, who pointed out the usefulness of Coco
 and changed my mind on where to store those data,
 and to Gert and snafu who reported the first bugs and suggested the new name.</p>
-<p>And last but not least many thanks to all developers of
-<a href="http://www.cmsimple-xh.com">CMSimple_XH</a>
+<p>And last but not least many thanks to <a href="http://www.harteg.dk/">Peter Harteg</a>,
+the father of CMSimple, and all developers of <a href="http://www.cmsimple-xh.com">CMSimple_XH</a>
 without whom this amazing CMS wouldn't exist.</p>
 <div class="toplink"><a href="#">back to top</a></div>
 

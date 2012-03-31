@@ -42,6 +42,7 @@ body {
     text-align: right;
 }
 
-.code {
+div.code {
     font-family: Courier New, monospace;
+    text-align: center;
 }
