@@ -57,6 +57,19 @@ function coco_data_folder() {
 
 
 /**
+ * Returns all available co-contents.
+ *
+ * @return array
+ */
+function coco_cocos() {
+    $cocos = glob(coco_data_folder().'*.htm');
+    $cocos = array_map(create_function('$fn', 'return basename($fn, \'.htm\');'), $cocos);
+    $cocos = array_filter($cocos, create_function('$fn', 'return !preg_match(\'/^\d{8}_\d{6}_/\', $fn);'));
+    return $cocos;
+}
+
+
+/**
  * Returns the co-content of page $i.
  *
  * @param string $name  The name of the co-content.
@@ -126,7 +139,10 @@ function coco_set($name, $i, $text) {
 
 
 /**
+ * Creates new backups of all co-contents and deletes superfluous ones.
+ * Returns the success messages. Errors are signalled via e().
  *
+ * @return string
  */
 function coco_backup() {
     global $cf, $tx, $backupDate;
@@ -134,7 +150,7 @@ function coco_backup() {
     $dir = coco_data_folder();
     if (!isset($backupDate)) {$backupDate = date("Ymd_His");}
     $o = '';
-    foreach (array('left', 'right') as $coco) {// TODO: coco_cocos()
+    foreach (coco_cocos() as $coco) {// TODO: coco_cocos()
 	$fn = $dir.$backupDate.'_'.$coco.'.htm';
 	if (copy($dir.$coco.'.htm', $fn)) {
 	    $o .= '<p>'.ucfirst($tx['filetype']['backup']).' '.$fn.' '.$tx['result']['created'].'</p>'."\n";

@@ -64,8 +64,7 @@ function coco_search_results() {
     $o = '';
     $words = preg_split('/\s+/isu', stsl($search), NULL, PREG_SPLIT_NO_EMPTY);
     $ta = coco_search_content(NULL, $words);
-    $cocos = array_map('trim', explode(',', $plugin_cf['coco']['search']));
-    foreach ($cocos as $name) {
+    foreach (coco_cocos() as $name) {
 	$ta = array_merge($ta, coco_search_content($name, $words));
     }
     $ta = array_unique($ta);

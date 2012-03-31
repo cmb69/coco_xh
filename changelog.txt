@@ -1,5 +1,5 @@
 TODO
-    make backups
+    add revision string?
 
     info about search.php
     credit Peter
@@ -9,6 +9,7 @@ Version 1beta1 - released TODO
 cmb	cleaned up code
 cmb	implemented search.php that will search co-contents as well
 cmb	implemented backup of co-contents on logout
+cmb	implemented auto-detection of available co-contents
 
 Version 1alpha2 - released 2012-02-27
 cmb	changed plugin's name to Coco_XH
