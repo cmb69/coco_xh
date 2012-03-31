@@ -150,7 +150,7 @@ function coco_backup() {
     $dir = coco_data_folder();
     if (!isset($backupDate)) {$backupDate = date("Ymd_His");}
     $o = '';
-    foreach (coco_cocos() as $coco) {// TODO: coco_cocos()
+    foreach (coco_cocos() as $coco) {
 	$fn = $dir.$backupDate.'_'.$coco.'.htm';
 	if (copy($dir.$coco.'.htm', $fn)) {
 	    $o .= '<p>'.ucfirst($tx['filetype']['backup']).' '.$fn.' '.$tx['result']['created'].'</p>'."\n";

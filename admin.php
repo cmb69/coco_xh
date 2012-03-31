@@ -21,19 +21,22 @@ define('COCO_VERSION', '1beta1');
  *
  * @return string  The (X)HTML.
  */
-function coco_version() { // TODO plugin icon
+function coco_version() {
+    global $pth;
+
     return '<h1><a href="http://3-magi.net/?CMSimple_XH/Coco_XH">Coco_XH</a></h1>'."\n"
+	    .tag('img class="coco_plugin_icon" src="'.$pth['folder']['plugins'].'coco/coco.png" alt="Plugin Icon"')
 	    .'<p>Version: '.COCO_VERSION.'</p>'."\n"
 	    .'<p>Copyright &copy; 2012 <a href="http://3-magi.net">Christoph M. Becker</a></p>'."\n"
-	    .'<p style="text-align: justify">This program is free software: you can redistribute it and/or modify'
+	    .'<p  class="coco_license">This program is free software: you can redistribute it and/or modify'
 	    .' it under the terms of the GNU General Public License as published by'
 	    .' the Free Software Foundation, either version 3 of the License, or'
 	    .' (at your option) any later version.</p>'."\n"
-	    .'<p style="text-align: justify">This program is distributed in the hope that it will be useful,'
+	    .'<p  class="coco_license">This program is distributed in the hope that it will be useful,'
 	    .' but WITHOUT ANY WARRANTY; without even the implied warranty of'
 	    .' MERCHAN&shy;TABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the'
 	    .' GNU General Public License for more details.</p>'."\n"
-	    .'<p style="text-align: justify">You should have received a copy of the GNU General Public License'
+	    .'<p class="coco_license"">You should have received a copy of the GNU General Public License'
 	    .' along with this program.  If not, see'
 	    .' <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>'."\n";
 }
@@ -126,7 +129,7 @@ function coco_admin_main() {
 		.'</form>'.$coco.'</li>'."\n";
     }
     $o .= '</ul>'."\n".'</div>'."\n";
-    return $o; // TODO: info that no cocos are available
+    return $o;
 }
 
 

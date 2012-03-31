@@ -1,11 +1,8 @@
 TODO
-    add revision string?
-    admin: delete co-contents CONFIRMATION
     add translations
 
     info about search.php
     credit Peter (general father)
-    credit Torsten (make fast stable, than continue)
     limitation: not for huge co-contents (preg_match restriction)
 
 Version 1beta1 - released TODO
@@ -13,6 +10,8 @@ cmb	cleaned up code
 cmb	implemented search.php that will search co-contents as well
 cmb	implemented backup of co-contents on logout
 cmb	implemented auto-detection of available co-contents
+cmb	implemented co-content adminstration (delete co-contents only for now)
+cmb	added slovak translation (contributed by Tata)
 
 Version 1alpha2 - released 2012-02-27
 cmb	changed plugin's name to Coco_XH
