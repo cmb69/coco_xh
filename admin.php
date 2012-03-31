@@ -78,13 +78,69 @@ function coco_system_check() { // RELEASE-TODO
 
 
 /**
+ * Deletes the co-content $name and all of its backups.
+ * Returns wether that succeeded, and report errors via e().
+ *
+ * return bool
+ */
+function coco_delete($name) {
+    $fns = glob(coco_data_folder().'????????_??????_'.$name.'.htm');
+    foreach ($fns as $fn) {
+	if (!unlink($fn)) {
+	    e('cntdelete', 'backup', $fn);
+	    return FALSE;
+	}
+    }
+    if (!unlink(coco_data_folder().$name.'.htm')) {
+	e('cntdelete', 'file', $fn);
+	return FALSE;
+    }
+    return TRUE;
+}
+
+
+/**
+ * Returns the main administration view.
+ *
+ * @return string  The (X)HTML.
+ */
+function coco_admin_main() {
+    global $sn, $pth, $tx, $plugin_tx;
+
+    $ptx = $plugin_tx['coco'];
+    if (isset($_POST['action']) && $_POST['action'] == 'delete') {
+	coco_delete(stsl($_POST['coco_name']));
+    }
+    $o = '<div id="coco_admin_cocos">'."\n".'<h1>'.$ptx['title_cocos'].'</h1>'."\n";
+    $o .= '<ul>'."\n";
+    foreach (coco_cocos() as $coco) {
+	$url = $sn.'?&amp;coco&amp;admin=plugin_main';
+	$msg = htmlspecialchars(addcslashes(sprintf($ptx['confirm_delete'], $coco), "\n\r\t\\"), ENT_QUOTES);
+	$js = 'return confirm(\''.$msg.'\')';
+	$alt = ucfirst($tx['action']['delete']);
+	$o .= '<li><form action="'.$url.'" method="POST" onsubmit="'.$js.'">'
+		.tag('input type="hidden" name="action" value="delete"')
+		.tag('input type="hidden" name="coco_name" value="'.$coco.'"')
+		.tag('input type="image" src="'.$pth['folder']['plugins'].'coco/images/delete.png"'
+		    .' alt="'.$alt.'" title="'.$alt.'"')
+		.'</form>'.$coco.'</li>'."\n";
+    }
+    $o .= '</ul>'."\n".'</div>'."\n";
+    return $o; // TODO: info that no cocos are available
+}
+
+
+/**
  * Handle the plugin administration.
  */
 if (!empty($coco)) {
-    $o .= print_plugin_admin('off');
+    $o .= print_plugin_admin('on');
     switch ($admin) {
 	case '':
 	    $o .= coco_version().tag('hr').coco_system_check();
+	    break;
+	case 'plugin_main':
+	    $o .= coco_admin_main();
 	    break;
 	default:
 	    $o .= plugin_admin_common($action, $admin, $plugin);

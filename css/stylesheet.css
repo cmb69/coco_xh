@@ -1,1 +1,5 @@
 /* use Settings->Stylesheet to style co-contents */
+
+/* back-end styles */
+#coco_admin_cocos ul {list-style: none; padding: 0; margin: 1em 0}
+#coco_admin_cocos form {display: inline; margin-right: 0.5em}

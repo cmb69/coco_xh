@@ -1,8 +1,11 @@
 TODO
     add revision string?
+    admin: delete co-contents CONFIRMATION
+    add translations
 
     info about search.php
-    credit Peter
+    credit Peter (general father)
+    credit Torsten (make fast stable, than continue)
     limitation: not for huge co-contents (preg_match restriction)
 
 Version 1beta1 - released TODO

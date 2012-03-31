@@ -223,6 +223,9 @@ function coco($name, $config = FALSE, $height = '100%') {
 $pd_router->add_interest('coco_id');
 
 
+/**
+ * Create and delete backups.
+ */
 if ($logout && $_COOKIE['status'] == 'adm' && logincheck()) {
     $o .= coco_backup();
 }
