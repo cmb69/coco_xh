@@ -13,6 +13,9 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 }
 
 
+define('COCO_VERSION', '1beta1');
+
+
 /**
  * Compatibility with CMSimple_XH < 1.5
  */
@@ -157,7 +160,8 @@ function coco_backup() {
 	    $bus = glob($dir.'????????_??????_'.$coco.'.htm');
 	    for ($i = 0; $i < count($bus) - $cf['backup']['numberoffiles']; $i++) {
 		if (unlink($bus[$i])) {
-		    $o .= '<p>'.ucfirst($tx['filetype']['backup']).' '.$bus[$i].' '.$tx['result']['deleted'].'</p>'."\n";
+		    $o .= '<p>'.ucfirst($tx['filetype']['backup']).' '.$bus[$i]
+			    .' '.$tx['result']['deleted'].'</p>'."\n";
 		} else {
 		    e('cntdelete', 'backup', $bus[$i]);
 		}
