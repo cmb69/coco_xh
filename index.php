@@ -110,7 +110,7 @@ function coco_get($name, $i) {
  * @return void
  */
 function coco_set($name, $i, $text) {
-    global $cl, $l, $h, $cf, $pd_router;
+    global $pth, $cl, $l, $h, $cf, $pd_router;
 
     $fn = coco_data_folder().$name.'.htm';
     $old = is_readable($fn) ? file_get_contents($fn) : '';
@@ -133,8 +133,10 @@ function coco_set($name, $i, $text) {
 	}
     }
     $cnt .= '</body>'."\n".'</html>'."\n";
-    if (($fp = fopen($fn, 'w')) === FALSE
-	    || fwrite($fp, $cnt)) {
+    if (($fp = fopen($fn, 'w')) !== FALSE
+	    && fwrite($fp, $cnt) !== FALSE) {
+	touch($pth['file']['content']);
+    } else {
 	e('cntwriteto', 'file', $fn);
     }
     if ($fp !== FALSE) {fclose($fp);}

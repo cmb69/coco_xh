@@ -1,7 +1,4 @@
-TODO
-    test XH 1.2
-
-Version 1beta1 - released TODO
+Version 1beta1 - released 2012-04-01
 cmb	cleaned up code
 cmb	implemented search.php that will search co-contents as well
 cmb	implemented backup of co-contents on logout
@@ -11,6 +8,7 @@ cmb	added slovak translation (contributed by Tata)
 cmb	updated manual
 cmb	added German manual
 cmb	added German translation
+cmb	made lastupdate recognize changes in co-contents
 
 Version 1alpha2 - released 2012-02-27
 cmb	changed plugin's name to Coco_XH
