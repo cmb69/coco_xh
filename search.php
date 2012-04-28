@@ -14,7 +14,7 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 
 
 /**
- * Returns wether all $words are contained in $text.
+ * Returns whether all $words are contained in $text.
  *
  * @param array $words
  * @param string $text

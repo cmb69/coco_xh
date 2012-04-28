@@ -79,7 +79,7 @@ function coco_system_check() { // RELEASE-TODO
 
 /**
  * Deletes the co-content $name and all of its backups.
- * Returns wether that succeeded, and report errors via e().
+ * Returns whether that succeeded, and report errors via e().
  *
  * return bool
  */
