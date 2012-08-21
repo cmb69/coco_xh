@@ -1,3 +1,7 @@
+Version 1rc1 - released 2012-08-21
+cmb     added czech translation (contributed by oldnema)
+cmb     made minor changes
+
 Version 1beta1 - released 2012-04-01
 cmb	cleaned up code
 cmb	implemented search.php that will search co-contents as well

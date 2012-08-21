@@ -13,7 +13,7 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 }
 
 
-define('COCO_VERSION', '1beta1');
+define('COCO_VERSION', '1rc1');
 
 
 /**
@@ -203,7 +203,7 @@ function coco($name, $config = FALSE, $height = '100%') {
 	$er = function_exists('editor_replace') ? editor_replace($id, $config) : FALSE;
 	$o .= '<form action="" method="POST">'."\n"
 		.'<textarea id="'.$id.'" name="coco_text_'.$name.'" style="'.$style.'">'
-		.htmlspecialchars(coco_get($name, $s)).'</textarea>'."\n"
+		.htmlspecialchars(coco_get($name, $s), ENT_COMPAT, 'UTF-8').'</textarea>'."\n"
 		.(!$er ? tag('input type="submit" class="submit" value="'.ucfirst($tx['action']['save']).'"') : '')
 		.'</form>'."\n";
 	if ($er) {
@@ -213,7 +213,7 @@ function coco($name, $config = FALSE, $height = '100%') {
     } else {
 	$text = evaluate_scripting(coco_get($name, $s));
 	if (isset($_GET['search'])) {
-	    $words = explode(',', htmlspecialchars(urldecode($_GET['search']), ENT_NOQUOTES));
+	    $words = explode(',', htmlspecialchars(urldecode($_GET['search']), ENT_NOQUOTES, 'UTF-8'));
 	    $words = array_map(create_function('$w', 'return "/".preg_quote($w, "/")."(?!([^<]+)?>)/isU";'), $words);
 	    $text = preg_replace($words, '<span class="highlight_search">\\0</span>', $text);
 	}

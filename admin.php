@@ -115,7 +115,7 @@ function coco_admin_main() {
     $o .= '<ul>'."\n";
     foreach (coco_cocos() as $coco) {
 	$url = $sn.'?&amp;coco&amp;admin=plugin_main';
-	$msg = htmlspecialchars(addcslashes(sprintf($ptx['confirm_delete'], $coco), "\n\r\t\\"), ENT_QUOTES);
+	$msg = htmlspecialchars(addcslashes(sprintf($ptx['confirm_delete'], $coco), "\n\r\t\\"), ENT_QUOTES, 'UTF-8');
 	$js = 'return confirm(\''.$msg.'\')';
 	$alt = ucfirst($tx['action']['delete']);
 	$o .= '<li><form action="'.$url.'" method="POST" onsubmit="'.$js.'">'
@@ -133,7 +133,7 @@ function coco_admin_main() {
 /**
  * Handle the plugin administration.
  */
-if (!empty($coco)) {
+if (isset($coco) && $coco == 'true') {
     $o .= print_plugin_admin('on');
     switch ($admin) {
 	case '':

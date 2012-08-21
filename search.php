@@ -70,7 +70,7 @@ function coco_search_results() {
     $ta = array_unique($ta);
     sort($ta);
     $o .= '<h1>'.$tx['search']['result'].'</h1>'."\n"
-	    .'<p>"'.htmlspecialchars($search, ENT_QUOTES, 'UTF-8').'" ';
+	    .'<p>"'.htmlspecialchars($search, ENT_COMPAT, 'UTF-8').'" ';
     if (count($ta) == 0) {
 	$o .= $tx['search']['notfound'];
     }
