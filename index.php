@@ -125,6 +125,7 @@ function coco_set($name, $i, $text) {
 	$cnt .= '<h'.$l[$j].' id="'.$pd['coco_id'].'">'.$h[$j].'</h'.$l[$j].'>'."\n";
 	if ($j == $i) {
 	    $text = trim(preg_replace('/<h'.$ml.'.*?>.*?<\/h'.$ml.'>/isu', '', $text));
+	    $text = preg_replace('/(<\/?h)[1-' . $ml . ']/is', '${1}' . ($ml + 1), $text);
 	    if (!empty($text)) {$cnt .= $text."\n";}
 	} else {
 	    preg_match('/<h[1-'.$ml.'].*?id="'.$pd['coco_id'].'".*?>.*?<\/h[1-'.$ml.']>'
