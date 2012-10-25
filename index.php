@@ -96,8 +96,8 @@ function coco_get($name, $i) {
     }
     $ml = $cf['menu']['levels'];
     preg_match('/<h[1-'.$ml.'].*?id="'.$pd['coco_id'].'".*?>.*?<\/h[1-'.$ml.']>'
-	    .'(.*?)<(h[1-'.$ml.']|\/body)/isu', $text, $matches);
-    return trim($matches[1]);
+	    .'(.*?)<(?:h[1-'.$ml.']|\/body)/isu', $text, $matches);
+    return !empty($matches[1]) ? trim($matches[1]) : '';
 }
 
 
@@ -128,7 +128,7 @@ function coco_set($name, $i, $text) {
 	    if (!empty($text)) {$cnt .= $text."\n";}
 	} else {
 	    preg_match('/<h[1-'.$ml.'].*?id="'.$pd['coco_id'].'".*?>.*?<\/h[1-'.$ml.']>'
-		    .'(.*?)<h[1-'.$ml.']/isu', $old, $matches);
+		    .'(.*?)<(?:h[1-'.$ml.']|\/body)/isu', $old, $matches);
 	    $cnt .= isset($matches[1]) && ($match = trim($matches[1])) != '' ? $match."\n" : '';
 	}
     }
