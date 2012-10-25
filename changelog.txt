@@ -1,3 +1,8 @@
+Version 1rc2 - released 2012-10-25
+cmb	fixed bug where co-content of last page was purged
+cmb	fixed bug where page headings in co-contents were not properly handled
+cmb	updated Slovak translation (contributed by Tata)
+
 Version 1rc1 - released 2012-08-21
 cmb     added czech translation (contributed by oldnema)
 cmb     made minor changes
