@@ -95,11 +95,17 @@ doesn't work with Coco_XH, so you have to update to a newer version.
 If you want to use another toolbar than the one you have configured for the main content editor,
 just give the name of the toolbar as second parameter, e.g.</p>
 <div class="code">&lt;?php echo coco('small_content', 'sidebar');?&gt;</div>
+<p>As toolbars usually "full", "medium", "minimal" and "sidebar" are available.
+How to customize the tinyMCE toolbars is explained in the
+<a href="http://cmsimple-xh.com/wiki/doku.php/tinymce#customization">CMSimple_XH Wiki</a>.</p>
 <p>The screenshot shows the co-contents in edit mode:</p>
 <div><img src="edit-mode.png" width="100%" alt="edit-mode"></div>
 <p>The width and height of the textarea resp. the editor default to 100% of its container.
 The height can be changed by a third parameter to the coco() call, e.g.</p>
 <div class="code">&lt;?php echo coco('my_content', 'sidebar', '500px');?&gt;</div>
+<p>If you give this parameter, it's mandatory to give the toolbar parameter too.
+If you want to stick with the default toolbar, you can write:</p>
+<div class="code">&lt;?php echo coco('my_content', false, '500px');?&gt;</div>
 <p>If you want to change the width, you can do so in the stylesheet.</p>
 <p>The co-contents are stored in Coco_XH's data folder
 in an (X)HTML file with the name given as first parameter, e.g. my_content.htm.

@@ -96,11 +96,17 @@ nicht mit Coco_XH verwendet werden kann, so dass Sie auf eine neuere Version akt
 Möchten Sie eine andere Toolbar verwenden als diejenige, die für den Haupt-Content-Editor konfiguriert wurde,
 geben Sie einfach den Namen der Toolbar als zweiten Parameter an, z.B.</p>
 <div class="code">&lt;?php echo coco('kleiner_content', 'sidebar');?&gt;</div>
+<p>Als Toolbar sind üblicherweise "full", "medium", "minimal" und "sidebar" verfügbar.
+Wie die Toolbars des tinyMCE angepasst werden können, ist im
+<a href="http://cmsimple-xh.com/wiki/doku.php/de:tinymce#customization">CMSimple_XH-Wiki</a> erklärt.</p>
 <p>Der Screenshot zeigt die Co-Contents im Bearbeitungsmodus:</p>
 <div><img src="edit-mode.png" width="100%" alt="edit-mode"></div>
 <p>Die Breite und Höhe der Textarea bzw. des Editors sind auf 100% der Größes ihres Containers voreingestellt.
 Die Höhe kann durch einen dritten Parameter für den coco() Aufruf geändert werden, z.B.</p>
 <div class="code">&lt;?php echo coco('mein_content', 'sidebar', '500px');?&gt;</div>
+<p>Wenn Sie diesen Parameter übergeben, dann müssen Sie auch den Toolbar-Parameter übergeben.
+Wenn Sie bei der Standard-Toolbar bleiben möchten, schreiben Sie einfach:</p>
+<div class="code">&lt;?php echo coco('mein_content', false, '500px');?&gt;</div>
 <p>Möchten Sie die Breite ändern, können Sie das im Stylesheet tun.</p>
 <p>Die Co-Contents werden in Coco_XHs Datenordner in einer (X)HTML-Datei mit dem Namen,
 der als erster Parameter angegeben wurde, gespeichert, z.B. mein_content.htm.
