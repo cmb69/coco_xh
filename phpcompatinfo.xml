@@ -16,6 +16,9 @@
             <directory name="help"/>
             <directory name="images"/>
             <directory name="languages"/>
+            
+            <!-- we're using the $recursive parameter -->
+            <function name="mkdir"/>
         </exclude>
     </excludes>
 </phpcompatinfo>

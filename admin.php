@@ -71,7 +71,7 @@ function Coco_systemCheck()
 {
     global $pth, $tx, $plugin_tx;
 
-    define('COCO_PHP_VERSION', '4.3.0');
+    define('COCO_PHP_VERSION', '4.3.10');
     $ptx = $plugin_tx['coco'];
     $imgdir = $pth['folder']['plugins'] . 'coco/images/';
     $ok = tag('img src="' . $imgdir . 'ok.png" alt="ok"');
@@ -81,7 +81,7 @@ function Coco_systemCheck()
         . (version_compare(PHP_VERSION, COCO_PHP_VERSION) >= 0 ? $ok : $fail)
         . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_phpversion'], COCO_PHP_VERSION)
         . tag('br') . tag('br') . PHP_EOL;
-    foreach (array('pcre') as $ext) {
+    foreach (array('mbstring', 'pcre') as $ext) {
         $o .= (extension_loaded($ext) ? $ok : $fail)
             . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_extension'], $ext)
             . tag('br') . PHP_EOL;
