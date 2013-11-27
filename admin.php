@@ -81,7 +81,7 @@ function Coco_systemCheck()
         . (version_compare(PHP_VERSION, COCO_PHP_VERSION) >= 0 ? $ok : $fail)
         . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_phpversion'], COCO_PHP_VERSION)
         . tag('br') . tag('br') . PHP_EOL;
-    foreach (array('mbstring', 'pcre') as $ext) {
+    foreach (array('pcre') as $ext) {
         $o .= (extension_loaded($ext) ? $ok : $fail)
             . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_extension'], $ext)
             . tag('br') . PHP_EOL;

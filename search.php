@@ -23,6 +23,11 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 }
 
 /**
+ * The Utf8_XH utility plugin.
+ */
+require_once $pth['folder']['plugins'] . 'utf8/utf8.php';
+
+/**
  * Decodes all HTML entities in a text.
  *
  * As html_entity_decode() doesn't work for UTF-8 strings before PHP 5.0.0,
@@ -63,9 +68,9 @@ function Coco_search($words, $text)
 {
     $text = strip_tags(Coco_evaluateScripting($text));
     $text = Coco_decodeEntities($text, ENT_QUOTES, 'UTF-8');
-    $text = mb_strtolower($text, 'UTF-8');
+    $text = utf8_strtolower($text, 'UTF-8');
     foreach ($words as $word) {
-        if (strpos($text, mb_strtolower($word, 'UTF-8')) === false) {
+        if (strpos($text, utf8_strtolower($word, 'UTF-8')) === false) {
             return false;
         }
     }
