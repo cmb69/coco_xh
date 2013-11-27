@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phpcompatinfo reference="ALL"
+               report="summary"
+               reportFileAppend="false"
+               cacheDriver="file"
+               recursive="true"
+               fileExtensions="php, htm"
+               consoleProgress="false"
+               verbose="false">
+
+    <excludes>
+        <exclude id="coco">
+            <directory name="config"/>
+            <directory name="css"/>
+            <directory name="data"/>
+            <directory name="help"/>
+            <directory name="images"/>
+            <directory name="languages"/>
+        </exclude>
+    </excludes>
+</phpcompatinfo>
