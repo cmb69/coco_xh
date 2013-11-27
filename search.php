@@ -23,6 +23,35 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 }
 
 /**
+ * Decodes all HTML entities in a text.
+ *
+ * As html_entity_decode() doesn't work for UTF-8 strings before PHP 5.0.0,
+ * we provide a simple fallback.
+ *
+ * @param string $text A text.
+ *
+ * @return string
+ *
+ * @todo improve PHP 4 fallback
+ */
+function Coco_decodeEntities($text)
+{
+    if (version_compare(phpversion(), '5.0.0', '>=')) {
+        $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+    } else {
+        $replacePairs = array(
+            '&amp;' => '&',
+            '&quot;' => '"',
+            '&apos;' => '\'',
+            '&lt;' => '<',
+            '&gt;' => '>'
+        );
+        $text = strtr($text, $replacePairs);
+    }
+    return $text;
+}
+
+/**
  * Returns whether all words are contained in a text.
  *
  * @param array  $words An array of words.
@@ -33,7 +62,7 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 function Coco_search($words, $text)
 {
     $text = strip_tags(Coco_evaluateScripting($text));
-    $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+    $text = Coco_decodeEntities($text, ENT_QUOTES, 'UTF-8');
     $text = mb_strtolower($text, 'UTF-8');
     foreach ($words as $word) {
         if (strpos($text, mb_strtolower($word, 'UTF-8')) === false) {
