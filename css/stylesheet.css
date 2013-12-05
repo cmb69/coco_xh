@@ -1,6 +1,24 @@
-/* back-end styles */
-img.coco_plugin_icon {display: block; float: left; margin: 10px 20px 10px 0}
-p.coco_license {clear: both; text-align: justify}
+/*
+ * Administration.
+ */
 
-#coco_admin_cocos ul {list-style: none; padding: 0; margin: 1em 0}
-#coco_admin_cocos form {display: inline; margin-right: 0.5em}
+img.coco_plugin_icon {
+    float: left;
+    margin: 10px 20px 10px 0;
+}
+
+p.coco_license {
+    clear: both;
+    text-align: justify;
+}
+
+#coco_admin_cocos ul {
+    list-style: none;
+    padding: 0;
+    margin: 1em 0;
+}
+
+#coco_admin_cocos form {
+    display: inline;
+    margin-right: 0.5em;
+}
