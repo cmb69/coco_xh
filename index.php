@@ -233,8 +233,7 @@ function Coco_set($name, $i, $text)
  *
  * @global array  The configuration of the core.
  * @global array  The localization of the core.
- *
- * @todo $backupDate?
+ * @global string The backup date of the core (only available before XH 1.6).
  */
 function Coco_backup()
 {
