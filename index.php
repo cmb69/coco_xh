@@ -45,6 +45,19 @@ function Coco_evaluateScripting($text)
 }
 
 /**
+ * Returns whether the core is a certain CMSimple_XH version at least.
+ *
+ * @param string $version A version number.
+ *
+ * @return bool
+ */
+function Coco_hasXHVersion($version)
+{
+    return strpos(CMSIMPLE_XH_VERSION, 'CMSimple_XH') === 0
+        && version_compare(CMSIMPLE_XH_VERSION, 'CMSimple_XH ' . $version, '>=');
+}
+
+/**
  * Returns the path of the data folder.
  *
  * @return string
@@ -338,8 +351,7 @@ $pd_router->add_interest('coco_id');
 /*
  * Create and delete backups.
  */
-$temp = strpos(CMSIMPLE_XH_VERSION, 'CMSimple_XH') === 0
-    && version_compare(CMSIMPLE_XH_VERSION, 'CMSimple_XH 1.6dev', '>=');
+$temp = Coco_hasXHVersion('1.6dev');
 if ($temp && $f == 'xh_loggedout'
     || !$temp && $logout && $_COOKIE['status'] == 'adm' && logincheck()
 ) {
