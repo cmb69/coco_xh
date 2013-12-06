@@ -327,6 +327,7 @@ function coco($name, $config = false, $height = '100%')
     } else {
         $text = Coco_evaluateScripting(Coco_get($name, $s));
         if (isset($_GET['search'])) {
+            $class = Coco_hasXHVersion('1.6rc1') ? 'xh_find' : 'highlight_search';
             $search = urldecode($_GET['search']);
             $search = htmlspecialchars($search, ENT_NOQUOTES, 'UTF-8');
             $words = explode(',', $search);
@@ -335,7 +336,7 @@ function coco($name, $config = false, $height = '100%')
             );
             $words = array_map($func, $words);
             $text = preg_replace(
-                $words, '<span class="highlight_search">\\0</span>', $text
+                $words, '<span class="' . $class . '">\\0</span>', $text
             );
         }
         $o .= $text;
