@@ -15,6 +15,12 @@ $plugin_tx['coco']['confirm_delete']="Der gesamte Inhalt von \"%s\" wird gelösc
 
 $plugin_tx['coco']['error_invalid_name']="Co-Content-Namen dürfen nur a-z, 0-9 and _ enthalten!";
 
+$plugin_tx['coco']['search_foundin']="wurde gefunden auf";
+$plugin_tx['coco']['search_notfound']="wurde nicht gefunden";
+$plugin_tx['coco']['search_pgplural']="Seiten";
+$plugin_tx['coco']['search_pgsingular']="Seite";
+$plugin_tx['coco']['search_result']="Suchergebnis";
+
 $plugin_tx['coco']['cf_folder_data']="Pfad zu einem Ordner relativ zum CMSimple Wurzelverzeichnis, in dem die Plugin-Daten gespeichert werden. Z.B. \"userfiles/coco/\". Leer lassen, um in den data/ Ordner des Plugins zu speichern.";
 
 ?>

@@ -115,13 +115,14 @@ function Coco_searchContent($name, $words)
  * @global string The script name.
  * @global array  The headings of the pages.
  * @global array  The URLs of the pages.
- * @global array  The localization of the core.
+ * @global array  The configuration of the plugins.
  * @global array  The localization of the plugins.
  */
 function Coco_searchResults()
 {
-    global $search, $sn, $h, $u, $tx, $plugin_cf;
+    global $search, $sn, $h, $u, $plugin_cf, $plugin_tx;
 
+    $ptx = $plugin_tx['coco'];
     $o = '';
     $words = preg_split('/\s+/isu', stsl($search), null, PREG_SPLIT_NO_EMPTY);
     $ta = Coco_searchContent(null, $words);
@@ -130,16 +131,16 @@ function Coco_searchResults()
     }
     $ta = array_unique($ta);
     sort($ta);
-    $o .= '<h1>' . $tx['search']['result'] . '</h1>' . PHP_EOL
+    $o .= '<h1>' . $ptx['search_result'] . '</h1>' . PHP_EOL
         . '<p>"' . htmlspecialchars($search, ENT_COMPAT, 'UTF-8') . '" ';
     if (count($ta) == 0) {
-        $o .= $tx['search']['notfound'];
+        $o .= $ptx['search_notfound'];
     } else {
-        $o .= $tx['search']['foundin'] . ' ' . count($ta) . ' ';
+        $o .= $ptx['search_foundin'] . ' ' . count($ta) . ' ';
         if (count($ta) > 1) {
-            $o .= $tx['search']['pgplural'];
+            $o .= $ptx['search_pgplural'];
         } else {
-            $o .= $tx['search']['pgsingular'];
+            $o .= $ptx['search_pgsingular'];
         }
         $o .= ':';
     }
