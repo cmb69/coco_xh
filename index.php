@@ -338,7 +338,11 @@ $pd_router->add_interest('coco_id');
 /*
  * Create and delete backups.
  */
-if ($logout && $_COOKIE['status'] == 'adm' && logincheck()) {
+$temp = strpos(CMSIMPLE_XH_VERSION, 'CMSimple_XH') === 0
+    && version_compare(CMSIMPLE_XH_VERSION, 'CMSimple_XH 1.6dev', '>=');
+if ($temp && $f == 'xh_loggedout'
+    || !$temp && $logout && $_COOKIE['status'] == 'adm' && logincheck()
+) {
     $o .= Coco_backup();
 }
 
