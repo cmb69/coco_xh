@@ -45,6 +45,76 @@ function Coco_evaluateScripting($text)
 }
 
 /**
+ * Returns the remaining contents of a stream.
+ *
+ * @param resource $stream An open stream.
+ *
+ * @return string
+ */
+function Coco_getStreamContents($stream)
+{
+    $func = 'stream_get_contents';
+    if (function_exists($func)) {
+        $contents = $func($stream);
+    } else {
+        ob_start();
+        fpassthru($stream);
+        $contents = ob_get_clean();
+    }
+    return $contents;
+}
+
+/**
+ * Reads a file and returns its contents; <var>false</var> on failure.
+ * During reading, the file is locked for shared access.
+ *
+ * @param string $filename A file path.
+ *
+ * @return string
+ */
+function Coco_readFile($filename)
+{
+    $contents = false;
+    $stream = fopen($filename, 'rb');
+    if ($stream) {
+        if (flock($stream, LOCK_SH)) {
+            $contents = XH_getStreamContents($stream);
+            flock($stream, LOCK_UN);
+        }
+        fclose($stream);
+    }
+    return $contents;
+}
+
+/**
+ * Writes <var>$contents</var> to the file <var>$filename</var>.
+ * During writing the file is locked exclusively.
+ *
+ * @param string $filename The filename.
+ * @param string $contents The content to write.
+ *
+ * @return int The number of bytes written, or false on failure.
+ */
+function Coco_writeFile($filename, $contents)
+{
+    $res = false;
+    // we can't use "cb" as it is available only since PHP 5.2.6
+    // we can't use "r+b" as it will fail if the file does not already exist
+    $stream = fopen($filename, 'a+b');
+    if ($stream) {
+        if (flock($stream, LOCK_EX)) {
+            fseek($stream, 0);
+            ftruncate($stream, 0);
+            $res = fwrite($stream, $contents);
+            fflush($stream);
+            flock($stream, LOCK_UN);
+        }
+        fclose($stream);
+    }
+    return $res;
+}
+
+/**
  * Returns whether the core is a certain CMSimple_XH version at least.
  *
  * @param string $version A version number.
@@ -144,7 +214,7 @@ function Coco_get($name, $i)
     if ($name != $curname) {
         $curname = $name;
         $fn = Coco_dataFolder() . $name . '.htm';
-        if (!is_readable($fn) || ($text = file_get_contents($fn)) === false) {
+        if (!is_readable($fn) || ($text = Coco_readFile($fn)) === false) {
             e('cntopen', 'file', $fn);
             return false;
         }
@@ -173,15 +243,13 @@ function Coco_get($name, $i)
  * @global array  The headings of the pages.
  * @global array  The configuration of the core.
  * @global object The page data router.
- *
- * @todo File locking.
  */
 function Coco_set($name, $i, $text)
 {
     global $pth, $cl, $l, $h, $cf, $pd_router;
 
     $fn = Coco_dataFolder() . $name . '.htm';
-    $old = is_readable($fn) ? file_get_contents($fn) : '';
+    $old = is_readable($fn) ? Coco_readFile($fn) : '';
     $ml = $cf['menu']['levels'];
     $cnt = '<html>' . PHP_EOL . '<body>' . PHP_EOL;
     for ($j = 0; $j < $cl; $j++) {
@@ -215,13 +283,10 @@ function Coco_set($name, $i, $text)
         }
     }
     $cnt .= '</body>' . PHP_EOL . '</html>' . PHP_EOL;
-    if (($fp = fopen($fn, 'w')) !== false && fwrite($fp, $cnt) !== false) {
+    if (Coco_writeFile($fn, $cnt) !== false) {
         touch($pth['file']['content']);
     } else {
         e('cntwriteto', 'file', $fn);
-    }
-    if ($fp !== false) {
-        fclose($fp);
     }
 }
 
