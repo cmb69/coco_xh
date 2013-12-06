@@ -1,3 +1,10 @@
+Version 1rc3 - released 2013-12-06
+cmb     replaced dependency on mb_string with Utf8_XH requirement
+cmb     fixed bug, where search did always fail on PHP 4
+cmb     added version.nfo
+cmb     added access protection of data/ folder for Apache 2.4
+cmb     improved QA (Phing, PHP_CI, CodeSniffer, PHPDoc)
+
 Version 1rc2 - released 2012-10-25
 cmb	fixed bug where co-content of last page was purged
 cmb	fixed bug where page headings in co-contents were not properly handled
