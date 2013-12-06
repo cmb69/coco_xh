@@ -31,13 +31,11 @@ require_once $pth['folder']['plugins'] . 'utf8/utf8.php';
  * Decodes all HTML entities in a text.
  *
  * As html_entity_decode() doesn't work for UTF-8 strings before PHP 5.0.0,
- * we provide a simple fallback.
+ * we provide a simplified fallback.
  *
  * @param string $text A text.
  *
  * @return string
- *
- * @todo improve PHP 4 fallback
  */
 function Coco_decodeEntities($text)
 {
