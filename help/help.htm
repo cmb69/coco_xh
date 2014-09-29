@@ -11,7 +11,7 @@
 
 <h1>Coco_XH &ndash; a CMSimple_XH Plugin</h1>
 <img src="../coco.png" width="128" height="128" style="float:left;
-margin-right:20px" alt="Plugin icon">
+margin-right:20px" alt="Box with stuff">
 <p style="text-align:justify">Coco_XH facilitates to have an arbitrary amount of
 so called co-contents on your website. These are similar to newsboxes, but
 instead have different content for every page. Coco_XH is inspired by the <a
@@ -20,7 +20,6 @@ CMSimple_XH &ge; 1.5 only) allows editing with the chosen editor instead of a
 textarea and scripting to be used.</p>
 
 <ul id="nav">
-<li><a href="#notice">Important Notice</a></li>
 <li><a href="#requirements">Requirements</a></li>
 <li><a href="#installation">Installation</a></li>
 <li><a href="#settings">Settings</a></li>
@@ -38,18 +37,16 @@ textarea and scripting to be used.</p>
 <p><strong>Please do read this documentation, <em>before</em> you encounter any
 problems!</strong></p>
 
-<h2 id="notice">Important Notice</h2>
-<p><strong>Coco_XH couldn't be tested so far in various environments. It is a so
-called Release Candidate. Use with caution!</strong></p>
-<div class="toplink"><a href="#">back to top</a></div>
-
-<h2 id="requirements">Requirements</h2>
+<section id="requirements">
+<h2>Requirements</h2>
 <p>Coco_XH is a plugin for CMSimple_XH. It requires a UTF-8 encoded version and
 the <a href="http://3-magi.net/?CMSimple_XH/Utf8_XH">Utf8_XH plugin</a>, which
 is shipped with CMSimple_XH since version 1.5.4.</p>
 <div class="toplink"><a href="#">back to top</a></div>
+</section>
 
-<h2 id="installation">Installation</h2>
+<section id="installation">
+<h2>Installation</h2>
 <p>The installation is done as with many other CMSimple_XH plugins. See the <a
 href="http://www.cmsimple-xh.org/wiki/doku.php/installation"> CMSimple_XH
 wiki</a> for further details.</p>
@@ -67,20 +64,25 @@ in the default data folder.</li>
 fulfilled.</li>
 </ol>
 <div class="toplink"><a href="#">back to top</a></div>
+</section>
 
-<h2 id="settings">Settings</h2>
+<section id="settings">
+<h2>Settings</h2>
 <p>The plugin's configuration is done as with many other CMSimple_XH plugins in
 the website's back-end. Select Plugins &rarr; Coco.</p>
 <p>You can change the default settings of Coco_XH under "Config". Hints for the
 options will be displayed when hovering over the help icon with your mouse.</p>
 <p>Localization is done under "Language". You can translate the character
-strings to your own language, or customize them according to your needs.</p>
+strings to your own language (if there is no appropriate language file
+available), or customize them according to your needs.</p>
 <p>The look of the Coco_XH can be customized under "Stylesheet". This is mainly
 meant for styling the back-end. The styling of the co-content should be done by
 modifying the template and its stylesheet.</p>
 <div class="toplink"><a href="#">back to top</a></div>
+</section>
 
-<h2 id="usage">Usage</h2>
+<section id="usage">
+<h2>Usage</h2>
 <p>To have co-content on your site, just insert in your template</p>
 <div class="code">&lt;?php echo coco('my_content');?&gt;</div>
 <p>in the place where you want, e.g. instead of a newsbox. Instead of
@@ -122,36 +124,46 @@ made with the id given for the heading. You must not alter these ids in any way!
 Creating new pages by inserting new headings is not possible; these will simply
 be ignored.</p>
 <p>Note that a backup of all co-contents is automatically made on logout. This
-is done the same way as CMSimple_XH makes backups of the content. If you want to
-restore a backup, you have to do it via FTP.</p>
+is done the same way as CMSimple_XH 1.5.x makes backups of the content. If you
+want to restore a backup, you have to do it via FTP.</p>
 <div class="toplink"><a href="#">back to top</a></div>
+</section>
 
-<h3 id="usage-searching">Searching</h3>
+<section id="usage-searching">
+<h3>Searching</h3>
 <p>If you want CMSimple_XH's search function to search your co-contents too, you
 have to replace cmsimple/search.php with plugins/coco/search.php. The search
 will work the same as in CMSimple_XH 1.5.x.</p>
 <div class="toplink"><a href="#">back to top</a></div>
+</section>
 
-<h3 id="usage-administration">Administration</h3>
+<section id="usage-administration">
+<h3>Administration</h3>
 <p>You can administrate the co-contents under Plugins &rarr; Coco &rarr;
 Co-Contents. Currently it's only possible to delete co-content files that you
 don't need any more. It's however important to delete those files as they will
 automatically being searched by the search function; besides taking time it
 might give wrong search results.</p>
 <div class="toplink"><a href="#">back to top</a></div>
+</section>
 
-<!--<h2 id="limitations">Limitations</h2>-->
+<!--<section id="limitations">-->
+<!--<h2>Limitations</h2>-->
 <!--<div class="toplink"><a href="#">back to top</a></div>-->
+<!--</section>-->
 
-<h2 id="license">License</h2>
+<section id="license">
+<h2>License</h2>
 <p>Coco_XH is licensed under <a
 href="http://www.gnu.org/licenses/gpl.html">GPLv3</a>.</p>
 <p>&copy; 2012-2014 Christoph M. Becker</p>
 <p>Slovak translation &copy; 2012 Dr. Martin Sereday<br>
 Czech translation &copy; 2012 Josef Němec</p>
 <div class="toplink"><a href="#">back to top</a></div>
+</section>
 
-<h2 id="credits">Credits</h2>
+<section id="credits">
+<h2>Credits</h2>
 <p>Coco_XH was inspired by Ricardo Serpell's
 <a href="http://cmsimplewiki.com/doku.php/plugins/also">Also plugin</a>.</p>
 <p>The plugin icon is designed by <a href="http://www.graphicrating.com/">Andy
@@ -169,6 +181,7 @@ Harteg</a>, the "father" of CMSimple, and all developers of <a
 href="http://www.cmsimple-xh.org">CMSimple_XH</a> without whom this amazing CMS
 wouldn't exist.</p>
 <div class="toplink"><a href="#">back to top</a></div>
+</section>
 
 </div>
 
