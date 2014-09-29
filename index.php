@@ -28,6 +28,38 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 define('COCO_VERSION', '@COCO_VERSION@');
 
 /**
+ * Returns a text with HTML special chars encoded as entities.
+ *
+ * @param string $text A text.
+ *
+ * @return string (X)HTML.
+ */
+function Coco_hsc($text)
+{
+    if (function_exists('XH_hsc')) {
+        return XH_hsc($text);
+    } else {
+        return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+    }
+}
+
+/**
+ * Returns a message with appropriate markup.
+ *
+ * @param string $message A message.
+ *
+ * @return string (X)HTML.
+ */
+function Coco_renderInfoMessage($message)
+{
+    if (function_exists('XH_message')) {
+        return XH_message('info', $message);
+    } else {
+        return '<p>' . Coco_hsc($message) . '</p>';
+    }
+}
+
+/**
  * Returns a text with scripting evaluated, if evaluate_scripting() is defined;
  * otherwise returns the text unmodified.
  *
@@ -312,13 +344,17 @@ function Coco_backup()
     foreach (Coco_cocos() as $coco) {
         $fn = $dir . $backupDate . '_' . $coco . '.htm';
         if (copy($dir . $coco . '.htm', $fn)) {
-            $o .= '<p>' . ucfirst($tx['filetype']['backup']) . ' ' . $fn . ' '
-                . $tx['result']['created'] . '</p>' . PHP_EOL;
+            $o .= Coco_renderInfoMessage(
+                ucfirst($tx['filetype']['backup']) . ' ' . $fn . ' '
+                . $tx['result']['created']
+            ) . PHP_EOL;
             $bus = glob($dir . '????????_??????_' . $coco . '.htm');
             for ($i = 0; $i < count($bus) - $cf['backup']['numberoffiles']; $i++) {
                 if (unlink($bus[$i])) {
-                    $o .= '<p>' . ucfirst($tx['filetype']['backup']) . ' ' . $bus[$i]
-                        . ' ' . $tx['result']['deleted'] . '</p>' . PHP_EOL;
+                    $o .= Coco_renderInfoMessage(
+                        ucfirst($tx['filetype']['backup']) . ' ' . $bus[$i]
+                        . ' ' . $tx['result']['deleted']
+                    ) . PHP_EOL;
                 } else {
                     e('cntdelete', 'backup', $bus[$i]);
                 }
@@ -374,7 +410,7 @@ function coco($name, $config = false, $height = '100%')
         $o .= '<form action="" method="POST">' . PHP_EOL
             . '<textarea id="' . $id . '" name="coco_text_' . $name . '" style="'
             . $style.'">'
-            . htmlspecialchars(Coco_get($name, $s), ENT_COMPAT, 'UTF-8')
+            . Coco_hsc(Coco_get($name, $s))
             . '</textarea>' . PHP_EOL;
         if (!$er) {
             $o .= tag(
@@ -393,7 +429,7 @@ function coco($name, $config = false, $height = '100%')
         if (isset($_GET['search'])) {
             $class = Coco_hasXHVersion('1.6rc1') ? 'xh_find' : 'highlight_search';
             $search = urldecode($_GET['search']);
-            $search = htmlspecialchars($search, ENT_NOQUOTES, 'UTF-8');
+            $search = Coco_hsc($search);
             $words = explode(',', $search);
             $func = create_function(
                 '$w', 'return "/" . preg_quote($w, "/") . "(?!([^<]+)?>)/isU";'

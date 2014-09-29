@@ -154,9 +154,9 @@ function Coco_administration()
     foreach (Coco_cocos() as $coco) {
         $url = $sn . '?&amp;coco&amp;admin=plugin_main';
         $message = addcslashes(sprintf($ptx['confirm_delete'], $coco), "\n\r\t\\");
-        $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+        $message = Coco_hsc($message);
         $js = 'return confirm(\'' . $message . '\')';
-        $alt = ucfirst($tx['action']['delete']);
+        $alt = ucfirst($tx['action']['delete']); // FIXME
         $o .= '<li>'
             . '<form action="' . $url . '" method="POST" onsubmit="' . $js . '">'
             . tag('input type="hidden" name="action" value="delete"')
@@ -172,9 +172,19 @@ function Coco_administration()
 }
 
 /*
+ * Register plugin menu items.
+ */
+if (function_exists('XH_registerStandardPluginMenuItems')) {
+    XH_registerStandardPluginMenuItems(true);
+}
+
+/*
  * Handle the plugin administration.
  */
-if (isset($coco) && $coco == 'true') {
+if (function_exists('XH_wantsPluginAdministration')
+    && XH_wantsPluginAdministration('coco')
+    || isset($coco) && $coco == 'true'
+) {
     $o .= print_plugin_admin('on');
     switch ($admin) {
     case '':
