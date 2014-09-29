@@ -10,13 +10,9 @@
 
     <excludes>
         <exclude id="coco">
-            <directory name="config"/>
-            <directory name="css"/>
-            <directory name="data"/>
-            <directory name="help"/>
-            <directory name="images"/>
-            <directory name="languages"/>
-            
+            <directory name="tests"/>
+            <directory name="vendor"/>
+
             <!-- we're using the $recursive parameter -->
             <function name="mkdir"/>
         </exclude>

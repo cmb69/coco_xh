@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- $Id$ -->
-
-<project name="Coco" default="default">
-
-    <!-- Filesets -->
+<project name="Coco" default="help">
 
     <fileset id="php-sources" dir=".">
         <include name="admin.php"/>
@@ -12,20 +8,25 @@
         <include name="search.php"/>
     </fileset>
 
-    <!-- Checks -->
+    <fileset id="js-sources" dir=".">
+        <include name="*.js"/>
+    </fileset>
 
-    <target name="sniff">
-        <phpcodesniffer standard="PEAR">
+    <target name="help" description="lists available targets">
+        <exec command="phing -l" outputProperty="help"/>
+        <echo>${help}</echo>
+    </target>
+
+    <target name="sniff" description="checks adherence to PEAR CS">
+        <phpcodesniffer standard="PEAR" format="full">
             <fileset refid="php-sources"/>
         </phpcodesniffer>
     </target>
 
-    <target name="compat">
-        <exec command="phpcompatinfo --configuration phpcompatinfo.xml print --exclude-pattern coco ."
+    <target name="compat" description="checks compatibility with PHP_CompatInfo 2">
+        <exec command="C:\xampp\php\phpcompatinfo --configuration phpcompatinfo.xml print --exclude-pattern coco ."
               logoutput="true"/>
     </target>
-
-    <!-- Documentation -->
 
     <target name="php-doc">
         <phpdoc title="Coco_XH Developer Documentation" destdir="doc/php"
@@ -39,15 +40,19 @@
         </phpdoc>
     </target>
 
-<!--    <target name="js-doc">
-        <exec command="jsdoc -destination doc/js pagemanager.js" checkreturn="true"/>
+    <target name="js-doc">
+        <apply executable="jsdoc" parallel="true" checkreturn="true">
+            <arg value="-d"/>
+            <arg value="doc/js"/>
+            <arg value="-p"/>
+            <fileset refid="js-sources"/>
+        </apply>
     </target>
--->
-    <target name="doc" depends="php-doc"/>
 
-    <!-- Build -->
+    <target name="doc" depends="php-doc"
+            description="generates the developer documentation"/>
 
-    <target name="build">
+    <target name="build" description="builds a distributable ZIP archive">
         <fail unless="version" message="version is not defined!"/>
         <svnexport revision="" repositoryurl="." todir="export"/>
         <move todir="dist">
@@ -65,7 +70,7 @@
             <fileset dir="export">
                 <exclude name="coco.komodoproject"/>
                 <exclude name="build.xml"/>
-                <exclude name="phpcompatinfo.xml"/>
+                <exclude name="phpcompatinfo.*"/>
                 <exclude name="TODO"/>
             </fileset>
         </move>
