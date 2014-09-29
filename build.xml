@@ -84,8 +84,10 @@
         <move todir="dist">
             <fileset dir="export">
                 <exclude name="coco.komodoproject"/>
+                <exclude name="composer.*"/>
                 <exclude name="build.xml"/>
                 <exclude name="phpcompatinfo.*"/>
+                <exclude name="tests/**"/>
                 <exclude name="TODO"/>
             </fileset>
         </move>
