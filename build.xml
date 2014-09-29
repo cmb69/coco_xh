@@ -30,8 +30,8 @@
 
     <target name="php-doc">
         <phpdoc title="Coco_XH Developer Documentation" destdir="doc/php"
-                output="HTML:frames:default" defaultpackagename="Coco"
-                defaultcategoryname="Coco_XH">
+                output="HTML:Smarty:HandS" defaultpackagename="Coco"
+                defaultcategoryname="CMSimple_XH" parseprivate="true">
             <fileset refid="php-sources"/>
             <projdocfileset dir=".">
                <include name="README"/>
