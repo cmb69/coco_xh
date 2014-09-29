@@ -1,3 +1,4 @@
 * XH 1.6 APIs
+* CSRF protection
 
 * store contents in content/ (keep config option?)

@@ -7,7 +7,9 @@ $plugin_tx['coco']['syscheck_encoding']="Encoding 'UTF-8' configured";
 $plugin_tx['coco']['syscheck_magic_quotes']="Magic quotes runtime off";
 $plugin_tx['coco']['syscheck_writable']="Folder '%s' writable";
 
-$plugin_tx['coco']['title_cocos']="Available Co-Contents";
+$plugin_tx['coco']['label_info']="Info";
+
+$plugin_tx['coco']['alt_logo']="Box with stuff";
 
 $plugin_tx['coco']['menu_main']="Co-Contents";
 
@@ -20,7 +22,6 @@ $plugin_tx['coco']['search_notfound']="was not found";
 $plugin_tx['coco']['search_pgplural']="pages";
 $plugin_tx['coco']['search_pgsingular']="page";
 $plugin_tx['coco']['search_result']="Result of your search";
-
 
 $plugin_tx['coco']['cf_folder_data']="Path to a folder relative to the CMSimple root directory, where to store the plugin's data. E.g. \"userfiles/coco/\". Leave blank to store into the plugin's data/ folder.";
 

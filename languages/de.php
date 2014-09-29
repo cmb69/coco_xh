@@ -7,7 +7,9 @@ $plugin_tx['coco']['syscheck_encoding']="UTF-8-Kodierung eingestellt";
 $plugin_tx['coco']['syscheck_magic_quotes']="magic_quotes_runtime off";
 $plugin_tx['coco']['syscheck_writable']="Ordner '%s' beschreibbar";
 
-$plugin_tx['coco']['title_cocos']="Vorhandene Co-Contents";
+$plugin_tx['coco']['label_info']="Info";
+
+$plugin_tx['coco']['alt_logo']="Kiste mit Kram";
 
 $plugin_tx['coco']['menu_main']="Co-Contents";
 

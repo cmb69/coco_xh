@@ -6,7 +6,6 @@
 	$plugin_tx['coco']['syscheck_encoding']="Kódování 'UTF-8' nastaveno";
 	$plugin_tx['coco']['syscheck_magic_quotes']="Magic quotes runtime off";
 	$plugin_tx['coco']['syscheck_writable']="Do adresáře '%s' lze zapisovat";
-	$plugin_tx['coco']['title_cocos']="Dostupný Co-Contents";
 	$plugin_tx['coco']['menu_main']="Co-Contents";
 	$plugin_tx['coco']['confirm_delete']="Veškerý obsah z \"%s\" bude smazán!";
 	$plugin_tx['coco']['error_invalid_name']="Názvy v Co-content mohou obsahovat jen  a-z, 0-9 a _ !";

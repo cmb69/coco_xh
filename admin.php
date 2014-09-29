@@ -28,30 +28,32 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
  * @return string (X)HTML.
  *
  * @global array The paths of system files and folders.
+ * @global array The localization of the plugins.
  */
 function Coco_version()
 {
-    global $pth;
+    global $pth, $plugin_tx;
 
     $imagePath = $pth['folder']['plugins'] . 'coco/coco.png';
-    return '<h1><a href="http://3-magi.net/?CMSimple_XH/Coco_XH">Coco_XH</a></h1>'
+    return '<h1>Coco &ndash; ' . $plugin_tx['coco']['label_info'] . '</h1>'
         . PHP_EOL
         . tag(
-            'img class="coco_plugin_icon" src="' . $imagePath . '" alt="Plugin Icon"'
+            'img class="coco_plugin_icon" src="' . $imagePath . '" alt="'
+            . $plugin_tx['coco']['alt_logo'] . '"'
         )
-        . '<p style="margin-top: 50px">Version: ' . COCO_VERSION . '</p>' . PHP_EOL
+        . '<p>Version: ' . COCO_VERSION . '</p>' . PHP_EOL
         . '<p>Copyright &copy; 2012-2014 <a href="http://3-magi.net">'
         . 'Christoph M. Becker</a></p>' . PHP_EOL
-        . '<p  class="coco_license">This program is free software:'
+        . '<p class="coco_license">This program is free software:'
         . ' you can redistribute it and/or modify'
         . ' it under the terms of the GNU General Public License as published by'
         . ' the Free Software Foundation, either version 3 of the License, or'
         . ' (at your option) any later version.</p>' . PHP_EOL
-        . '<p  class="coco_license">This program is distributed'
+        . '<p class="coco_license">This program is distributed'
         . ' in the hope that it will be useful,'
-        . ' but WITHOUT ANY WARRANTY; without even the implied warranty of'
-        . ' MERCHAN&shy;TABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the'
-        . ' GNU General Public License for more details.</p>' . PHP_EOL
+        . ' but <em>without any warranty</em>; without even the implied warranty of'
+        . ' <em>merchantability</em> or <em>fitness for a particular purpose</em>.'
+        . ' See the GNU General Public License for more details.</p>' . PHP_EOL
         . '<p class="coco_license"">You should have received a copy of the'
         . ' GNU General Public License along with this program.  If not, see'
         . ' <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>'
@@ -146,8 +148,8 @@ function Coco_administration()
     if (isset($_POST['action']) && $_POST['action'] == 'delete') {
         Coco_delete(stsl($_POST['coco_name']));
     }
-    $o = '<div id="coco_admin_cocos">' . PHP_EOL
-        . '<h1>' . $ptx['title_cocos'] . '</h1>' . PHP_EOL;
+    $o = '<h1>Coco &ndash; ' . $ptx['menu_main'] . '</h1>' . PHP_EOL
+        . '<div id="coco_admin_cocos">' . PHP_EOL;
     $o .= '<ul>' . PHP_EOL;
     foreach (Coco_cocos() as $coco) {
         $url = $sn . '?&amp;coco&amp;admin=plugin_main';
