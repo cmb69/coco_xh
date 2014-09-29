@@ -60,6 +60,40 @@ function Coco_renderInfoMessage($message)
 }
 
 /**
+ * Renders a CSRF token input field.
+ *
+ * @return string (X)HTML.
+ *
+ * @global XH_CSRFProtection The CSRF protector.
+ */
+function Coco_renderCsrfTokenInput()
+{
+    global $_XH_csrfProtection;
+
+    if (isset($_XH_csrfProtection)) {
+        return $_XH_csrfProtection->tokenInput();
+    } else {
+        return '';
+    }
+}
+
+/**
+ * Checks the CSRF token, and exits the script on failure.
+ *
+ * @return void
+ *
+ * @global XH_CSRFProtection The CSRF protector.
+ */
+function Coco_checkCsrfToken()
+{
+    global $_XH_csrfProtection;
+
+    if (isset($_XH_csrfProtection)) {
+        $_XH_csrfProtection->check();
+    }
+}
+
+/**
  * Returns a text with scripting evaluated, if evaluate_scripting() is defined;
  * otherwise returns the text unmodified.
  *
@@ -400,6 +434,7 @@ function coco($name, $config = false, $height = '100%')
     $o = '';
     if ($adm && $edit) {
         if (isset($_POST['coco_text_' . $name])) {
+            Coco_checkCsrfToken();
             Coco_set($name, $s, stsl($_POST['coco_text_' . $name]));
         }
         $id = 'coco_text_' . $name;
@@ -418,7 +453,7 @@ function coco($name, $config = false, $height = '100%')
                 . ucfirst($tx['action']['save']) . '"'
             );
         }
-        $o .= '</form>' . PHP_EOL;
+        $o .= Coco_renderCsrfTokenInput() . '</form>' . PHP_EOL;
 
         if ($er) {
             $o .= '<script type="text/javascript">/* <![CDATA[ */' . PHP_EOL

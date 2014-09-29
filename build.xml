@@ -12,6 +12,10 @@
         <include name="*.js"/>
     </fileset>
 
+    <fileset id="attack-tests" dir="tests/attack">
+        <include name="*Test.php"/>
+    </fileset>
+
     <target name="help" description="lists available targets">
         <exec command="phing -l" outputProperty="help"/>
         <echo>${help}</echo>
@@ -20,12 +24,23 @@
     <target name="sniff" description="checks adherence to PEAR CS">
         <phpcodesniffer standard="PEAR" format="full">
             <fileset refid="php-sources"/>
+            <fileset refid="attack-tests"/>
         </phpcodesniffer>
     </target>
 
     <target name="compat" description="checks compatibility with PHP_CompatInfo 2">
         <exec command="C:\xampp\php\phpcompatinfo --configuration phpcompatinfo.xml print --exclude-pattern coco ."
               logoutput="true"/>
+    </target>
+
+    <target name="attack-tests" description="runs all attack tests">
+        <fail unless="env.CMSIMPLEDIR" message="CMSIMPLEDIR undefined!"/>
+        <phpunit haltonerror="true" haltonfailure="true">
+            <formatter type="plain" usefile="false"/>
+            <batchtest>
+                <fileset refid="attack-tests"/>
+            </batchtest>
+        </phpunit>
     </target>
 
     <target name="php-doc">

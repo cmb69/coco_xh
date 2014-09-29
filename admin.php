@@ -116,6 +116,7 @@ function Coco_systemCheck()
  */
 function Coco_delete($name)
 {
+    Coco_checkCsrfToken();
     $fns = glob(Coco_dataFolder().'????????_??????_' . $name . '.htm');
     foreach ($fns as $fn) {
         if (!unlink($fn)) {
@@ -156,7 +157,7 @@ function Coco_administration()
         $message = addcslashes(sprintf($ptx['confirm_delete'], $coco), "\n\r\t\\");
         $message = Coco_hsc($message);
         $js = 'return confirm(\'' . $message . '\')';
-        $alt = ucfirst($tx['action']['delete']); // FIXME
+        $alt = ucfirst($tx['action']['delete']);
         $o .= '<li>'
             . '<form action="' . $url . '" method="POST" onsubmit="' . $js . '">'
             . tag('input type="hidden" name="action" value="delete"')
@@ -165,6 +166,7 @@ function Coco_administration()
                 'input type="image" src="' . $pth['folder']['plugins']
                 . 'coco/images/delete.png" alt="' . $alt . '" title="' . $alt . '"'
             )
+            . Coco_renderCsrfTokenInput()
             . '</form>' . $coco . '</li>' . PHP_EOL;
     }
     $o .= '</ul>' . PHP_EOL . '</div>' . PHP_EOL;
