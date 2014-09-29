@@ -8,7 +8,7 @@
  * @category  CMSimple_XH
  * @package   Coco
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
- * @copyright 2012-2013 Christoph M. Becker <http://3-magi.net>
+ * @copyright 2012-2014 Christoph M. Becker <http://3-magi.net>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @version   SVN: $Id$
  * @link      http://3-magi.net/?CMSimple_XH/Coco_XH
@@ -195,7 +195,7 @@ function Coco_cocos()
  *
  * @param string $name A co-content name.
  * @param int    $i    A page index.
- * 
+ *
  * @return string
  *
  * @global array  The configuration of the core.
@@ -234,7 +234,7 @@ function Coco_get($name, $i)
  * @param string $name A co-content name.
  * @param int    $i    A page index.
  * @param string $text A new co-content.
- * 
+ *
  * @return void
  *
  * @global array  The paths of system files and folders.
@@ -337,7 +337,7 @@ function Coco_backup()
  * @param string $name   A co-content name.
  * @param string $config An editor configuration.
  * @param string $height An editor height as CSS length.
- * 
+ *
  * @return string (X)HTML.
  *
  * @global bool   Whether we're in admin mode.
@@ -347,7 +347,7 @@ function Coco_backup()
  * @global string The (X)HTML fragment containing error messages.
  * @global array  The localization of the core.
  * @global array  The localiaztion of the plugins.
- * 
+ *
  * @access public
  */
 function coco($name, $config = false, $height = '100%')
@@ -383,7 +383,7 @@ function coco($name, $config = false, $height = '100%')
             );
         }
         $o .= '</form>' . PHP_EOL;
-        
+
         if ($er) {
             $o .= '<script type="text/javascript">/* <![CDATA[ */' . PHP_EOL
                 . $er . PHP_EOL . '/* ]]> */</script>' . PHP_EOL;
