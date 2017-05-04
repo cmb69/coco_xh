@@ -27,109 +27,6 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 define('COCO_VERSION', '@COCO_VERSION@');
 
 /**
- * Returns a text with HTML special chars encoded as entities.
- *
- * @param string $text A text.
- *
- * @return string (X)HTML.
- */
-function Coco_hsc($text)
-{
-    if (function_exists('XH_hsc')) {
-        return XH_hsc($text);
-    } else {
-        return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
-    }
-}
-
-/**
- * Returns a message with appropriate markup.
- *
- * @param string $message A message.
- *
- * @return string (X)HTML.
- */
-function Coco_renderInfoMessage($message)
-{
-    if (function_exists('XH_message')) {
-        return XH_message('info', $message);
-    } else {
-        return '<p>' . Coco_hsc($message) . '</p>';
-    }
-}
-
-/**
- * Renders a CSRF token input field.
- *
- * @return string (X)HTML.
- *
- * @global XH_CSRFProtection The CSRF protector.
- */
-function Coco_renderCsrfTokenInput()
-{
-    global $_XH_csrfProtection;
-
-    if (isset($_XH_csrfProtection)) {
-        return $_XH_csrfProtection->tokenInput();
-    } else {
-        return '';
-    }
-}
-
-/**
- * Checks the CSRF token, and exits the script on failure.
- *
- * @return void
- *
- * @global XH_CSRFProtection The CSRF protector.
- */
-function Coco_checkCsrfToken()
-{
-    global $_XH_csrfProtection;
-
-    if (isset($_XH_csrfProtection)) {
-        $_XH_csrfProtection->check();
-    }
-}
-
-/**
- * Returns a text with scripting evaluated, if evaluate_scripting() is defined;
- * otherwise returns the text unmodified.
- *
- * @param string $text A text.
- *
- * @return string
- */
-function Coco_evaluateScripting($text)
-{
-    if (function_exists('evaluate_scripting')) {
-        return evaluate_scripting($text);
-    } else {
-        return $text;
-    }
-}
-
-/**
- * Returns the remaining contents of a stream.
- *
- * @param resource $stream An open stream.
- *
- * @return string
- */
-function Coco_getStreamContents($stream)
-{
-    $func = 'stream_get_contents';
-    if (function_exists($func)) {
-        $contents = $func($stream);
-    } else {
-        ob_start();
-        fpassthru($stream);
-        $contents = ob_get_clean();
-    }
-    return $contents;
-}
-
-/**
  * Reads a file and returns its contents; <var>false</var> on failure.
  * During reading, the file is locked for shared access.
  *
@@ -143,7 +40,7 @@ function Coco_readFile($filename)
     $stream = fopen($filename, 'rb');
     if ($stream) {
         if (flock($stream, LOCK_SH)) {
-            $contents = XH_getStreamContents($stream);
+            $contents = stream_get_contents($stream);
             flock($stream, LOCK_UN);
         }
         fclose($stream);
@@ -163,12 +60,9 @@ function Coco_readFile($filename)
 function Coco_writeFile($filename, $contents)
 {
     $res = false;
-    // we can't use "cb" as it is available only since PHP 5.2.6
-    // we can't use "r+b" as it will fail if the file does not already exist
-    $stream = fopen($filename, 'a+b');
+    $stream = fopen($filename, 'cb');
     if ($stream) {
         if (flock($stream, LOCK_EX)) {
-            fseek($stream, 0);
             ftruncate($stream, 0);
             $res = fwrite($stream, $contents);
             fflush($stream);
@@ -177,19 +71,6 @@ function Coco_writeFile($filename, $contents)
         fclose($stream);
     }
     return $res;
-}
-
-/**
- * Returns whether the core is a certain CMSimple_XH version at least.
- *
- * @param string $version A version number.
- *
- * @return bool
- */
-function Coco_hasXHVersion($version)
-{
-    return strpos(CMSIMPLE_XH_VERSION, 'CMSimple_XH') === 0
-        && version_compare(CMSIMPLE_XH_VERSION, 'CMSimple_XH ' . $version, '>=');
 }
 
 /**
@@ -377,14 +258,16 @@ function Coco_backup()
     foreach (Coco_cocos() as $coco) {
         $fn = $dir . $backupDate . '_' . $coco . '.htm';
         if (copy($dir . $coco . '.htm', $fn)) {
-            $o .= Coco_renderInfoMessage(
+            $o .= XH_message(
+                'info', 
                 ucfirst($tx['filetype']['backup']) . ' ' . $fn . ' '
                 . $tx['result']['created']
             ) . PHP_EOL;
             $bus = glob($dir . '????????_??????_' . $coco . '.htm');
             for ($i = 0; $i < count($bus) - $cf['backup']['numberoffiles']; $i++) {
                 if (unlink($bus[$i])) {
-                    $o .= Coco_renderInfoMessage(
+                    $o .= XH_message(
+                        'info',
                         ucfirst($tx['filetype']['backup']) . ' ' . $bus[$i]
                         . ' ' . $tx['result']['deleted']
                     ) . PHP_EOL;
@@ -421,7 +304,7 @@ function Coco_backup()
  */
 function coco($name, $config = false, $height = '100%')
 {
-    global $adm, $edit, $s, $cl, $e, $tx, $plugin_tx;
+    global $adm, $edit, $s, $cl, $e, $tx, $plugin_tx, $_XH_csrfProtection;
 
     if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
         return '<div class="cmsimplecore_warning">'
@@ -433,7 +316,7 @@ function coco($name, $config = false, $height = '100%')
     $o = '';
     if ($adm && $edit) {
         if (isset($_POST['coco_text_' . $name])) {
-            Coco_checkCsrfToken();
+            $_XH_csrfProtection->check();
             Coco_set($name, $s, stsl($_POST['coco_text_' . $name]));
         }
         $id = 'coco_text_' . $name;
@@ -444,7 +327,7 @@ function coco($name, $config = false, $height = '100%')
         $o .= '<form action="" method="POST">' . PHP_EOL
             . '<textarea id="' . $id . '" name="coco_text_' . $name . '" style="'
             . $style.'">'
-            . Coco_hsc(Coco_get($name, $s))
+            . XH_hsc(Coco_get($name, $s))
             . '</textarea>' . PHP_EOL;
         if (!$er) {
             $o .= tag(
@@ -452,18 +335,18 @@ function coco($name, $config = false, $height = '100%')
                 . ucfirst($tx['action']['save']) . '"'
             );
         }
-        $o .= Coco_renderCsrfTokenInput() . '</form>' . PHP_EOL;
+        $o .= $_XH_csrfProtection->tokenInput() . '</form>' . PHP_EOL;
 
         if ($er) {
             $o .= '<script type="text/javascript">/* <![CDATA[ */' . PHP_EOL
                 . $er . PHP_EOL . '/* ]]> */</script>' . PHP_EOL;
         }
     } else {
-        $text = Coco_evaluateScripting(Coco_get($name, $s));
+        $text = evaluate_scripting(Coco_get($name, $s));
         if (isset($_GET['search'])) {
-            $class = Coco_hasXHVersion('1.6rc1') ? 'xh_find' : 'highlight_search';
+            $class = 'xh_find';
             $search = urldecode($_GET['search']);
-            $search = Coco_hsc($search);
+            $search = XH_hsc($search);
             $words = explode(',', $search);
             $func = create_function(
                 '$w', 'return "/" . preg_quote($w, "/") . "(?!([^<]+)?>)/isU";'
@@ -486,10 +369,7 @@ $pd_router->add_interest('coco_id');
 /*
  * Create and delete backups.
  */
-$temp = Coco_hasXHVersion('1.6dev');
-if ($temp && $f == 'xh_loggedout'
-    || !$temp && $logout && $_COOKIE['status'] == 'adm' && logincheck()
-) {
+if ($f == 'xh_loggedout') {
     $o .= Coco_backup();
 }
 

@@ -115,7 +115,9 @@ function Coco_systemCheck()
  */
 function Coco_delete($name)
 {
-    Coco_checkCsrfToken();
+    global $_XH_csrfProtection;
+
+    $_XH_csrfProtection->check();
     $fns = glob(Coco_dataFolder().'????????_??????_' . $name . '.htm');
     foreach ($fns as $fn) {
         if (!unlink($fn)) {
@@ -142,7 +144,7 @@ function Coco_delete($name)
  */
 function Coco_administration()
 {
-    global $sn, $pth, $tx, $plugin_tx;
+    global $sn, $pth, $tx, $plugin_tx, $_XH_csrfProtection;
 
     $ptx = $plugin_tx['coco'];
     if (isset($_POST['action']) && $_POST['action'] == 'delete') {
@@ -154,7 +156,7 @@ function Coco_administration()
     foreach (Coco_cocos() as $coco) {
         $url = $sn . '?&amp;coco&amp;admin=plugin_main';
         $message = addcslashes(sprintf($ptx['confirm_delete'], $coco), "\n\r\t\\");
-        $message = Coco_hsc($message);
+        $message = XH_hsc($message);
         $js = 'return confirm(\'' . $message . '\')';
         $alt = ucfirst($tx['action']['delete']);
         $o .= '<li>'
@@ -165,27 +167,19 @@ function Coco_administration()
                 'input type="image" src="' . $pth['folder']['plugins']
                 . 'coco/images/delete.png" alt="' . $alt . '" title="' . $alt . '"'
             )
-            . Coco_renderCsrfTokenInput()
+            . $_XH_csrfProtection->tokenInput()
             . '</form>' . $coco . '</li>' . PHP_EOL;
     }
     $o .= '</ul>' . PHP_EOL . '</div>' . PHP_EOL;
     return $o;
 }
 
-/*
- * Register plugin menu items.
- */
-if (function_exists('XH_registerStandardPluginMenuItems')) {
-    XH_registerStandardPluginMenuItems(true);
-}
+XH_registerStandardPluginMenuItems(true);
 
 /*
  * Handle the plugin administration.
  */
-if (function_exists('XH_wantsPluginAdministration')
-    && XH_wantsPluginAdministration('coco')
-    || isset($coco) && $coco == 'true'
-) {
+if (XH_wantsPluginAdministration('coco')) {
     $o .= print_plugin_admin('on');
     switch ($admin) {
     case '':

@@ -63,7 +63,7 @@ function Coco_decodeEntities($text)
  */
 function Coco_search($words, $text)
 {
-    $text = strip_tags(Coco_evaluateScripting($text));
+    $text = strip_tags(evaluate_scripting($text));
     $text = Coco_decodeEntities($text, ENT_QUOTES, 'UTF-8');
     $text = utf8_strtolower($text, 'UTF-8');
     foreach ($words as $word) {
