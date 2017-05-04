@@ -8,7 +8,7 @@
  * @category  CMSimple_XH
  * @package   Coco
  * @author    Christoph M. Becker <cmbecker69@gmx.de>
- * @copyright 2012-2014 Christoph M. Becker <http://3-magi.net>
+ * @copyright 2012-2017 Christoph M. Becker <http://3-magi.net>
  * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
  * @link      http://3-magi.net/?CMSimple_XH/Coco_XH
  */
@@ -41,7 +41,7 @@ function Coco_version()
             . $plugin_tx['coco']['alt_logo'] . '"'
         )
         . '<p>Version: ' . COCO_VERSION . '</p>' . PHP_EOL
-        . '<p>Copyright &copy; 2012-2014 <a href="http://3-magi.net">'
+        . '<p>Copyright &copy; 2012-2017 <a href="http://3-magi.net">'
         . 'Christoph M. Becker</a></p>' . PHP_EOL
         . '<p class="coco_license">This program is free software:'
         . ' you can redistribute it and/or modify'
