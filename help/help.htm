@@ -54,11 +54,7 @@ wiki</a> for further details.</p>
 <li>Unzip the distribution on your computer.</li>
 <li>Upload the whole directory coco/ to your server into CMSimple_XH's plugins
 directory.</li>
-<li>Set write permissions to the subdirectories config/, css/, languages/ and
-the plugin's data folder.</li>
-<li>Protect Coco_XH's data folder against direct access by any means your
-webserver provides. An .htaccess file for Apache servers is already distributed
-in the default data folder.</li>
+<li>Set write permissions to the subfolders css/ and languages/.</li>
 <li>Switch to "Coco" in the back-end to check if all requirements are
 fulfilled.</li>
 </ol>
@@ -69,8 +65,10 @@ fulfilled.</li>
 <h2>Settings</h2>
 <p>The plugin's configuration is done as with many other CMSimple_XH plugins in
 the website's back-end. Select Plugins &rarr; Coco.</p>
+<!--
 <p>You can change the default settings of Coco_XH under "Config". Hints for the
 options will be displayed when hovering over the help icon with your mouse.</p>
+-->
 <p>Localization is done under "Language". You can translate the character
 strings to your own language (if there is no appropriate language file
 available), or customize them according to your needs.</p>
@@ -111,7 +109,7 @@ e.g.</p>
 If you want to stick with the default toolbar, you can write:</p>
 <div class="code">&lt;?php echo coco('my_content', false, '500px');?&gt;</div>
 <p>If you want to change the width, you can do so in the stylesheet.</p>
-<p>The co-contents are stored in Coco_XH's data folder in an (X)HTML file with
+<p>The co-contents are stored in the subfolder coco/ of the content/ folder of CMSimple_XH in an HTML file with
 the name given as first parameter, e.g. my_content.htm. The structure is similar
 to that of CMSimple's content.htm file. The pages are separated by &lt;h1&gt;,
 &lt;h2&gt; or &lt;h3&gt; according to their menu level. (Therefore it's not

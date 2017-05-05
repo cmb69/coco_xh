@@ -38,18 +38,9 @@ define('COCO_VERSION', '@COCO_VERSION@');
  */
 function Coco_dataFolder()
 {
-    global $pth, $sl, $cf, $plugin_cf;
+    global $pth, $sl, $cf;
 
-    $pcf = $plugin_cf['coco'];
-
-    if ($pcf['folder_data'] == '') {
-        $fn = $pth['folder']['plugins'] . 'coco/data/';
-    } else {
-        $fn = $pth['folder']['base'] . $pcf['folder_data'];
-    }
-    if (substr($fn, -1) != '/') {
-        $fn .= '/';
-    }
+    $fn = $pth['folder']['content'] . 'coco/';
     if (file_exists($fn)) {
         if (!is_dir($fn)) {
             e('cntopen', 'folder', $fn);
@@ -57,18 +48,6 @@ function Coco_dataFolder()
     } else {
         if (!mkdir($fn, 0777, true)) {
             e('cntwriteto', 'folder', $fn);
-        }
-    }
-    if ($sl != $cf['language']['default']) {
-        $fn .= $sl . '/';
-        if (file_exists($fn)) {
-            if (!is_dir($fn)) {
-                e('cntopen', 'folder', $fn);
-            }
-        } else {
-            if (!mkdir($fn, 0777, true)) {
-                e('cntwriteto', 'folder', $fn);
-            }
         }
     }
     return $fn;

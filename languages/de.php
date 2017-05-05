@@ -25,6 +25,4 @@ $plugin_tx['coco']['search_pgplural']="Seiten";
 $plugin_tx['coco']['search_pgsingular']="Seite";
 $plugin_tx['coco']['search_result']="Suchergebnis";
 
-$plugin_tx['coco']['cf_folder_data']="Pfad zu einem Ordner relativ zum CMSimple Wurzelverzeichnis, in dem die Plugin-Daten gespeichert werden. Z.B. \"userfiles/coco/\". Leer lassen, um in den data/ Ordner des Plugins zu speichern.";
-
 ?>

@@ -55,11 +55,8 @@ Wiki</a> finden sie ausführliche Hinweise.</p>
 <li>Entpacken Sie die ZIP-Datei auf Ihrem Computer.</li>
 <li>Laden Sie das gesamte Verzeichnis coco/ auf Ihren Server in das
 CMSimple_XH-Plugin-Verzeichnis hoch.</li>
-<li>Vergeben Sie falls nötig Schreibrechte für die Unterverzeichnisse config/,
-css/, languages/ und den Daten-Ordner des Plugins.</li>
-<li>Schützen Sie Coco_XHs Daten-Ordner vor direktem Zugriff auf eine Weise, die
-Ihr Webserver unterstützt. Eine .htaccess-Datei für Apache Server ist bereits im
-voreingestellten Daten-Ordner enthalten.</li>
+<li>Vergeben Sie falls nötig Schreibrechte für die Unterordner
+css/ und languages/.</li>
 <li>Gehen Sie zu "Coco" im Administrationsbereich, und prüfen Sie, ob alle
 Voraussetzungen erfüllt sind.</li>
 </ol>
@@ -71,9 +68,11 @@ Voraussetzungen erfüllt sind.</li>
 <p>Die Konfiguration des Plugins erfolgt wie bei vielen anderen
 CMSimple_XH-Plugins auch im Administrationsbereich der Homepage. Wählen Sie
 Plugins &rarr; Coco.</p>
+<!--
 <p>Sie können die Voreinstellungen von Coco_XH unter "Konfiguration" ändern.
 Beim Überfahren der Hilfe-Icons mit der Maus werden Hinweise zu den
 Einstellungen angezeigt.</p>
+-->
 <p>Die Lokalisierung wird unter "Sprache" vorgenommen. Sie können die
 Zeichenketten in Ihre eigene Sprache übersetzen (falls keine entsprechende
 Sprachdatei zur Verfügung steht), oder sie entsprechend Ihren Anforderungen
@@ -119,7 +118,7 @@ Toolbar-Parameter übergeben. Wenn Sie bei der Standard-Toolbar bleiben möchten
 schreiben Sie einfach:</p>
 <div class="code">&lt;?php echo coco('mein_content', false, '500px');?&gt;</div>
 <p>Möchten Sie die Breite ändern, können Sie das im Stylesheet tun.</p>
-<p>Die Co-Contents werden in Coco_XHs Datenordner in einer (X)HTML-Datei mit dem
+<p>Die Co-Contents werden im Unterordner coco/ des content/ Ordners von CMSimple_XH in einer HTML-Datei mit dem
 Namen, der als erster Parameter angegeben wurde, gespeichert, z.B.
 mein_content.htm. Die Struktur ist ähnlich zu derjenigen der CMSimple
 content.htm-Datei. Die Seiten werden entsprechend Ihrer Menüebene durch
