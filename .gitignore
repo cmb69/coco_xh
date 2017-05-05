@@ -1,4 +1,2 @@
-*.komodoproject
-.komodotools
 tests/coverage
 vendor
