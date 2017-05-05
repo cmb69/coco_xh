@@ -27,53 +27,6 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 define('COCO_VERSION', '@COCO_VERSION@');
 
 /**
- * Reads a file and returns its contents; <var>false</var> on failure.
- * During reading, the file is locked for shared access.
- *
- * @param string $filename A file path.
- *
- * @return string
- */
-function Coco_readFile($filename)
-{
-    $contents = false;
-    $stream = fopen($filename, 'rb');
-    if ($stream) {
-        if (flock($stream, LOCK_SH)) {
-            $contents = stream_get_contents($stream);
-            flock($stream, LOCK_UN);
-        }
-        fclose($stream);
-    }
-    return $contents;
-}
-
-/**
- * Writes <var>$contents</var> to the file <var>$filename</var>.
- * During writing the file is locked exclusively.
- *
- * @param string $filename The filename.
- * @param string $contents The content to write.
- *
- * @return int The number of bytes written, or false on failure.
- */
-function Coco_writeFile($filename, $contents)
-{
-    $res = false;
-    $stream = fopen($filename, 'cb');
-    if ($stream) {
-        if (flock($stream, LOCK_EX)) {
-            ftruncate($stream, 0);
-            $res = fwrite($stream, $contents);
-            fflush($stream);
-            flock($stream, LOCK_UN);
-        }
-        fclose($stream);
-    }
-    return $res;
-}
-
-/**
  * Returns the path of the data folder.
  *
  * @return string
@@ -164,7 +117,7 @@ function Coco_get($name, $i)
     if ($name != $curname) {
         $curname = $name;
         $fn = Coco_dataFolder() . $name . '.htm';
-        if (!is_readable($fn) || ($text = Coco_readFile($fn)) === false) {
+        if (!is_readable($fn) || ($text = XH_readFile($fn)) === false) {
             e('cntopen', 'file', $fn);
             return false;
         }
@@ -199,7 +152,7 @@ function Coco_set($name, $i, $text)
     global $pth, $cl, $l, $h, $cf, $pd_router;
 
     $fn = Coco_dataFolder() . $name . '.htm';
-    $old = is_readable($fn) ? Coco_readFile($fn) : '';
+    $old = is_readable($fn) ? XH_readFile($fn) : '';
     $ml = $cf['menu']['levels'];
     $cnt = '<html>' . PHP_EOL . '<body>' . PHP_EOL;
     for ($j = 0; $j < $cl; $j++) {
@@ -233,7 +186,7 @@ function Coco_set($name, $i, $text)
         }
     }
     $cnt .= '</body>' . PHP_EOL . '</html>' . PHP_EOL;
-    if (Coco_writeFile($fn, $cnt) !== false) {
+    if (XH_writeFile($fn, $cnt) !== false) {
         touch($pth['file']['content']);
     } else {
         e('cntwriteto', 'file', $fn);
