@@ -72,7 +72,7 @@ function Coco_systemCheck()
 {
     global $pth, $tx, $plugin_tx;
 
-    define('COCO_PHP_VERSION', '4.3.10');
+    define('COCO_PHP_VERSION', '5.4.0');
     $ptx = $plugin_tx['coco'];
     $imgdir = $pth['folder']['plugins'] . 'coco/images/';
     $ok = tag('img src="' . $imgdir . 'ok.png" alt="ok"');
@@ -81,18 +81,15 @@ function Coco_systemCheck()
     $o = '<h4>' . $ptx['syscheck_title'] . '</h4>'
         . (version_compare(PHP_VERSION, COCO_PHP_VERSION) >= 0 ? $ok : $fail)
         . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_phpversion'], COCO_PHP_VERSION)
-        . tag('br') . tag('br') . PHP_EOL;
-    foreach (array('pcre') as $ext) {
+        . tag('br') . PHP_EOL;
+    foreach (array() as $ext) {
         $o .= (extension_loaded($ext) ? $ok : $fail)
             . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_extension'], $ext)
             . tag('br') . PHP_EOL;
     }
     $o .= tag('br')
         . (strtoupper($tx['meta']['codepage']) == 'UTF-8' ? $ok : $warn)
-        . '&nbsp;&nbsp;' . $ptx['syscheck_encoding'] . tag('br') . PHP_EOL;
-    $o .= (!get_magic_quotes_runtime() ? $ok : $fail)
-        . '&nbsp;&nbsp;' . $ptx['syscheck_magic_quotes']
-        . tag('br') . tag('br') . PHP_EOL;
+        . '&nbsp;&nbsp;' . $ptx['syscheck_encoding'] . tag('br') . tag('br') . PHP_EOL;
     foreach (array('config/', 'css/', 'languages/') as $folder) {
         $folders[] = $pth['folder']['plugins'] . 'coco/' . $folder;
     }
@@ -148,7 +145,7 @@ function Coco_administration()
 
     $ptx = $plugin_tx['coco'];
     if (isset($_POST['action']) && $_POST['action'] == 'delete') {
-        Coco_delete(stsl($_POST['coco_name']));
+        Coco_delete($_POST['coco_name']);
     }
     $o = '<h1>Coco &ndash; ' . $ptx['menu_main'] . '</h1>' . PHP_EOL
         . '<div id="coco_admin_cocos">' . PHP_EOL;

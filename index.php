@@ -129,9 +129,13 @@ function Coco_dataFolder()
 function Coco_cocos()
 {
     $cocos = glob(Coco_dataFolder() . '*.htm');
-    $func = create_function('$fn', 'return basename($fn, \'.htm\');');
+    $func = function ($fn) {
+        return basename($fn, '.htm');
+    };                        
     $cocos = array_map($func, $cocos);
-    $func = create_function('$fn', 'return !preg_match(\'/^\d{8}_\d{6}_/\', $fn);');
+    $func = function ($fn) {
+        return !preg_match('/^\d{8}_\d{6}_/', $fn);
+    };
     $cocos = array_filter($cocos, $func);
     return $cocos;
 }
@@ -317,7 +321,7 @@ function coco($name, $config = false, $height = '100%')
     if ($adm && $edit) {
         if (isset($_POST['coco_text_' . $name])) {
             $_XH_csrfProtection->check();
-            Coco_set($name, $s, stsl($_POST['coco_text_' . $name]));
+            Coco_set($name, $s, $_POST['coco_text_' . $name]);
         }
         $id = 'coco_text_' . $name;
         $style = 'width:100%; height:' . $height;
@@ -348,9 +352,9 @@ function coco($name, $config = false, $height = '100%')
             $search = urldecode($_GET['search']);
             $search = XH_hsc($search);
             $words = explode(',', $search);
-            $func = create_function(
-                '$w', 'return "/" . preg_quote($w, "/") . "(?!([^<]+)?>)/isU";'
-            );
+            $func = function($w) {
+                return "/" . preg_quote($w, "/") . "(?!([^<]+)?>)/isU";
+            };
             $words = array_map($func, $words);
             $text = preg_replace(
                 $words, '<span class="' . $class . '">\\0</span>', $text

@@ -121,7 +121,7 @@ function Coco_searchResults()
 
     $ptx = $plugin_tx['coco'];
     $o = '';
-    $words = preg_split('/\s+/isu', stsl($search), null, PREG_SPLIT_NO_EMPTY);
+    $words = preg_split('/\s+/isu', $search, null, PREG_SPLIT_NO_EMPTY);
     $ta = Coco_searchContent(null, $words);
     foreach (Coco_cocos() as $name) {
         $ta = array_merge($ta, Coco_searchContent($name, $words));
