@@ -308,61 +308,22 @@ function Coco_backup()
  */
 function coco($name, $config = false, $height = '100%')
 {
-    global $adm, $edit, $s, $cl, $e, $tx, $plugin_tx, $_XH_csrfProtection;
+    global $adm, $edit, $s, $cl, $plugin_tx;
 
     if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
-        return '<div class="cmsimplecore_warning">'
-            . $plugin_tx['coco']['error_invalid_name'] . '</div>' . PHP_EOL;
+        return XH_message('fail', $plugin_tx['coco']['error_invalid_name']);
     }
     if ($s < 0 || $s >= $cl) {
         return '';
     }
-    $o = '';
+    $controller = new Coco\MainController($name, $config, $height);
+    ob_start();
     if ($adm && $edit) {
-        if (isset($_POST['coco_text_' . $name])) {
-            $_XH_csrfProtection->check();
-            Coco_set($name, $s, $_POST['coco_text_' . $name]);
-        }
-        $id = 'coco_text_' . $name;
-        $style = 'width:100%; height:' . $height;
-        $er = function_exists('editor_replace')
-            ? editor_replace($id, $config)
-            : false;
-        $o .= '<form action="" method="POST">' . PHP_EOL
-            . '<textarea id="' . $id . '" name="coco_text_' . $name . '" style="'
-            . $style.'">'
-            . XH_hsc(Coco_get($name, $s))
-            . '</textarea>' . PHP_EOL;
-        if (!$er) {
-            $o .= tag(
-                'input type="submit" class="submit" value="'
-                . ucfirst($tx['action']['save']) . '"'
-            );
-        }
-        $o .= $_XH_csrfProtection->tokenInput() . '</form>' . PHP_EOL;
-
-        if ($er) {
-            $o .= '<script type="text/javascript">/* <![CDATA[ */' . PHP_EOL
-                . $er . PHP_EOL . '/* ]]> */</script>' . PHP_EOL;
-        }
+        $controller->editAction();
     } else {
-        $text = evaluate_scripting(Coco_get($name, $s));
-        if (isset($_GET['search'])) {
-            $class = 'xh_find';
-            $search = urldecode($_GET['search']);
-            $search = XH_hsc($search);
-            $words = explode(',', $search);
-            $func = function($w) {
-                return "/" . preg_quote($w, "/") . "(?!([^<]+)?>)/isU";
-            };
-            $words = array_map($func, $words);
-            $text = preg_replace(
-                $words, '<span class="' . $class . '">\\0</span>', $text
-            );
-        }
-        $o .= $text;
+        $controller->defaultAction();
     }
-    return $o;
+    return ob_get_clean();
 }
 
 /*
