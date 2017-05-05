@@ -22,64 +22,22 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 }
 
 /**
- * Returns the plugin's version information view.
+ * Returns the plugin's information view.
  *
  * @return string (X)HTML.
  *
  * @global array The paths of system files and folders.
  * @global array The localization of the plugins.
  */
-function Coco_version()
+function Coco_info()
 {
     global $pth;
 
     $view = new Coco\View('info');
     $view->logo = $pth['folder']['plugins'] . 'coco/coco.png';
     $view->version = COCO_VERSION;
+    $view->checks = (new Coco\SystemCheckService)->getChecks();
     return (string) $view;
-}
-
-/**
- * Returns the requirements information view.
- *
- * @return string (X)HTML.
- *
- * @global array The paths of system files and folders.
- * @global array The localization of the core.
- * @global array The localization of the plugins.
- */
-function Coco_systemCheck()
-{
-    global $pth, $tx, $plugin_tx;
-
-    define('COCO_PHP_VERSION', '5.4.0');
-    $ptx = $plugin_tx['coco'];
-    $imgdir = $pth['folder']['plugins'] . 'coco/images/';
-    $ok = tag('img src="' . $imgdir . 'ok.png" alt="ok"');
-    $warn = tag('img src="' . $imgdir . 'warn.png" alt="warning"');
-    $fail = tag('img src="' . $imgdir . 'fail.png" alt="failure"');
-    $o = '<h4>' . $ptx['syscheck_title'] . '</h4>'
-        . (version_compare(PHP_VERSION, COCO_PHP_VERSION) >= 0 ? $ok : $fail)
-        . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_phpversion'], COCO_PHP_VERSION)
-        . tag('br') . PHP_EOL;
-    foreach (array() as $ext) {
-        $o .= (extension_loaded($ext) ? $ok : $fail)
-            . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_extension'], $ext)
-            . tag('br') . PHP_EOL;
-    }
-    $o .= tag('br')
-        . (strtoupper($tx['meta']['codepage']) == 'UTF-8' ? $ok : $warn)
-        . '&nbsp;&nbsp;' . $ptx['syscheck_encoding'] . tag('br') . tag('br') . PHP_EOL;
-    foreach (array('config/', 'css/', 'languages/') as $folder) {
-        $folders[] = $pth['folder']['plugins'] . 'coco/' . $folder;
-    }
-    $folders[] = Coco_dataFolder();
-    foreach ($folders as $folder) {
-        $o .= (is_writable($folder) ? $ok : $warn)
-            . '&nbsp;&nbsp;' . sprintf($ptx['syscheck_writable'], $folder)
-            . tag('br') . PHP_EOL;
-    }
-    return $o;
 }
 
 /**
@@ -149,7 +107,7 @@ if (XH_wantsPluginAdministration('coco')) {
     $o .= print_plugin_admin('on');
     switch ($admin) {
     case '':
-        $o .= Coco_version() . tag('hr') . Coco_systemCheck();
+        $o .= Coco_info();
         break;
     case 'plugin_main':
         $o .= Coco_administration();

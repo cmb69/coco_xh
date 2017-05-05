@@ -19,3 +19,9 @@
     this program. If not, see <a
     href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a> .
 </p>
+<div class="coco_syscheck">
+    <h2><?=$this->text('syscheck_title')?></h2>
+<?php foreach ($this->checks as $check):?>
+    <p class="xh_<?=$this->escape($check->state)?>"><?=$this->text('syscheck_message', $check->label, $check->stateLabel)?></p>
+<?php endforeach?>
+</div>
