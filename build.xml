@@ -28,9 +28,8 @@
         </phpcodesniffer>
     </target>
 
-    <target name="compat" description="checks compatibility with PHP_CompatInfo 2">
-        <exec command="C:\xampp\php\phpcompatinfo --configuration phpcompatinfo.xml print --exclude-pattern coco ."
-              logoutput="true"/>
+    <target name="compat" description="ecks PHP requirements">
+        <exec command="phpcompatinfo analyser:run --alias current" logoutput="true"/>
     </target>
 
     <target name="attack-tests" description="runs all attack tests">
