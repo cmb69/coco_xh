@@ -1,16 +1,22 @@
 <?php
 
 /**
- * Front-End of Coco_XH.
+ * Copyright 2012-2017 Christoph M. Becker
  *
- * PHP versions 4 and 5
+ * This file is part of Coco_XH.
  *
- * @category  CMSimple_XH
- * @package   Coco
- * @author    Christoph M. Becker <cmbecker69@gmx.de>
- * @copyright 2012-2017 Christoph M. Becker <http://3-magi.net>
- * @license   http://www.gnu.org/licenses/gpl-3.0.en.html GNU GPLv3
- * @link      http://3-magi.net/?CMSimple_XH/Coco_XH
+ * Coco_XH is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Coco_XH is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
@@ -21,20 +27,10 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
     exit;
 }
 
-/**
- * The plugin version.
- */
 define('COCO_VERSION', '@COCO_VERSION@');
 
 /**
- * Returns the path of the data folder.
- *
  * @return string
- *
- * @global array  The paths of system files and folders.
- * @global string The current language.
- * @global array  The configuration of the core.
- * @global array  The configuration of the plugins.
  */
 function Coco_dataFolder()
 {
@@ -56,8 +52,6 @@ function Coco_dataFolder()
 }
 
 /**
- * Returns all available co-contents.
- *
  * @return array
  */
 function Coco_cocos()
@@ -65,7 +59,7 @@ function Coco_cocos()
     $cocos = glob(Coco_dataFolder() . '*.htm');
     $func = function ($fn) {
         return basename($fn, '.htm');
-    };                        
+    };
     $cocos = array_map($func, $cocos);
     $func = function ($fn) {
         return !preg_match('/^\d{8}_\d{6}_/', $fn);
@@ -75,15 +69,9 @@ function Coco_cocos()
 }
 
 /**
- * Returns the co-content of a page.
- *
- * @param string $name A co-content name.
- * @param int    $i    A page index.
- *
+ * @param string $name
+ * @param int $i
  * @return string
- *
- * @global array  The configuration of the core.
- * @global object The page data router.
  */
 function Coco_get($name, $i)
 {
@@ -107,26 +95,16 @@ function Coco_get($name, $i)
     preg_match(
         '/<h[1-' . $ml . '].*?id="' . $pd['coco_id'] . '".*?>.*?'
         . '<\/h[1-' . $ml . ']>(.*?)<(?:h[1-' . $ml . ']|\/body)/isu',
-        $text, $matches
+        $text,
+        $matches
     );
     return !empty($matches[1]) ? trim($matches[1]) : '';
 }
 
 /**
- * Saves a text as co-content of a page.
- *
- * @param string $name A co-content name.
- * @param int    $i    A page index.
- * @param string $text A new co-content.
- *
- * @return void
- *
- * @global array  The paths of system files and folders.
- * @global int    The number of pages.
- * @global array  The levels of the pages.
- * @global array  The headings of the pages.
- * @global array  The configuration of the core.
- * @global object The page data router.
+ * @param string $name
+ * @param int $i
+ * @param string $text
  */
 function Coco_set($name, $i, $text)
 {
@@ -145,13 +123,9 @@ function Coco_set($name, $i, $text)
         $cnt .= '<h' . $l[$j] . ' id="' . $pd['coco_id'] . '">' . $h[$j]
             . '</h' . $l[$j] . '>' . PHP_EOL;
         if ($j == $i) {
-            $text = preg_replace(
-                '/<h' . $ml . '.*?>.*?<\/h' . $ml . '>/isu', '', $text
-            );
+            $text = preg_replace('/<h' . $ml . '.*?>.*?<\/h' . $ml . '>/isu', '', $text);
             $text = trim($text);
-            $text = preg_replace(
-                '/(<\/?h)[1-' . $ml . ']/is', '${1}' . ($ml + 1), $text
-            );
+            $text = preg_replace('/(<\/?h)[1-' . $ml . ']/is', '${1}' . ($ml + 1), $text);
             if (!empty($text)) {
                 $cnt .= $text . PHP_EOL;
             }
@@ -159,7 +133,8 @@ function Coco_set($name, $i, $text)
             preg_match(
                 '/<h[1-' . $ml . '].*?id="' . $pd['coco_id'] . '".*?>.*?'
                 . '<\/h[1-' . $ml . ']>(.*?)<(?:h[1-' . $ml . ']|\/body)/isu',
-                $old, $matches
+                $old,
+                $matches
             );
             $cnt .= isset($matches[1]) && ($match = trim($matches[1])) != ''
                 ? $match . PHP_EOL
@@ -175,14 +150,7 @@ function Coco_set($name, $i, $text)
 }
 
 /**
- * Creates new backups of all co-contents and deletes superfluous ones.
- * Returns the success messages. Errors are signalled via e().
- *
  * @return string
- *
- * @global array  The configuration of the core.
- * @global array  The localization of the core.
- * @global string The backup date of the core (only available before XH 1.6).
  */
 function Coco_backup()
 {
@@ -197,7 +165,7 @@ function Coco_backup()
         $fn = $dir . $backupDate . '_' . $coco . '.htm';
         if (copy($dir . $coco . '.htm', $fn)) {
             $o .= XH_message(
-                'info', 
+                'info',
                 ucfirst($tx['filetype']['backup']) . ' ' . $fn . ' '
                 . $tx['result']['created']
             ) . PHP_EOL;
@@ -216,29 +184,15 @@ function Coco_backup()
         } else {
             e('cntsave', 'backup', $fn);
         }
-
     }
     return $o;
 }
 
 /**
- * Returns the co-content view depending on the mode.
- *
- * @param string $name   A co-content name.
- * @param string $config An editor configuration.
- * @param string $height An editor height as CSS length.
- *
- * @return string (X)HTML.
- *
- * @global bool   Whether we're in admin mode.
- * @global bool   Whether we're in edit mode.
- * @global int    The current page index.
- * @global int    The number of pages.
- * @global string The (X)HTML fragment containing error messages.
- * @global array  The localization of the core.
- * @global array  The localiaztion of the plugins.
- *
- * @access public
+ * @param string $name
+ * @param string $config
+ * @param string $height
+ * @return string
  */
 function coco($name, $config = false, $height = '100%')
 {
@@ -260,16 +214,8 @@ function coco($name, $config = false, $height = '100%')
     return ob_get_clean();
 }
 
-/*
- * Register the coco id in the page data.
- */
 $pd_router->add_interest('coco_id');
 
-/*
- * Create and delete backups.
- */
 if ($f == 'xh_loggedout') {
     $o .= Coco_backup();
 }
-
-?>

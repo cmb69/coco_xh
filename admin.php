@@ -29,26 +29,24 @@ XH_registerStandardPluginMenuItems(true);
 if (XH_wantsPluginAdministration('coco')) {
     $o .= print_plugin_admin('on');
     switch ($admin) {
-    case '':
-        ob_start();
-        (new Coco\InfoController)->defaultAction();
-        $o .= ob_get_clean();
-        break;
-    case 'plugin_main':
-        $temp = new Coco\MainAdminController;
-        ob_start();
-        switch ($action) {
-            case 'delete':
-                $temp->deleteAction();
-                break;
-            default:
-                $temp->defaultAction();
-        }
-        $o .= ob_get_clean();
-        break;
-    default:
-        $o .= plugin_admin_common($action, $admin, $plugin);
+        case '':
+            ob_start();
+            (new Coco\InfoController)->defaultAction();
+            $o .= ob_get_clean();
+            break;
+        case 'plugin_main':
+            $temp = new Coco\MainAdminController;
+            ob_start();
+            switch ($action) {
+                case 'delete':
+                    $temp->deleteAction();
+                    break;
+                default:
+                    $temp->defaultAction();
+            }
+            $o .= ob_get_clean();
+            break;
+        default:
+            $o .= plugin_admin_common($action, $admin, $plugin);
     }
 }
-
-?>
