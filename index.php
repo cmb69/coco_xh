@@ -34,7 +34,7 @@ define('COCO_VERSION', '@COCO_VERSION@');
  */
 function Coco_dataFolder()
 {
-    global $pth, $sl, $cf;
+    global $pth;
 
     $fn = $pth['folder']['content'] . 'coco/';
     if (file_exists($fn)) {

@@ -123,7 +123,7 @@ function Coco_searchContent($name, $words)
  */
 function Coco_searchResults()
 {
-    global $search, $sn, $h, $u, $plugin_cf, $plugin_tx;
+    global $search, $h, $plugin_tx;
 
     $ptx = $plugin_tx['coco'];
     $o = '';
