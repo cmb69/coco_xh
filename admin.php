@@ -31,32 +31,12 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
  */
 function Coco_version()
 {
-    global $pth, $plugin_tx;
+    global $pth;
 
-    $imagePath = $pth['folder']['plugins'] . 'coco/coco.png';
-    return '<h1>Coco &ndash; ' . $plugin_tx['coco']['label_info'] . '</h1>'
-        . PHP_EOL
-        . tag(
-            'img class="coco_plugin_icon" src="' . $imagePath . '" alt="'
-            . $plugin_tx['coco']['alt_logo'] . '"'
-        )
-        . '<p>Version: ' . COCO_VERSION . '</p>' . PHP_EOL
-        . '<p>Copyright &copy; 2012-2017 <a href="http://3-magi.net">'
-        . 'Christoph M. Becker</a></p>' . PHP_EOL
-        . '<p class="coco_license">This program is free software:'
-        . ' you can redistribute it and/or modify'
-        . ' it under the terms of the GNU General Public License as published by'
-        . ' the Free Software Foundation, either version 3 of the License, or'
-        . ' (at your option) any later version.</p>' . PHP_EOL
-        . '<p class="coco_license">This program is distributed'
-        . ' in the hope that it will be useful,'
-        . ' but <em>without any warranty</em>; without even the implied warranty of'
-        . ' <em>merchantability</em> or <em>fitness for a particular purpose</em>.'
-        . ' See the GNU General Public License for more details.</p>' . PHP_EOL
-        . '<p class="coco_license"">You should have received a copy of the'
-        . ' GNU General Public License along with this program.  If not, see'
-        . ' <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>'
-        . '.</p>' . PHP_EOL;
+    $view = new Coco\View('info');
+    $view->logo = $pth['folder']['plugins'] . 'coco/coco.png';
+    $view->version = COCO_VERSION;
+    return (string) $view;
 }
 
 /**
@@ -143,32 +123,21 @@ function Coco_administration()
 {
     global $sn, $pth, $tx, $plugin_tx, $_XH_csrfProtection;
 
-    $ptx = $plugin_tx['coco'];
     if (isset($_POST['action']) && $_POST['action'] == 'delete') {
         Coco_delete($_POST['coco_name']);
     }
-    $o = '<h1>Coco &ndash; ' . $ptx['menu_main'] . '</h1>' . PHP_EOL
-        . '<div id="coco_admin_cocos">' . PHP_EOL;
-    $o .= '<ul>' . PHP_EOL;
+    $view = new Coco\View('admin');
+    $view->csrfTokenInput = new Coco\HtmlString($_XH_csrfProtection->tokenInput());
+    $view->url = "$sn?&amp;coco&amp;admin=plugin_main";
+    $view->deleteIcon = "{$pth['folder']['plugins']}coco/images/delete.png";
+    $view->alt = ucfirst($tx['action']['delete']);
+    $cocos = [];
     foreach (Coco_cocos() as $coco) {
-        $url = $sn . '?&amp;coco&amp;admin=plugin_main';
-        $message = addcslashes(sprintf($ptx['confirm_delete'], $coco), "\n\r\t\\");
-        $message = XH_hsc($message);
-        $js = 'return confirm(\'' . $message . '\')';
-        $alt = ucfirst($tx['action']['delete']);
-        $o .= '<li>'
-            . '<form action="' . $url . '" method="POST" onsubmit="' . $js . '">'
-            . tag('input type="hidden" name="action" value="delete"')
-            . tag('input type="hidden" name="coco_name" value="' . $coco . '"')
-            . tag(
-                'input type="image" src="' . $pth['folder']['plugins']
-                . 'coco/images/delete.png" alt="' . $alt . '" title="' . $alt . '"'
-            )
-            . $_XH_csrfProtection->tokenInput()
-            . '</form>' . $coco . '</li>' . PHP_EOL;
+        $message = addcslashes(sprintf($plugin_tx['coco']['confirm_delete'], $coco), "\n\r\t\\");
+        $cocos[] = (object) ['name' => $coco, 'message' => $message];
     }
-    $o .= '</ul>' . PHP_EOL . '</div>' . PHP_EOL;
-    return $o;
+    $view->cocos = $cocos;
+    return (string) $view;
 }
 
 XH_registerStandardPluginMenuItems(true);
