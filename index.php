@@ -46,7 +46,9 @@ function Coco_dataFolder()
             e('cntopen', 'folder', $fn);
         }
     } else {
-        if (!mkdir($fn, 0777, true)) {
+        if (mkdir($fn, 0777, true)) {
+            chmod($fn, 0777);
+        } else {
             e('cntwriteto', 'folder', $fn);
         }
     }
