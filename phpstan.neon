@@ -1,9 +1,11 @@
 parameters:
-  level: 0
+  level: 1
   paths:
     - classes/
     - index.php
     - search.php
+  bootstrapFiles:
+    - .phpstan/bootstrap.php
   scanFiles:
     - ../../cmsimple/adminfuncs.php
     - ../../cmsimple/functions.php

@@ -31,7 +31,7 @@ use Coco\Plugin;
 
 /**
  * @param string $name
- * @param string $config
+ * @param string|false $config
  * @param string $height
  * @return string
  */

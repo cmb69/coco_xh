@@ -39,7 +39,7 @@ final class Plugin
             $o .= Plugin::backup();
         }
 
-        if (XH_ADM) {
+        if (XH_ADM) { // @phpstan-ignore-line
             XH_registerStandardPluginMenuItems(true);
             if (XH_wantsPluginAdministration('coco')) {
                 self::handlePluginAdministration();
@@ -74,7 +74,7 @@ final class Plugin
                 $o .= ob_get_clean();
                 break;
             default:
-                $o .= plugin_admin_common($action);
+                $o .= plugin_admin_common();
         }
     }
 
@@ -317,7 +317,7 @@ final class Plugin
      * Returns a list of all pages that contain all words in a co-content.
      * If $name === NULL the main content will be searched.
      *
-     * @param string $name  A co-content name.
+     * @param string|null $name  A co-content name.
      * @param array  $words An array of words.
      *
      * @return array

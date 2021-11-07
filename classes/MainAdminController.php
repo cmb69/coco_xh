@@ -75,7 +75,8 @@ class MainAdminController
                 e('cntdelete', 'backup', $fn);
             }
         }
-        if (!unlink(Plugin::dataFolder() . $name . '.htm')) {
+        $fn = Plugin::dataFolder() . $name . '.htm';
+        if (!unlink($fn)) {
             e('cntdelete', 'file', $fn);
         }
         $this->defaultAction();
