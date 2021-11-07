@@ -23,11 +23,15 @@ namespace Coco;
 
 class InfoController
 {
+    /** @var SystemCheckService */
+    private $systemCheckService;
+
     /** @var View */
     private $view;
 
-    public function __construct(View $view)
+    public function __construct(SystemCheckService $systemCheckService, View $view)
     {
+        $this->systemCheckService = $systemCheckService;
         $this->view = $view;
     }
 
@@ -38,7 +42,7 @@ class InfoController
     {
         $this->view->render("info", [
             "version" => Plugin::VERSION,
-            "checks" => (new SystemCheckService)->getChecks(),
+            "checks" => $this->systemCheckService->getChecks(),
         ]);
     }
 }

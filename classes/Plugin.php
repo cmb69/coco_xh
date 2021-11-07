@@ -58,7 +58,7 @@ final class Plugin
         switch ($admin) {
             case '':
                 ob_start();
-                (new InfoController(self::view()))->defaultAction();
+                (new InfoController(new SystemCheckService(), self::view()))->defaultAction();
                 $o .= ob_get_clean();
                 break;
             case 'plugin_main':
