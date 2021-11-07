@@ -40,8 +40,4 @@ function coco($name, $config = false, $height = '100%')
     return Plugin::coco($name, $config, $height);
 }
 
-$pd_router->add_interest('coco_id');
-
-if ($f == 'xh_loggedout') {
-    $o .= Plugin::backup();
-}
+\Coco\Plugin::run();

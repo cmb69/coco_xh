@@ -25,6 +25,59 @@ final class Plugin
 {
     const VERSION = "2.0-dev";
 
+
+    /**
+     * @return void
+     */
+    public static function run()
+    {
+        global $pd_router, $f, $o;
+
+        $pd_router->add_interest('coco_id');
+
+        if ($f == 'xh_loggedout') {
+            $o .= Plugin::backup();
+        }
+
+        if (XH_ADM) {
+            XH_registerStandardPluginMenuItems(true);
+            if (XH_wantsPluginAdministration('coco')) {
+                self::handlePluginAdministration();
+            }
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private static function handlePluginAdministration()
+    {
+        global $o, $admin, $action;
+
+        $o .= print_plugin_admin('on');
+        switch ($admin) {
+            case '':
+                ob_start();
+                (new InfoController)->defaultAction();
+                $o .= ob_get_clean();
+                break;
+            case 'plugin_main':
+                $controller = new MainAdminController;
+                ob_start();
+                switch ($action) {
+                    case 'delete':
+                        $controller->deleteAction();
+                        break;
+                    default:
+                        $controller->defaultAction();
+                }
+                $o .= ob_get_clean();
+                break;
+            default:
+                $o .= plugin_admin_common($action);
+        }
+    }
+
     /**
      * @return string
      */
