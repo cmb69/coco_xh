@@ -47,6 +47,6 @@ if (XH_wantsPluginAdministration('coco')) {
             $o .= ob_get_clean();
             break;
         default:
-            $o .= plugin_admin_common($action, $admin, $plugin);
+            $o .= plugin_admin_common($action);
     }
 }

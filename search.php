@@ -29,11 +29,6 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
 
 use Coco\Plugin;
 
-/**
- * The Utf8_XH utility plugin.
- */
-require_once $pth['folder']['plugins'] . 'utf8/utf8.php';
-
 /*
  * Search.
  */
