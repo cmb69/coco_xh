@@ -1,7 +1,7 @@
 <h1>Coco – <?=$this->text('label_info')?></h1>
 <img class="coco_plugin_icon" src="<?=$this->logo()?>" alt="<?=$this->text('alt_logo')?>">
 <p>Version: <?=$this->version()?></p>
-<p>Copyright © 2012-2017 Christoph M. Becker</p>
+<p>Copyright © 2012-2021 Christoph M. Becker</p>
 <p class="coco_license">
     This program is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free

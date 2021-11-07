@@ -2,7 +2,7 @@
 
 /**
  * Copyright 2013-2014 The CMSimple_XH developers <http://cmsimple-xh.org/?The_Team>
- * Copyright 2014-2017 Christoph M. Becker <http://3-magi.net/>
+ * Copyright 2014-2021 Christoph M. Becker <http://3-magi.net/>
  *
  * This file is part of Coco_XH.
  *

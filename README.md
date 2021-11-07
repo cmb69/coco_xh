@@ -157,7 +157,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Coco_XH.  If not, see <https://www.gnu.org/licenses/>.
 
-Copyright 2012-2017 Christoph M. Becker
+Copyright 2012-2021 Christoph M. Becker
 
 Slovak translation © 2012 Dr. Martin Sereday  
 Czech translation © 2012 Josef Němec  
