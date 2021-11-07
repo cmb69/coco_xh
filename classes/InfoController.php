@@ -23,19 +23,11 @@ namespace Coco;
 
 class InfoController
 {
-    /**
-     * @var string
-     */
-    private $pluginFolder;
-
     /** @var View */
     private $view;
 
     public function __construct(View $view)
     {
-        global $pth;
-
-        $this->pluginFolder = "{$pth['folder']['plugins']}coco/";
         $this->view = $view;
     }
 
@@ -45,7 +37,6 @@ class InfoController
     public function defaultAction()
     {
         $this->view->render("info", [
-            "logo" => "{$this->pluginFolder}coco.png",
             "version" => Plugin::VERSION,
             "checks" => (new SystemCheckService)->getChecks(),
         ]);

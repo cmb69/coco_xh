@@ -2,15 +2,6 @@
  * Administration.
  */
 
-img.coco_plugin_icon {
-    float: left;
-    margin: 10px 20px 10px 0;
-}
-
-p.coco_license {
-    text-align: justify;
-}
-
 #coco_admin_cocos ul {
     list-style: none;
     padding: 0;
