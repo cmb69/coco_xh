@@ -30,11 +30,6 @@ class View
     private $templateDir;
 
     /**
-     * @var array<string,mixed>
-     */
-    private $data = array();
-
-    /**
      * @param array<string,string> $lang
      * @param string $templateDir
      */
@@ -45,34 +40,6 @@ class View
     }
 
     /**
-     * @param string $name
-     * @return string
-     */
-    public function __get($name)
-    {
-        return $this->data[$name];
-    }
-
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function __isset($name)
-    {
-        return isset($this->data[$name]);
-    }
-
-    /**
-     * @param string $name
-     * @param mixed[] $args
-     * @return string
-     */
-    public function __call($name, array $args)
-    {
-        return $this->escape($this->data[$name]);
-    }
-
-    /**
      * @param string $key
      * @return string
      */
@@ -80,7 +47,7 @@ class View
     {
         $args = func_get_args();
         array_shift($args);
-        return $this->escape(vsprintf($this->lang[$key], $args));
+        return $this->esc(vsprintf($this->lang[$key], $args));
     }
 
     /**
@@ -97,7 +64,7 @@ class View
         }
         $args = func_get_args();
         array_shift($args);
-        return $this->escape(vsprintf($this->lang[$key], $args));
+        return $this->esc(vsprintf($this->lang[$key], $args));
     }
 
     /**
@@ -107,7 +74,7 @@ class View
      */
     public function render($_template, array $_data)
     {
-        $this->data = $_data;
+        extract($_data);
         echo "<!-- {$_template} -->", PHP_EOL;
         include "{$this->templateDir}/$_template.php";
     }
@@ -116,7 +83,7 @@ class View
      * @param mixed $value
      * @return mixed
      */
-    protected function escape($value)
+    protected function esc($value)
     {
         if ($value instanceof HtmlString) {
             return $value;

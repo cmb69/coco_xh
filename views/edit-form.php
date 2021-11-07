@@ -1,9 +1,9 @@
 <form action="" method="POST">
-    <?=$this->csrfTokenInput()?>
-    <textarea id="<?=$this->id()?>" name="coco_text_<?=$this->name()?>" style="<?=$this->style()?>"><?=$this->content()?></textarea>
-<?php if ($this->editor):?>
-    <script type="text/javascript"><?=$this->editor()?></script>
+    <?=$this->esc($csrfTokenInput)?>
+    <textarea id="<?=$this->esc($id)?>" name="coco_text_<?=$this->esc($name)?>" style="<?=$this->esc($style)?>"><?=$this->esc($content)?></textarea>
+<?php if ($editor):?>
+    <script type="text/javascript"><?=$this->esc($editor)?></script>
 <?php else:?>
-    <input type="submit" class="submit" value="<?=$this->saveLabel()?>">
+    <input type="submit" class="submit" value="<?=$this->esc($saveLabel)?>">
 <?php endif?>
 </form>

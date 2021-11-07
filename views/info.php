@@ -1,6 +1,6 @@
 <h1>Coco – <?=$this->text('label_info')?></h1>
-<img class="coco_plugin_icon" src="<?=$this->logo()?>" alt="<?=$this->text('alt_logo')?>">
-<p>Version: <?=$this->version()?></p>
+<img class="coco_plugin_icon" src="<?=$this->esc($logo)?>" alt="<?=$this->text('alt_logo')?>">
+<p>Version: <?=$this->esc($version)?></p>
 <p>Copyright © 2012-2021 Christoph M. Becker</p>
 <p class="coco_license">
     This program is free software: you can redistribute it and/or modify it
@@ -21,7 +21,7 @@
 </p>
 <div class="coco_syscheck">
     <h2><?=$this->text('syscheck_title')?></h2>
-<?php foreach ($this->checks as $check):?>
-    <p class="xh_<?=$this->escape($check->state)?>"><?=$this->text('syscheck_message', $check->label, $check->stateLabel)?></p>
+<?php foreach ($checks as $check):?>
+    <p class="xh_<?=$this->esc($check->state)?>"><?=$this->text('syscheck_message', $check->label, $check->stateLabel)?></p>
 <?php endforeach?>
 </div>
