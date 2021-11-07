@@ -58,7 +58,6 @@
     </target>
 
     <target name="build" description="builds a distributable ZIP archive">
-        <fail unless="version" message="version is not defined!"/>
         <exec command="git archive -o export.zip HEAD" checkreturn="true"/>
         <unzip file="export.zip" todir="export"/>
         <delete file="export.zip"/>
@@ -76,7 +75,7 @@
         <delete dir="export"/>
         <!--<copy file="dist/config/config.php" tofile="dist/config/defaultconfig.php"/>-->
         <copy file="dist/languages/en.php" tofile="dist/languages/default.php"/>
-        <zip destfile="Coco_XH-${version}.zip" basedir="dist" prefix="coco/"/>
+        <zip destfile="Coco_XH-2.0-dev.zip" basedir="dist" prefix="coco/"/>
         <delete dir="dist"/>
     </target>
 

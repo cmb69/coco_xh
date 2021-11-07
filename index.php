@@ -27,7 +27,7 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
     exit;
 }
 
-define('COCO_VERSION', '1.0');
+define('COCO_VERSION', '2.0-dev');
 
 /**
  * @return string
