@@ -43,13 +43,13 @@ class MainAdminController
     /** @var View */
     private $view;
 
-    public function __construct(View $view)
+    public function __construct(CsrfProtector $csrfProtector, View $view)
     {
-        global $pth, $plugin_tx, $_XH_csrfProtection;
+        global $pth, $plugin_tx;
 
         $this->pluginFolder = "{$pth['folder']['plugins']}coco/";
         $this->lang = $plugin_tx['coco'];
-        $this->csrfProtector = $_XH_csrfProtection;
+        $this->csrfProtector = $csrfProtector;
         $this->view = $view;
     }
 

@@ -52,7 +52,7 @@ final class Plugin
      */
     private static function handlePluginAdministration()
     {
-        global $o, $admin, $action;
+        global $o, $admin, $action, $_XH_csrfProtection;
 
         $o .= print_plugin_admin('on');
         switch ($admin) {
@@ -62,7 +62,7 @@ final class Plugin
                 $o .= ob_get_clean();
                 break;
             case 'plugin_main':
-                $controller = new MainAdminController(new View());
+                $controller = new MainAdminController($_XH_csrfProtection, new View());
                 ob_start();
                 switch ($action) {
                     case 'delete':
@@ -246,7 +246,7 @@ final class Plugin
      */
     public static function coco($name, $config, $height)
     {
-        global $adm, $edit, $s, $cl, $plugin_tx;
+        global $adm, $edit, $s, $cl, $plugin_tx, $_XH_csrfProtection;
 
         if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
             return XH_message('fail', $plugin_tx['coco']['error_invalid_name']);
@@ -254,7 +254,7 @@ final class Plugin
         if ($s < 0 || $s >= $cl) {
             return '';
         }
-        $controller = new MainController($name, $config, $height, new View());
+        $controller = new MainController($name, $config, $height, $_XH_csrfProtection, new View());
         ob_start();
         if ($adm && $edit) {
             $controller->editAction();

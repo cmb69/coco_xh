@@ -53,14 +53,12 @@ class MainController
      * @param string $config
      * @param string $height
      */
-    public function __construct($name, $config, $height, View $view)
+    public function __construct($name, $config, $height, CsrfProtector $csrfProtector, View $view)
     {
-        global $_XH_csrfProtection;
-
         $this->name = $name;
         $this->config = $config;
         $this->height = $height;
-        $this->csrfProtector = $_XH_csrfProtection;
+        $this->csrfProtector = $csrfProtector;
         $this->view = $view;
     }
 
