@@ -120,7 +120,7 @@ final class Plugin
     /**
      * @param string $name
      * @param int $i
-     * @return string
+     * @return string|false
      */
     public static function get($name, $i)
     {

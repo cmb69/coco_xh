@@ -21,6 +21,8 @@
 
 namespace Coco;
 
+use XH\CSRFProtection as CsrfProtector;
+
 class MainController
 {
     /**
@@ -39,7 +41,7 @@ class MainController
     private $height;
 
     /**
-     * @var XH_CSRFProtection
+     * @var CsrfProtector
      */
     private $csrfProtector;
 

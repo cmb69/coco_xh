@@ -21,6 +21,8 @@
 
 namespace Coco;
 
+use XH\CSRFProtection as CsrfProtector;
+
 class MainAdminController
 {
     /**
@@ -34,7 +36,7 @@ class MainAdminController
     private $lang;
 
     /**
-     * @var XH_CSRFProtection
+     * @var CsrfProtector
      */
     private $csrfProtector;
 
