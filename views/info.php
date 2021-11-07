@@ -1,3 +1,16 @@
+<?php
+
+use Coco\View;
+
+/**
+ * @var View $this
+ * @var string $logo
+ * @var string $version
+ * @var object[] $checks
+ */
+
+?>
+
 <h1>Coco – <?=$this->text('label_info')?></h1>
 <img class="coco_plugin_icon" src="<?=$this->esc($logo)?>" alt="<?=$this->text('alt_logo')?>">
 <p>Version: <?=$this->esc($version)?></p>

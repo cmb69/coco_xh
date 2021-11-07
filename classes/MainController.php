@@ -98,12 +98,13 @@ class MainController
             Plugin::set($this->name, $s, $_POST['coco_text_' . $this->name]);
         }
         $id = 'coco_text_' . $this->name;
+        $editor = editor_replace($id, $this->config);
         $this->view->render("edit-form", [
             "id" => $id,
             "name" => $this->name,
             "style" => 'width:100%; height:' . $this->height,
             "content" => Plugin::get($this->name, $s),
-            "editor" => new HtmlString(editor_replace($id, $this->config)),
+            "editor" => $editor !== false ? new HtmlString($editor) : false,
             "saveLabel" => ucfirst($tx['action']['save']),
             "csrfTokenInput" => new HtmlString($this->csrfProtector->tokenInput()),
         ]);

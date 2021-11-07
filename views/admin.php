@@ -1,3 +1,19 @@
+<?php
+
+use Coco\HtmlString;
+use Coco\View;
+
+/**
+ * @var View $this
+ * @var HtmlString $csrfTokenInput
+ * @var string $url
+ * @var string $deleteIcon
+ * @var string $alt
+ * @var object[] $cocos
+ */
+
+?>
+
 <h1>Coco – <?=$this->text('menu_main')?></h1>
 <div id="coco_admin_cocos">
     <ul>
