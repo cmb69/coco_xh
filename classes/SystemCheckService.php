@@ -51,7 +51,7 @@ class SystemCheckService
             $this->checkXhVersion('1.6.3'),
             $this->checkWritability("$this->pluginFolder/css/"),
             $this->checkWritability("$this->pluginFolder/languages/"),
-            $this->checkWritability(Coco_dataFolder())
+            $this->checkWritability(Plugin::dataFolder())
         );
     }
 

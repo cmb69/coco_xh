@@ -57,7 +57,7 @@ class MainAdminController
         $view->deleteIcon = "{$this->pluginFolder}images/delete.png";
         $view->alt = ucfirst($tx['action']['delete']);
         $cocos = [];
-        foreach (Coco_cocos() as $coco) {
+        foreach (Plugin::cocos() as $coco) {
             $message = addcslashes(sprintf($this->lang['confirm_delete'], $coco), "\n\r\t\\");
             $cocos[] = (object) ['name' => $coco, 'message' => $message];
         }
@@ -69,13 +69,13 @@ class MainAdminController
     {
         $this->csrfProtector->check();
         $name = $_POST['coco_name'];
-        $fns = glob(Coco_dataFolder().'????????_??????_' . $name . '.htm');
+        $fns = glob(Plugin::dataFolder().'????????_??????_' . $name . '.htm');
         foreach ($fns as $fn) {
             if (!unlink($fn)) {
                 e('cntdelete', 'backup', $fn);
             }
         }
-        if (!unlink(Coco_dataFolder() . $name . '.htm')) {
+        if (!unlink(Plugin::dataFolder() . $name . '.htm')) {
             e('cntdelete', 'file', $fn);
         }
         $this->defaultAction();

@@ -62,7 +62,7 @@ class MainController
     {
         global $s;
 
-        $text = evaluate_scripting(Coco_get($this->name, $s));
+        $text = evaluate_scripting(Plugin::get($this->name, $s));
         if (isset($_GET['search'])) {
             $class = 'xh_find';
             $search = urldecode($_GET['search']);
@@ -85,14 +85,14 @@ class MainController
 
         if (isset($_POST['coco_text_' . $this->name])) {
             $this->csrfProtector->check();
-            Coco_set($this->name, $s, $_POST['coco_text_' . $this->name]);
+            Plugin::set($this->name, $s, $_POST['coco_text_' . $this->name]);
         }
         $id = 'coco_text_' . $this->name;
         $view = new View('edit-form');
         $view->id = $id;
         $view->name = $this->name;
         $view->style = 'width:100%; height:' . $this->height;
-        $view->content = Coco_get($this->name, $s);
+        $view->content = Plugin::get($this->name, $s);
         $view->editor = new HtmlString(editor_replace($id, $this->config));
         $view->saveLabel = ucfirst($tx['action']['save']);
         $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
