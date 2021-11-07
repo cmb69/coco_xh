@@ -23,10 +23,26 @@ namespace Coco;
 
 class View
 {
+    /** @var array<string,string> */
+    private $lang;
+
+    /** @var string */
+    private $templateDir;
+
     /**
      * @var array<string,mixed>
      */
     private $data = array();
+
+    /**
+     * @param array<string,string> $lang
+     * @param string $templateDir
+     */
+    public function __construct(array $lang, $templateDir)
+    {
+        $this->lang = $lang;
+        $this->templateDir = $templateDir;
+    }
 
     /**
      * @param string $name
@@ -62,11 +78,9 @@ class View
      */
     protected function text($key)
     {
-        global $plugin_tx;
-
         $args = func_get_args();
         array_shift($args);
-        return $this->escape(vsprintf($plugin_tx['coco'][$key], $args));
+        return $this->escape(vsprintf($this->lang[$key], $args));
     }
 
     /**
@@ -76,8 +90,6 @@ class View
      */
     protected function plural($key, $count)
     {
-        global $plugin_tx;
-
         if ($count == 0) {
             $key .= '_0';
         } else {
@@ -85,7 +97,7 @@ class View
         }
         $args = func_get_args();
         array_shift($args);
-        return $this->escape(vsprintf($plugin_tx['coco'][$key], $args));
+        return $this->escape(vsprintf($this->lang[$key], $args));
     }
 
     /**
@@ -95,11 +107,9 @@ class View
      */
     public function render($_template, array $_data)
     {
-        global $pth;
-
         $this->data = $_data;
         echo "<!-- {$_template} -->", PHP_EOL;
-        include "{$pth['folder']['plugins']}coco/views/{$_template}.php";
+        include "{$this->templateDir}/$_template.php";
     }
 
     /**

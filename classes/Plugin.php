@@ -58,11 +58,11 @@ final class Plugin
         switch ($admin) {
             case '':
                 ob_start();
-                (new InfoController(new View()))->defaultAction();
+                (new InfoController(self::view()))->defaultAction();
                 $o .= ob_get_clean();
                 break;
             case 'plugin_main':
-                $controller = new MainAdminController($_XH_csrfProtection, new View());
+                $controller = new MainAdminController($_XH_csrfProtection, self::view());
                 ob_start();
                 switch ($action) {
                     case 'delete':
@@ -254,7 +254,7 @@ final class Plugin
         if ($s < 0 || $s >= $cl) {
             return '';
         }
-        $controller = new MainController($name, $config, $height, $_XH_csrfProtection, new View());
+        $controller = new MainController($name, $config, $height, $_XH_csrfProtection, self::view());
         ob_start();
         if ($adm && $edit) {
             $controller->editAction();
@@ -362,5 +362,15 @@ final class Plugin
             }
         }
         return true;
+    }
+
+    /**
+     * @return View
+     */
+    private static function view()
+    {
+        global $pth, $plugin_tx;
+
+        return new View($plugin_tx["coco"], "{$pth['folder']['plugins']}coco/views");
     }
 }
