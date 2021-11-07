@@ -28,6 +28,10 @@
         </phpcodesniffer>
     </target>
 
+    <target name="stan" description="runs static code analysis">
+        <exec executable="phpstan" passthru="true" checkreturn="true"/>
+    </target>
+
     <target name="mess" description="detects code flaws">
         <phpmd>
             <fileset refid="php-sources"/>
@@ -63,11 +67,13 @@
         <delete file="export.zip"/>
         <move todir="dist">
             <fileset dir="export">
+                <exclude name=".phive/**"/>
                 <exclude name="help/template.htm"/>
                 <exclude name="tests/**"/>
                 <exclude name="composer.*"/>
                 <exclude name="build.xml"/>
                 <exclude name="phpcompatinfo.*"/>
+                <exclude name="phpstan.neon"/>
                 <exclude name="README*.md"/>
                 <exclude name="teplad.xml"/>
             </fileset>

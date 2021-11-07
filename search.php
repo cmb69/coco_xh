@@ -70,10 +70,10 @@ function Coco_decodeEntities($text)
 function Coco_search($words, $text)
 {
     $text = strip_tags(evaluate_scripting($text));
-    $text = Coco_decodeEntities($text, ENT_QUOTES, 'UTF-8');
-    $text = utf8_strtolower($text, 'UTF-8');
+    $text = Coco_decodeEntities($text);
+    $text = utf8_strtolower($text);
     foreach ($words as $word) {
-        if (strpos($text, utf8_strtolower($word, 'UTF-8')) === false) {
+        if (strpos($text, utf8_strtolower($word)) === false) {
             return false;
         }
     }
