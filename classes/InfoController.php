@@ -35,6 +35,9 @@ class InfoController
         $this->pluginFolder = "{$pth['folder']['plugins']}coco/";
     }
 
+    /**
+     * @return void
+     */
     public function defaultAction()
     {
         $view = new View('info');

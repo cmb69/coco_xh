@@ -31,7 +31,7 @@ class MainAdminController
     private $pluginFolder;
 
     /**
-     * @var array
+     * @var array<string,string>
      */
     private $lang;
 
@@ -49,6 +49,9 @@ class MainAdminController
         $this->csrfProtector = $_XH_csrfProtection;
     }
 
+    /**
+     * @return void
+     */
     public function defaultAction()
     {
         global $sn, $tx;
@@ -68,6 +71,9 @@ class MainAdminController
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function deleteAction()
     {
         $this->csrfProtector->check();

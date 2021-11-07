@@ -60,6 +60,9 @@ class MainController
         $this->csrfProtector = $_XH_csrfProtection;
     }
 
+    /**
+     * @return void
+     */
     public function defaultAction()
     {
         global $s;
@@ -81,6 +84,9 @@ class MainController
         echo $text;
     }
 
+    /**
+     * @return void
+     */
     public function editAction()
     {
         global $s, $tx;

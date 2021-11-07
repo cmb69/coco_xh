@@ -101,7 +101,7 @@ final class Plugin
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public static function cocos()
     {
@@ -154,6 +154,7 @@ final class Plugin
      * @param string $name
      * @param int $i
      * @param string $text
+     * @return void
      */
     public static function set($name, $i, $text)
     {
@@ -318,15 +319,15 @@ final class Plugin
      * If $name === NULL the main content will be searched.
      *
      * @param string|null $name  A co-content name.
-     * @param array  $words An array of words.
+     * @param string[]  $words An array of words.
      *
-     * @return array
+     * @return int[]
      *
      * @global array The content of the pages.
      * @global int   The number of pages.
      * @global array The configuration of the core.
      */
-    private static function searchContent($name, $words)
+    private static function searchContent($name, array $words)
     {
         global $c, $cl, $cf;
 
@@ -345,12 +346,12 @@ final class Plugin
     /**
      * Returns whether all words are contained in a text.
      *
-     * @param array  $words An array of words.
+     * @param string[] $words An array of words.
      * @param string $text  A text to search in.
      *
      * @return bool
      */
-    private static function doSearch($words, $text)
+    private static function doSearch(array $words, $text)
     {
         $text = strip_tags(evaluate_scripting($text));
         $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
