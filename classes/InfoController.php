@@ -38,9 +38,10 @@ class InfoController
     public function defaultAction()
     {
         $view = new View('info');
-        $view->logo = "{$this->pluginFolder}coco.png";
-        $view->version = Plugin::VERSION;
-        $view->checks = (new SystemCheckService)->getChecks();
-        $view->render();
+        $view->render([
+            "logo" => "{$this->pluginFolder}coco.png",
+            "version" => Plugin::VERSION,
+            "checks" => (new SystemCheckService)->getChecks(),
+        ]);
     }
 }

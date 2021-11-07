@@ -89,13 +89,14 @@ class MainController
         }
         $id = 'coco_text_' . $this->name;
         $view = new View('edit-form');
-        $view->id = $id;
-        $view->name = $this->name;
-        $view->style = 'width:100%; height:' . $this->height;
-        $view->content = Plugin::get($this->name, $s);
-        $view->editor = new HtmlString(editor_replace($id, $this->config));
-        $view->saveLabel = ucfirst($tx['action']['save']);
-        $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
-        $view->render();
+        $view->render([
+            "id" => $id,
+            "name" => $this->name,
+            "style" => 'width:100%; height:' . $this->height,
+            "content" => Plugin::get($this->name, $s),
+            "editor" => new HtmlString(editor_replace($id, $this->config)),
+            "saveLabel" => ucfirst($tx['action']['save']),
+            "csrfTokenInput" => new HtmlString($this->csrfProtector->tokenInput()),
+        ]);
     }
 }

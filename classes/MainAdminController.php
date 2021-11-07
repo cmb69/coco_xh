@@ -52,17 +52,18 @@ class MainAdminController
         global $sn, $tx;
 
         $view = new View('admin');
-        $view->csrfTokenInput = new HtmlString($this->csrfProtector->tokenInput());
-        $view->url = "$sn?&coco&admin=plugin_main";
-        $view->deleteIcon = "{$this->pluginFolder}images/delete.png";
-        $view->alt = ucfirst($tx['action']['delete']);
         $cocos = [];
         foreach (Plugin::cocos() as $coco) {
             $message = addcslashes(sprintf($this->lang['confirm_delete'], $coco), "\n\r\t\\");
             $cocos[] = (object) ['name' => $coco, 'message' => $message];
         }
-        $view->cocos = $cocos;
-        $view->render();
+        $view->render([
+            "csrfTokenInput" => new HtmlString($this->csrfProtector->tokenInput()),
+            "url" => "$sn?&coco&admin=plugin_main",
+            "deleteIcon" => "{$this->pluginFolder}images/delete.png",
+            "alt" => ucfirst($tx['action']['delete']),
+            "cocos" => $cocos,
+        ]);
     }
 
     public function deleteAction()
