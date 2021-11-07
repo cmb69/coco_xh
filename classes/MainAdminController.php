@@ -40,13 +40,17 @@ class MainAdminController
      */
     private $csrfProtector;
 
-    public function __construct()
+    /** @var View */
+    private $view;
+
+    public function __construct(View $view)
     {
         global $pth, $plugin_tx, $_XH_csrfProtection;
 
         $this->pluginFolder = "{$pth['folder']['plugins']}coco/";
         $this->lang = $plugin_tx['coco'];
         $this->csrfProtector = $_XH_csrfProtection;
+        $this->view = $view;
     }
 
     /**
@@ -56,13 +60,12 @@ class MainAdminController
     {
         global $sn, $tx;
 
-        $view = new View('admin');
         $cocos = [];
         foreach (Plugin::cocos() as $coco) {
             $message = addcslashes(sprintf($this->lang['confirm_delete'], $coco), "\n\r\t\\");
             $cocos[] = (object) ['name' => $coco, 'message' => $message];
         }
-        $view->render([
+        $this->view->render("admin", [
             "csrfTokenInput" => new HtmlString($this->csrfProtector->tokenInput()),
             "url" => "$sn?&coco&admin=plugin_main",
             "deleteIcon" => "{$this->pluginFolder}images/delete.png",

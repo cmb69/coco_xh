@@ -24,22 +24,9 @@ namespace Coco;
 class View
 {
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
      * @var array<string,mixed>
      */
     private $data = array();
-
-    /**
-     * @param string $template
-     */
-    public function __construct($template)
-    {
-        $this->template = $template;
-    }
 
     /**
      * @param string $name
@@ -102,16 +89,17 @@ class View
     }
 
     /**
+     * @param string $_template
      * @param array<string,mixed> $_data
      * @return void
      */
-    public function render(array $_data)
+    public function render($_template, array $_data)
     {
         global $pth;
 
         $this->data = $_data;
-        echo "<!-- {$this->template} -->", PHP_EOL;
-        include "{$pth['folder']['plugins']}coco/views/{$this->template}.php";
+        echo "<!-- {$_template} -->", PHP_EOL;
+        include "{$pth['folder']['plugins']}coco/views/{$_template}.php";
     }
 
     /**

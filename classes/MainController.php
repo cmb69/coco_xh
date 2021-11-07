@@ -45,12 +45,15 @@ class MainController
      */
     private $csrfProtector;
 
+    /** @var View */
+    private $view;
+
     /**
      * @param string $name
      * @param string $config
      * @param string $height
      */
-    public function __construct($name, $config, $height)
+    public function __construct($name, $config, $height, View $view)
     {
         global $_XH_csrfProtection;
 
@@ -58,6 +61,7 @@ class MainController
         $this->config = $config;
         $this->height = $height;
         $this->csrfProtector = $_XH_csrfProtection;
+        $this->view = $view;
     }
 
     /**
@@ -96,8 +100,7 @@ class MainController
             Plugin::set($this->name, $s, $_POST['coco_text_' . $this->name]);
         }
         $id = 'coco_text_' . $this->name;
-        $view = new View('edit-form');
-        $view->render([
+        $this->view->render("edit-form", [
             "id" => $id,
             "name" => $this->name,
             "style" => 'width:100%; height:' . $this->height,

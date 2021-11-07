@@ -58,11 +58,11 @@ final class Plugin
         switch ($admin) {
             case '':
                 ob_start();
-                (new InfoController)->defaultAction();
+                (new InfoController(new View()))->defaultAction();
                 $o .= ob_get_clean();
                 break;
             case 'plugin_main':
-                $controller = new MainAdminController;
+                $controller = new MainAdminController(new View());
                 ob_start();
                 switch ($action) {
                     case 'delete':
@@ -254,7 +254,7 @@ final class Plugin
         if ($s < 0 || $s >= $cl) {
             return '';
         }
-        $controller = new MainController($name, $config, $height);
+        $controller = new MainController($name, $config, $height, new View());
         ob_start();
         if ($adm && $edit) {
             $controller->editAction();
