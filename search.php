@@ -27,10 +27,4 @@ if (!defined('CMSIMPLE_XH_VERSION')) {
     exit;
 }
 
-use Coco\Plugin;
-
-/*
- * Search.
- */
-$title = $tx['title']['search'];
-$o .= Plugin::searchResults();
+\Coco\Plugin::search();

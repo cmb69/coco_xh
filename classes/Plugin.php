@@ -264,9 +264,9 @@ final class Plugin
     }
 
     /**
-     * Returns the search results view.
+     * Searches the contents
      *
-     * @return string (X)HTML.
+     * @return void
      *
      * @global string The search string.
      * @global string The script name.
@@ -275,12 +275,12 @@ final class Plugin
      * @global array  The configuration of the plugins.
      * @global array  The localization of the plugins.
      */
-    public static function searchResults()
+    public static function search()
     {
-        global $search, $h, $plugin_tx;
+        global $title, $o, $search, $h, $tx, $plugin_tx;
 
         $ptx = $plugin_tx['coco'];
-        $o = '';
+        $title = $tx['title']['search'];
         $words = preg_split('/\s+/isu', $search, null, PREG_SPLIT_NO_EMPTY);
         $ta = self::searchContent(null, $words);
         foreach (self::cocos() as $name) {
@@ -311,7 +311,6 @@ final class Plugin
             }
             $o .= '</ul>' . PHP_EOL;
         }
-        return $o;
     }
 
     /**
@@ -335,7 +334,7 @@ final class Plugin
         for ($i = 0; $i < $cl; $i++) {
             if (!hide($i) || $cf['hidden']['pages_search'] == 'true') {
                 $text = !isset($name) ? $c[$i] : self::get($name, $i);
-                if (self::search($words, $text)) {
+                if (self::doSearch($words, $text)) {
                     $ta[] = $i;
                 }
             }
@@ -351,7 +350,7 @@ final class Plugin
      *
      * @return bool
      */
-    private static function search($words, $text)
+    private static function doSearch($words, $text)
     {
         $text = strip_tags(evaluate_scripting($text));
         $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
