@@ -65,14 +65,12 @@
         <move todir="dist">
             <fileset dir="export">
                 <exclude name="help/template.htm"/>
-                <exclude name="coco.komodoproject"/>
+                <exclude name="tests/**"/>
                 <exclude name="composer.*"/>
                 <exclude name="build.xml"/>
-                <exclude name="pax_global_header"/>
                 <exclude name="phpcompatinfo.*"/>
                 <exclude name="README*.md"/>
-                <exclude name="tests/**"/>
-                <exclude name="TODO"/>
+                <exclude name="teplad.xml"/>
             </fileset>
         </move>
         <delete dir="export"/>
