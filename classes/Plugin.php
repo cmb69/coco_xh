@@ -21,6 +21,8 @@
 
 namespace Coco;
 
+use XH\Pages;
+
 final class Plugin
 {
     const VERSION = "2.0-dev";
@@ -118,88 +120,6 @@ final class Plugin
     }
 
     /**
-     * @param string $name
-     * @param int $i
-     * @return string|false
-     */
-    public static function get($name, $i)
-    {
-        global $cf, $pd_router;
-        static $curname = null;
-        static $text = null;
-
-        $pd = $pd_router->find_page($i);
-        if (empty($pd['coco_id'])) {
-            return '';
-        }
-        if ($name != $curname) {
-            $curname = $name;
-            $fn = self::dataFolder() . $name . '.htm';
-            if (!is_readable($fn) || ($text = XH_readFile($fn)) === false) {
-                e('cntopen', 'file', $fn);
-                return false;
-            }
-        }
-        $ml = $cf['menu']['levels'];
-        preg_match(
-            '/<h[1-' . $ml . '].*?id="' . $pd['coco_id'] . '".*?>.*?'
-            . '<\/h[1-' . $ml . ']>(.*?)<(?:h[1-' . $ml . ']|\/body)/isu',
-            $text,
-            $matches
-        );
-        return !empty($matches[1]) ? trim($matches[1]) : '';
-    }
-
-    /**
-     * @param string $name
-     * @param int $i
-     * @param string $text
-     * @return void
-     */
-    public static function set($name, $i, $text)
-    {
-        global $pth, $cl, $l, $h, $cf, $pd_router;
-
-        $fn = self::dataFolder() . $name . '.htm';
-        $old = is_readable($fn) ? (string) XH_readFile($fn) : '';
-        $ml = $cf['menu']['levels'];
-        $cnt = '<html>' . PHP_EOL . '<body>' . PHP_EOL;
-        for ($j = 0; $j < $cl; $j++) {
-            $pd = $pd_router->find_page($j);
-            if (empty($pd['coco_id'])) {
-                $pd['coco_id'] = uniqid();
-                $pd_router->update($j, $pd);
-            }
-            $cnt .= '<h' . $l[$j] . ' id="' . $pd['coco_id'] . '">' . $h[$j]
-                . '</h' . $l[$j] . '>' . PHP_EOL;
-            if ($j == $i) {
-                $text = (string) preg_replace('/<h' . $ml . '.*?>.*?<\/h' . $ml . '>/isu', '', (string) $text);
-                $text = trim($text);
-                $text = preg_replace('/(<\/?h)[1-' . $ml . ']/is', '${1}' . ($ml + 1), $text);
-                if (!empty($text)) {
-                    $cnt .= $text . PHP_EOL;
-                }
-            } else {
-                preg_match(
-                    '/<h[1-' . $ml . '].*?id="' . $pd['coco_id'] . '".*?>.*?'
-                    . '<\/h[1-' . $ml . ']>(.*?)<(?:h[1-' . $ml . ']|\/body)/isu',
-                    $old,
-                    $matches
-                );
-                $cnt .= isset($matches[1]) && ($match = trim($matches[1])) != ''
-                    ? $match . PHP_EOL
-                    : '';
-            }
-        }
-        $cnt .= '</body>' . PHP_EOL . '</html>' . PHP_EOL;
-        if (XH_writeFile($fn, $cnt) !== false) {
-            touch($pth['file']['content']);
-        } else {
-            e('cntwriteto', 'file', $fn);
-        }
-    }
-
-    /**
      * @return string
      */
     public static function backup()
@@ -246,7 +166,7 @@ final class Plugin
      */
     public static function coco($name, $config, $height)
     {
-        global $adm, $edit, $s, $cl, $plugin_tx, $_XH_csrfProtection;
+        global $adm, $edit, $s, $cl, $plugin_tx, $_XH_csrfProtection, $pd_router;
 
         if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
             return XH_message('fail', $plugin_tx['coco']['error_invalid_name']);
@@ -254,7 +174,14 @@ final class Plugin
         if ($s < 0 || $s >= $cl) {
             return '';
         }
-        $controller = new MainController($name, $config, $height, $_XH_csrfProtection, self::view());
+        $controller = new MainController(
+            $name,
+            $config,
+            $height,
+            self::cocoService(),
+            $_XH_csrfProtection,
+            self::view()
+        );
         ob_start();
         if ($adm && $edit) {
             $controller->editAction();
@@ -329,12 +256,12 @@ final class Plugin
      */
     private static function searchContent($name, array $words)
     {
-        global $c, $cl, $cf;
+        global $pth, $c, $cl, $cf;
 
         $ta = array();
         for ($i = 0; $i < $cl; $i++) {
             if (!hide($i) || $cf['hidden']['pages_search'] == 'true') {
-                $text = !isset($name) ? $c[$i] : self::get($name, $i);
+                $text = !isset($name) ? $c[$i] : self::cocoService()->find($name, $i);
                 if (self::doSearch($words, $text)) {
                     $ta[] = $i;
                 }
@@ -362,6 +289,16 @@ final class Plugin
             }
         }
         return true;
+    }
+
+    /**
+     * @return CocoService
+     */
+    private static function cocoService()
+    {
+        global $pth, $pd_router;
+
+        return new CocoService($pth['file']['content'], new Pages(), $pd_router);
     }
 
     /**

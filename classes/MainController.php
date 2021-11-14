@@ -40,6 +40,9 @@ class MainController
      */
     private $height;
 
+    /** @var CocoService */
+    private $cocoService;
+
     /**
      * @var CsrfProtector
      */
@@ -53,11 +56,12 @@ class MainController
      * @param string $config
      * @param string $height
      */
-    public function __construct($name, $config, $height, CsrfProtector $csrfProtector, View $view)
+    public function __construct($name, $config, $height, CocoService $cocoService, CsrfProtector $csrfProtector, View $view)
     {
         $this->name = $name;
         $this->config = $config;
         $this->height = $height;
+        $this->cocoService = $cocoService;
         $this->csrfProtector = $csrfProtector;
         $this->view = $view;
     }
@@ -69,7 +73,7 @@ class MainController
     {
         global $s;
 
-        $text = evaluate_scripting((string) Plugin::get($this->name, $s));
+        $text = evaluate_scripting((string) $this->cocoService->find($this->name, $s));
         if (isset($_GET['search'])) {
             $class = 'xh_find';
             $search = urldecode($_GET['search']);
@@ -95,7 +99,7 @@ class MainController
 
         if (isset($_POST['coco_text_' . $this->name])) {
             $this->csrfProtector->check();
-            Plugin::set($this->name, $s, $_POST['coco_text_' . $this->name]);
+            $this->cocoService->save($this->name, $s, $_POST['coco_text_' . $this->name]);
         }
         $id = 'coco_text_' . $this->name;
         $editor = editor_replace($id, $this->config);
@@ -103,7 +107,7 @@ class MainController
             "id" => $id,
             "name" => $this->name,
             "style" => 'width:100%; height:' . $this->height,
-            "content" => Plugin::get($this->name, $s),
+            "content" => $this->cocoService->find($this->name, $s),
             "editor" => $editor !== false ? new HtmlString($editor) : false,
             "saveLabel" => ucfirst($tx['action']['save']),
             "csrfTokenInput" => new HtmlString($this->csrfProtector->tokenInput()),
