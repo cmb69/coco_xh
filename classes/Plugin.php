@@ -166,7 +166,7 @@ final class Plugin
      */
     public static function coco($name, $config, $height)
     {
-        global $adm, $edit, $s, $cl, $plugin_tx, $_XH_csrfProtection, $pd_router;
+        global $adm, $edit, $s, $cl, $plugin_tx, $_XH_csrfProtection;
 
         if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
             return XH_message('fail', $plugin_tx['coco']['error_invalid_name']);
@@ -256,7 +256,7 @@ final class Plugin
      */
     private static function searchContent($name, array $words)
     {
-        global $pth, $c, $cl, $cf;
+        global $c, $cl, $cf;
 
         $ta = array();
         for ($i = 0; $i < $cl; $i++) {

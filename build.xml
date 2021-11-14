@@ -3,6 +3,7 @@
 <project name="Coco" default="help">
 
     <fileset id="php-sources" dir=".">
+        <include name="classes/**"/>
         <include name="index.php"/>
         <include name="search.php"/>
     </fileset>

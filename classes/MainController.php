@@ -56,8 +56,14 @@ class MainController
      * @param string $config
      * @param string $height
      */
-    public function __construct($name, $config, $height, CocoService $cocoService, CsrfProtector $csrfProtector, View $view)
-    {
+    public function __construct(
+        $name,
+        $config,
+        $height,
+        CocoService $cocoService,
+        CsrfProtector $csrfProtector,
+        View $view
+    ) {
         $this->name = $name;
         $this->config = $config;
         $this->height = $height;
@@ -79,13 +85,11 @@ class MainController
             $search = urldecode($_GET['search']);
             $search = XH_hsc($search);
             $words = explode(',', $search);
-            $func = function($w) {
+            $func = function ($w) {
                 return "/" . preg_quote($w, "/") . "(?!([^<]+)?>)/isU";
             };
             $words = array_map($func, $words);
-            $text = preg_replace(
-                $words, '<span class="' . $class . '">\\0</span>', $text
-            );
+            $text = preg_replace($words, '<span class="' . $class . '">\\0</span>', $text);
         }
         echo $text;
     }
