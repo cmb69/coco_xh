@@ -37,7 +37,7 @@
          </phpmd>
     </target>
 
-    <target name="compat" description="ecks PHP requirements">
+    <target name="compat" description="checks PHP requirements">
         <exec command="phpcompatinfo analyser:run --alias current" logoutput="true"/>
     </target>
 
