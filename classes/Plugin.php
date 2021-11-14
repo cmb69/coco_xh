@@ -38,7 +38,7 @@ final class Plugin
         $pd_router->add_interest('coco_id');
 
         if ($f == 'xh_loggedout') {
-            $o .= Plugin::backup();
+            $o .= self::backup();
         }
 
         if (XH_ADM) { // @phpstan-ignore-line
@@ -105,40 +105,14 @@ final class Plugin
     /**
      * @return string
      */
-    public static function backup()
+    private static function backup()
     {
-        global $cf, $tx, $backupDate;
+        global $cf;
 
-        $dir = self::dataFolder();
-        if (!isset($backupDate)) {
-            $backupDate = date("Ymd_His");
-        }
-        $o = '';
-        foreach (self::cocoService()->findAll() as $coco) {
-            $fn = $dir . $backupDate . '_' . $coco . '.htm';
-            if (copy($dir . $coco . '.htm', $fn)) {
-                $o .= XH_message(
-                    'info',
-                    ucfirst($tx['filetype']['backup']) . ' ' . $fn . ' '
-                    . $tx['result']['created']
-                ) . PHP_EOL;
-                $bus = glob($dir . '????????_??????_' . $coco . '.htm') ?: [];
-                for ($i = 0; $i < count($bus) - $cf['backup']['numberoffiles']; $i++) {
-                    if (unlink($bus[$i])) {
-                        $o .= XH_message(
-                            'info',
-                            ucfirst($tx['filetype']['backup']) . ' ' . $bus[$i]
-                            . ' ' . $tx['result']['deleted']
-                        ) . PHP_EOL;
-                    } else {
-                        e('cntdelete', 'backup', $bus[$i]);
-                    }
-                }
-            } else {
-                e('cntsave', 'backup', $fn);
-            }
-        }
-        return $o;
+        ob_start();
+        $controller = new BackupController((int) $cf['backup']['numberoffiles'], self::cocoService());
+        $controller->execute(date("Ymd_His"));
+        return (string) ob_get_clean();
     }
 
     /**
