@@ -143,4 +143,22 @@ final class CocoService
             e('cntwriteto', 'file', $fn);
         }
     }
+
+    /**
+     * @param string $name
+     * @return void
+     */
+    public function delete($name)
+    {
+        $fns = glob(Plugin::dataFolder().'????????_??????_' . $name . '.htm') ?: [];
+        foreach ($fns as $fn) {
+            if (!unlink($fn)) {
+                e('cntdelete', 'backup', $fn);
+            }
+        }
+        $fn = Plugin::dataFolder() . $name . '.htm';
+        if (!unlink($fn)) {
+            e('cntdelete', 'file', $fn);
+        }
+    }
 }
