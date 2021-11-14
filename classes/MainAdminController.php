@@ -35,6 +35,9 @@ class MainAdminController
      */
     private $lang;
 
+    /** @var CocoService */
+    private $cocoService;
+
     /**
      * @var CsrfProtector
      */
@@ -43,12 +46,13 @@ class MainAdminController
     /** @var View */
     private $view;
 
-    public function __construct(CsrfProtector $csrfProtector, View $view)
+    public function __construct(CocoService $cocoService, CsrfProtector $csrfProtector, View $view)
     {
         global $pth, $plugin_tx;
 
         $this->pluginFolder = "{$pth['folder']['plugins']}coco/";
         $this->lang = $plugin_tx['coco'];
+        $this->cocoService = $cocoService;
         $this->csrfProtector = $csrfProtector;
         $this->view = $view;
     }
@@ -61,7 +65,7 @@ class MainAdminController
         global $sn, $tx;
 
         $cocos = [];
-        foreach (Plugin::cocos() as $coco) {
+        foreach ($this->cocoService->findAll() as $coco) {
             $message = addcslashes(sprintf($this->lang['confirm_delete'], $coco), "\n\r\t\\");
             $cocos[] = (object) ['name' => $coco, 'message' => $message];
         }

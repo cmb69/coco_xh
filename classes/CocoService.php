@@ -46,6 +46,23 @@ final class CocoService
     }
 
     /**
+     * @return string[]
+     */
+    public function findAll()
+    {
+        $cocos = glob(Plugin::dataFolder() . '*.htm') ?: [];
+        $func = function ($fn) {
+            return basename($fn, '.htm');
+        };
+        $cocos = array_map($func, $cocos);
+        $func = function ($fn) {
+            return !preg_match('/^\d{8}_\d{6}_/', $fn);
+        };
+        $cocos = array_filter($cocos, $func);
+        return $cocos;
+    }
+
+    /**
      * @param string $name
      * @param int $i
      * @return string|false

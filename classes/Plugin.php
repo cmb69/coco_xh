@@ -64,7 +64,7 @@ final class Plugin
                 $o .= ob_get_clean();
                 break;
             case 'plugin_main':
-                $controller = new MainAdminController($_XH_csrfProtection, self::view());
+                $controller = new MainAdminController(self::cocoService(), $_XH_csrfProtection, self::view());
                 ob_start();
                 switch ($action) {
                     case 'delete':
@@ -103,23 +103,6 @@ final class Plugin
     }
 
     /**
-     * @return string[]
-     */
-    public static function cocos()
-    {
-        $cocos = glob(self::dataFolder() . '*.htm') ?: [];
-        $func = function ($fn) {
-            return basename($fn, '.htm');
-        };
-        $cocos = array_map($func, $cocos);
-        $func = function ($fn) {
-            return !preg_match('/^\d{8}_\d{6}_/', $fn);
-        };
-        $cocos = array_filter($cocos, $func);
-        return $cocos;
-    }
-
-    /**
      * @return string
      */
     public static function backup()
@@ -131,7 +114,7 @@ final class Plugin
             $backupDate = date("Ymd_His");
         }
         $o = '';
-        foreach (self::cocos() as $coco) {
+        foreach (self::cocoService()->findAll() as $coco) {
             $fn = $dir . $backupDate . '_' . $coco . '.htm';
             if (copy($dir . $coco . '.htm', $fn)) {
                 $o .= XH_message(
@@ -211,7 +194,7 @@ final class Plugin
         $title = $tx['title']['search'];
         $words = preg_split('/\s+/isu', $search, null, PREG_SPLIT_NO_EMPTY) ?: [];
         $ta = self::searchContent(null, $words);
-        foreach (self::cocos() as $name) {
+        foreach (self::cocoService()->findAll() as $name) {
             $ta = array_merge($ta, self::searchContent($name, $words));
         }
         $ta = array_unique($ta);
