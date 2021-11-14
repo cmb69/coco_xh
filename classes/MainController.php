@@ -69,7 +69,7 @@ class MainController
     {
         global $s;
 
-        $text = evaluate_scripting(Plugin::get($this->name, $s));
+        $text = evaluate_scripting((string) Plugin::get($this->name, $s));
         if (isset($_GET['search'])) {
             $class = 'xh_find';
             $search = urldecode($_GET['search']);

@@ -37,7 +37,7 @@ use Coco\Plugin;
  */
 function coco($name, $config = false, $height = '100%')
 {
-    return Plugin::coco($name, $config, $height);
+    return Plugin::coco($name, (string) $config, $height);
 }
 
 \Coco\Plugin::run();

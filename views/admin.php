@@ -9,7 +9,7 @@ use Coco\View;
  * @var string $url
  * @var string $deleteIcon
  * @var string $alt
- * @var object[] $cocos
+ * @var stdClass[] $cocos
  */
 
 ?>

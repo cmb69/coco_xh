@@ -105,7 +105,7 @@ final class Plugin
      */
     public static function cocos()
     {
-        $cocos = glob(self::dataFolder() . '*.htm');
+        $cocos = glob(self::dataFolder() . '*.htm') ?: [];
         $func = function ($fn) {
             return basename($fn, '.htm');
         };
@@ -161,7 +161,7 @@ final class Plugin
         global $pth, $cl, $l, $h, $cf, $pd_router;
 
         $fn = self::dataFolder() . $name . '.htm';
-        $old = is_readable($fn) ? XH_readFile($fn) : '';
+        $old = is_readable($fn) ? (string) XH_readFile($fn) : '';
         $ml = $cf['menu']['levels'];
         $cnt = '<html>' . PHP_EOL . '<body>' . PHP_EOL;
         for ($j = 0; $j < $cl; $j++) {
@@ -173,7 +173,7 @@ final class Plugin
             $cnt .= '<h' . $l[$j] . ' id="' . $pd['coco_id'] . '">' . $h[$j]
                 . '</h' . $l[$j] . '>' . PHP_EOL;
             if ($j == $i) {
-                $text = preg_replace('/<h' . $ml . '.*?>.*?<\/h' . $ml . '>/isu', '', $text);
+                $text = (string) preg_replace('/<h' . $ml . '.*?>.*?<\/h' . $ml . '>/isu', '', (string) $text);
                 $text = trim($text);
                 $text = preg_replace('/(<\/?h)[1-' . $ml . ']/is', '${1}' . ($ml + 1), $text);
                 if (!empty($text)) {
@@ -219,7 +219,7 @@ final class Plugin
                     ucfirst($tx['filetype']['backup']) . ' ' . $fn . ' '
                     . $tx['result']['created']
                 ) . PHP_EOL;
-                $bus = glob($dir . '????????_??????_' . $coco . '.htm');
+                $bus = glob($dir . '????????_??????_' . $coco . '.htm') ?: [];
                 for ($i = 0; $i < count($bus) - $cf['backup']['numberoffiles']; $i++) {
                     if (unlink($bus[$i])) {
                         $o .= XH_message(
@@ -261,7 +261,7 @@ final class Plugin
         } else {
             $controller->defaultAction();
         }
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 
     /**
@@ -282,7 +282,7 @@ final class Plugin
 
         $ptx = $plugin_tx['coco'];
         $title = $tx['title']['search'];
-        $words = preg_split('/\s+/isu', $search, null, PREG_SPLIT_NO_EMPTY);
+        $words = preg_split('/\s+/isu', $search, null, PREG_SPLIT_NO_EMPTY) ?: [];
         $ta = self::searchContent(null, $words);
         foreach (self::cocos() as $name) {
             $ta = array_merge($ta, self::searchContent($name, $words));

@@ -6,7 +6,7 @@ use Coco\View;
  * @var View $this
  * @var string $logo
  * @var string $version
- * @var object[] $checks
+ * @var stdClass[] $checks
  */
 
 ?>

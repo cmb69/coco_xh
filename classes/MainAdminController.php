@@ -81,7 +81,7 @@ class MainAdminController
     {
         $this->csrfProtector->check();
         $name = $_POST['coco_name'];
-        $fns = glob(Plugin::dataFolder().'????????_??????_' . $name . '.htm');
+        $fns = glob(Plugin::dataFolder().'????????_??????_' . $name . '.htm') ?: [];
         foreach ($fns as $fn) {
             if (!unlink($fn)) {
                 e('cntdelete', 'backup', $fn);

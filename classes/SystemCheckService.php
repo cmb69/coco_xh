@@ -21,6 +21,8 @@
 
 namespace Coco;
 
+use stdClass;
+
 class SystemCheckService
 {
     /**
@@ -42,7 +44,7 @@ class SystemCheckService
     }
 
     /**
-     * @return object[]
+     * @return stdClass[]
      */
     public function getChecks()
     {
@@ -57,7 +59,7 @@ class SystemCheckService
 
     /**
      * @param string $version
-     * @return object
+     * @return stdClass
      */
     private function checkPhpVersion($version)
     {
@@ -69,7 +71,7 @@ class SystemCheckService
 
     /**
      * @param string $version
-     * @return object
+     * @return stdClass
      */
     private function checkXhVersion($version)
     {
@@ -81,7 +83,7 @@ class SystemCheckService
 
     /**
      * @param string $folder
-     * @return object
+     * @return stdClass
      */
     private function checkWritability($folder)
     {
