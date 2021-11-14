@@ -192,7 +192,7 @@ final class Plugin
 
         $ptx = $plugin_tx['coco'];
         $title = $tx['title']['search'];
-        $words = preg_split('/\s+/isu', $search, null, PREG_SPLIT_NO_EMPTY) ?: [];
+        $words = preg_split('/\s+/isu', $search, 0, PREG_SPLIT_NO_EMPTY) ?: [];
         $ta = self::searchContent(null, $words);
         foreach (self::cocoService()->findAll() as $name) {
             $ta = array_merge($ta, self::searchContent($name, $words));
