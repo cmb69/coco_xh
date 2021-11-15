@@ -27,6 +27,9 @@ use XH\Pages;
 final class CocoService
 {
     /** @var string */
+    private $dataDir;
+
+    /** @var string */
     private $contentFile;
 
     /** @var Pages */
@@ -36,13 +39,27 @@ final class CocoService
     private $pageData;
 
     /**
+     * @param string $dataDir
      * @param string $contentFile
      */
-    public function __construct($contentFile, Pages $pages, PageData $pageData)
+    public function __construct($dataDir, $contentFile, Pages $pages, PageData $pageData)
     {
+        if (!is_dir($dataDir)) {
+            mkdir($dataDir, 0777, true);
+            chmod($dataDir, 0777);
+        }
+        $this->dataDir = $dataDir;
         $this->contentFile = $contentFile;
         $this->pages = $pages;
         $this->pageData = $pageData;
+    }
+
+    /**
+     * @return string
+     */
+    public function dataDir()
+    {
+        return $this->dataDir;
     }
 
     /**
@@ -50,7 +67,7 @@ final class CocoService
      */
     public function findAll()
     {
-        $cocos = glob(Plugin::dataFolder() . '*.htm') ?: [];
+        $cocos = glob("$this->dataDir/*.htm") ?: [];
         $func = function ($fn) {
             return basename($fn, '.htm');
         };
@@ -79,7 +96,7 @@ final class CocoService
         }
         if ($name != $curname) {
             $curname = $name;
-            $fn = Plugin::dataFolder() . $name . '.htm';
+            $fn = "$this->dataDir/$name.htm";
             if (!is_readable($fn) || ($text = XH_readFile($fn)) === false) {
                 e('cntopen', 'file', $fn);
                 return false;
@@ -105,7 +122,7 @@ final class CocoService
     {
         global $cf;
 
-        $fn = Plugin::dataFolder() . $name . '.htm';
+        $fn = "$this->dataDir/$name.htm";
         $old = is_readable($fn) ? (string) XH_readFile($fn) : '';
         $ml = $cf['menu']['levels'];
         $cnt = '<html>' . PHP_EOL . '<body>' . PHP_EOL;
@@ -150,13 +167,13 @@ final class CocoService
      */
     public function delete($name)
     {
-        $fns = glob(Plugin::dataFolder().'????????_??????_' . $name . '.htm') ?: [];
+        $fns = glob("$this->dataDir/????????_??????_$name.htm") ?: [];
         foreach ($fns as $fn) {
             if (!unlink($fn)) {
                 e('cntdelete', 'backup', $fn);
             }
         }
-        $fn = Plugin::dataFolder() . $name . '.htm';
+        $fn = "$this->dataDir/$name.htm";
         if (!unlink($fn)) {
             e('cntdelete', 'file', $fn);
         }

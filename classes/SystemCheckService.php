@@ -35,12 +35,16 @@ class SystemCheckService
      */
     private $lang;
 
-    public function __construct()
+    /** @var CocoService */
+    private $cocoService;
+
+    public function __construct(CocoService $cocoService)
     {
         global $pth, $plugin_tx;
 
         $this->pluginFolder = "{$pth['folder']['plugins']}coco";
         $this->lang = $plugin_tx['coco'];
+        $this->cocoService = $cocoService;
     }
 
     /**
@@ -53,7 +57,7 @@ class SystemCheckService
             $this->checkXhVersion('1.7.0'),
             $this->checkWritability("$this->pluginFolder/css/"),
             $this->checkWritability("$this->pluginFolder/languages/"),
-            $this->checkWritability(Plugin::dataFolder())
+            $this->checkWritability($this->cocoService->dataDir())
         );
     }
 

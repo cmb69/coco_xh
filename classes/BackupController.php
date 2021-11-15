@@ -46,7 +46,7 @@ final class BackupController
     {
         global $tx;
 
-        $dir = Plugin::dataFolder();
+        $dir = $this->cocoService->dataDir() . "/";
         $o = '';
         foreach ($this->cocoService->findAll() as $coco) {
             $fn = $dir . $backupDate . '_' . $coco . '.htm';

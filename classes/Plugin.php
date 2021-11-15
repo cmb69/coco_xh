@@ -60,7 +60,7 @@ final class Plugin
         switch ($admin) {
             case '':
                 ob_start();
-                (new InfoController(new SystemCheckService(), self::view()))->defaultAction();
+                (new InfoController(new SystemCheckService(self::cocoService()), self::view()))->defaultAction();
                 $o .= ob_get_clean();
                 break;
             case 'plugin_main':
@@ -78,28 +78,6 @@ final class Plugin
             default:
                 $o .= plugin_admin_common();
         }
-    }
-
-    /**
-     * @return string
-     */
-    public static function dataFolder()
-    {
-        global $pth;
-
-        $fn = $pth['folder']['content'] . 'coco/';
-        if (file_exists($fn)) {
-            if (!is_dir($fn)) {
-                e('cntopen', 'folder', $fn);
-            }
-        } else {
-            if (mkdir($fn, 0777, true)) {
-                chmod($fn, 0777);
-            } else {
-                e('cntwriteto', 'folder', $fn);
-            }
-        }
-        return $fn;
     }
 
     /**
@@ -255,7 +233,7 @@ final class Plugin
     {
         global $pth, $pd_router;
 
-        return new CocoService($pth['file']['content'], new Pages(), $pd_router);
+        return new CocoService("{$pth['folder']['content']}coco", $pth['file']['content'], new Pages(), $pd_router);
     }
 
     /**
