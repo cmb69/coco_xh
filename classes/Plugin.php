@@ -146,7 +146,7 @@ final class Plugin
         $title = $tx['title']['search'];
         $words = preg_split('/\s+/isu', $search, 0, PREG_SPLIT_NO_EMPTY) ?: [];
         $ta = self::searchContent(null, $words);
-        foreach (self::cocoService()->findAll() as $name) {
+        foreach (self::cocoService()->findAllNames() as $name) {
             $ta = array_merge($ta, self::searchContent($name, $words));
         }
         $ta = array_unique($ta);
@@ -193,10 +193,18 @@ final class Plugin
     {
         global $c, $cl, $cf;
 
+        if ($name === null) {
+            $cocos = $c;
+        } else {
+            $cocos = self::cocoService()->findAll($name);
+            if ($cocos === false) {
+                return [];
+            }
+        }
         $ta = array();
         for ($i = 0; $i < $cl; $i++) {
             if (!hide($i) || $cf['hidden']['pages_search'] == 'true') {
-                $text = !isset($name) ? $c[$i] : self::cocoService()->find($name, $i);
+                $text = $cocos[$i];
                 if (self::doSearch($words, $text)) {
                     $ta[] = $i;
                 }

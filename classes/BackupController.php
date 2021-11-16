@@ -48,7 +48,7 @@ final class BackupController
 
         $dir = $this->cocoService->dataDir() . "/";
         $o = '';
-        foreach ($this->cocoService->findAll() as $coco) {
+        foreach ($this->cocoService->findAllNames() as $coco) {
             $fn = $dir . $backupDate . '_' . $coco . '.htm';
             if (copy($dir . $coco . '.htm', $fn)) {
                 $o .= XH_message(

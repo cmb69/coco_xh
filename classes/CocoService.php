@@ -74,7 +74,7 @@ final class CocoService
     /**
      * @return string[]
      */
-    public function findAll()
+    public function findAllNames()
     {
         $cocos = glob("$this->dataDir/*.htm") ?: [];
         $func = function ($fn) {
@@ -90,31 +90,53 @@ final class CocoService
 
     /**
      * @param string $name
+     * @return string[]|false
+     */
+    public function findAll($name)
+    {
+        $fn = $this->filename($name);
+        if (!is_readable($fn) || ($text = XH_readFile($fn)) === false) {
+            return false;
+        }
+        $result = [];
+        for ($i = 0; $i < $this->pages->getCount(); $i++) {
+            $result[] = $this->doFind($text, $i);
+        }
+        return $result;
+    }
+
+    /**
+     * @param string $name
      * @param int $i
      * @return string|false
      */
     public function find($name, $i)
     {
+        $fn = $this->filename($name);
+        if (!is_readable($fn) || ($text = XH_readFile($fn)) === false) {
+            return false;
+        }
+        return $this->doFind($text, $i);
+    }
+
+    /**
+     * @param string $content
+     * @param int $i
+     * @return string
+     */
+    private function doFind($content, $i)
+    {
         global $cf;
-        static $curname = null;
-        static $text = null;
 
         $pd = $this->pageData->find_page($i);
         if (empty($pd['coco_id'])) {
             return '';
         }
-        if ($name != $curname) {
-            $curname = $name;
-            $fn = $this->filename($name);
-            if (!is_readable($fn) || ($text = XH_readFile($fn)) === false) {
-                return false;
-            }
-        }
         $ml = $cf['menu']['levels'];
         preg_match(
             '/<h[1-' . $ml . '].*?id="' . $pd['coco_id'] . '".*?>.*?'
             . '<\/h[1-' . $ml . ']>(.*?)<(?:h[1-' . $ml . ']|\/body)/isu',
-            $text,
+            $content,
             $matches
         );
         return !empty($matches[1]) ? trim($matches[1]) : '';

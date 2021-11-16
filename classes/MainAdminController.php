@@ -65,7 +65,7 @@ class MainAdminController
         global $sn, $tx;
 
         $cocos = [];
-        foreach ($this->cocoService->findAll() as $coco) {
+        foreach ($this->cocoService->findAllNames() as $coco) {
             $message = addcslashes(sprintf($this->lang['confirm_delete'], $coco), "\n\r\t\\");
             $cocos[] = (object) ['name' => $coco, 'message' => $message];
         }
