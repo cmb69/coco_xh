@@ -18,6 +18,8 @@ $plugin_tx['coco']['menu_main']="Co-Contents";
 $plugin_tx['coco']['confirm_delete']="Der gesamte Inhalt von \"%s\" wird gelöscht!";
 
 $plugin_tx['coco']['error_invalid_name']="Co-Content-Namen dürfen nur a-z, 0-9 and _ enthalten!";
+$plugin_tx['coco']['error_save']="%s konnte nicht gespeichert werden!";
+$plugin_tx['coco']['error_delete']="%s konnte nicht gelöscht werden!";
 
 $plugin_tx['coco']['search_foundin']="wurde gefunden auf";
 $plugin_tx['coco']['search_notfound']="wurde nicht gefunden";

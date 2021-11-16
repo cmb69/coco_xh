@@ -63,6 +63,15 @@ final class CocoService
     }
 
     /**
+     * @param string $name
+     * @return string
+     */
+    public function filename($name)
+    {
+        return "$this->dataDir/$name.htm";
+    }
+
+    /**
      * @return string[]
      */
     public function findAll()
@@ -96,9 +105,8 @@ final class CocoService
         }
         if ($name != $curname) {
             $curname = $name;
-            $fn = "$this->dataDir/$name.htm";
+            $fn = $this->filename($name);
             if (!is_readable($fn) || ($text = XH_readFile($fn)) === false) {
-                e('cntopen', 'file', $fn);
                 return false;
             }
         }
@@ -116,13 +124,13 @@ final class CocoService
      * @param string $name
      * @param int $i
      * @param string $text
-     * @return void
+     * @return bool
      */
     public function save($name, $i, $text)
     {
         global $cf;
 
-        $fn = "$this->dataDir/$name.htm";
+        $fn = $this->filename($name);
         $old = is_readable($fn) ? (string) XH_readFile($fn) : '';
         $ml = $cf['menu']['levels'];
         $cnt = '<html>' . PHP_EOL . '<body>' . PHP_EOL;
@@ -154,28 +162,26 @@ final class CocoService
             }
         }
         $cnt .= '</body>' . PHP_EOL . '</html>' . PHP_EOL;
-        if (XH_writeFile($fn, $cnt) !== false) {
-            touch($this->contentFile);
-        } else {
-            e('cntwriteto', 'file', $fn);
+        if (XH_writeFile($fn, $cnt) === false) {
+            return false;
         }
+        touch($this->contentFile);
+        return true;
     }
 
     /**
      * @param string $name
-     * @return void
+     * @return array<string,bool>
      */
     public function delete($name)
     {
+        $result = [];
         $fns = glob("$this->dataDir/????????_??????_$name.htm") ?: [];
         foreach ($fns as $fn) {
-            if (!unlink($fn)) {
-                e('cntdelete', 'backup', $fn);
-            }
+            $result[$fn] = unlink($fn);
         }
         $fn = "$this->dataDir/$name.htm";
-        if (!unlink($fn)) {
-            e('cntdelete', 'file', $fn);
-        }
+        $result[$fn] = unlink($fn);
+        return $result;
     }
 }

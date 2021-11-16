@@ -66,6 +66,17 @@ class View
     }
 
     /**
+     * @param string $type
+     * @param string $key
+     * @param mixed $args
+     * @return void
+     */
+    public function message($type, $key, ...$args)
+    {
+        printf('<p class="xh_%s">%s</p>', $type, $this->text($key, ...$args));
+    }
+
+    /**
      * @param string $_template
      * @param array<string,mixed> $_data
      * @return void

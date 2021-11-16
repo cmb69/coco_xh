@@ -104,7 +104,9 @@ class MainController
         if (isset($_POST['coco_text_' . $this->name])) {
             $this->csrfProtector->check();
             $content = $_POST['coco_text_' . $this->name];
-            $this->cocoService->save($this->name, $s, $content);
+            if (!$this->cocoService->save($this->name, $s, $content)) {
+                $this->view->message("fail", "error_save", $this->cocoService->filename($this->name));
+            }
         } else {
             $content = $this->cocoService->find($this->name, $s);
         }

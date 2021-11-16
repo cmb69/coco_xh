@@ -85,7 +85,12 @@ class MainAdminController
     {
         $this->csrfProtector->check();
         $name = $_POST['coco_name'];
-        $this->cocoService->delete($name);
+        $result = $this->cocoService->delete($name);
+        foreach ($result as $filename => $success) {
+            if (!$success) {
+                $this->view->message("fail", "error_delete", $filename);
+            }
+        }
         $this->defaultAction();
     }
 }
