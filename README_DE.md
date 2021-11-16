@@ -23,7 +23,7 @@ Textarea und der Verwendung von Skripting.
 ## Voraussetzungen
 
 Coco_XH ist ein Plugin für [CMSimple_XH](https://www.cmsimple-xh.org/de/).
-Es benötigt CMSimple_XH ≥ 1.7.0 and PHP ≥ 5.4.0.
+Es benötigt CMSimple_XH ≥ 1.7.0 and PHP ≥ 7.0.0.
 
 ## Download
 
