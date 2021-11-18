@@ -100,7 +100,12 @@ final class CocoService
         }
         $result = [];
         for ($i = 0; $i < $this->pages->getCount(); $i++) {
-            $result[] = $this->doFind($text, $i);
+            $pd = $this->pageData->find_page($i);
+            if (empty($pd['coco_id'])) {
+                $result[] = "";
+            } else {
+                $result[] = $this->doFind($text, $pd['coco_id']);
+            }
         }
         return $result;
     }
@@ -116,30 +121,11 @@ final class CocoService
         if (!is_readable($fn) || ($text = XH_readFile($fn)) === false) {
             return false;
         }
-        return $this->doFind($text, $i);
-    }
-
-    /**
-     * @param string $content
-     * @param int $i
-     * @return string
-     */
-    private function doFind($content, $i)
-    {
-        global $cf;
-
         $pd = $this->pageData->find_page($i);
         if (empty($pd['coco_id'])) {
-            return '';
+            return "";
         }
-        $ml = $cf['menu']['levels'];
-        preg_match(
-            '/<h[1-' . $ml . '].*?id="' . $pd['coco_id'] . '".*?>.*?'
-            . '<\/h[1-' . $ml . ']>(.*?)<(?:h[1-' . $ml . ']|\/body)/isu',
-            $content,
-            $matches
-        );
-        return !empty($matches[1]) ? trim($matches[1]) : '';
+        return $this->doFind($text, $pd['coco_id']);
     }
 
     /**
@@ -172,15 +158,7 @@ final class CocoService
                     $cnt .= $text . PHP_EOL;
                 }
             } else {
-                preg_match(
-                    '/<h[1-' . $ml . '].*?id="' . $pd['coco_id'] . '".*?>.*?'
-                    . '<\/h[1-' . $ml . ']>(.*?)<(?:h[1-' . $ml . ']|\/body)/isu',
-                    $old,
-                    $matches
-                );
-                $cnt .= isset($matches[1]) && ($match = trim($matches[1])) != ''
-                    ? $match . PHP_EOL
-                    : '';
+                $cnt .= $this->doFind($old, $pd["coco_id"]);
             }
         }
         $cnt .= '</body>' . PHP_EOL . '</html>' . PHP_EOL;
@@ -189,6 +167,25 @@ final class CocoService
         }
         touch($this->contentFile);
         return true;
+    }
+
+    /**
+     * @param string $content
+     * @param string $id
+     * @return string
+     */
+    private function doFind($content, $id)
+    {
+        global $cf;
+
+        $ml = $cf['menu']['levels'];
+        preg_match(
+            '/<h[1-' . $ml . '].*?id="' . $id . '".*?>.*?'
+            . '<\/h[1-' . $ml . ']>(.*?)<(?:h[1-' . $ml . ']|\/body)/isu',
+            $content,
+            $matches
+        );
+        return !empty($matches[1]) ? trim($matches[1]) : '';
     }
 
     /**
