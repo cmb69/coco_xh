@@ -44,7 +44,7 @@ class MainController
     private $cocoService;
 
     /**
-     * @var CsrfProtector
+     * @var CsrfProtector|null
      */
     private $csrfProtector;
 
@@ -55,13 +55,14 @@ class MainController
      * @param string $name
      * @param string $config
      * @param string $height
+     * @param CsrfProtector|null $csrfProtector
      */
     public function __construct(
         $name,
         $config,
         $height,
         CocoService $cocoService,
-        CsrfProtector $csrfProtector,
+        $csrfProtector,
         View $view
     ) {
         $this->name = $name;
@@ -101,6 +102,7 @@ class MainController
     {
         global $s, $tx;
 
+        assert($this->csrfProtector !== null);
         if (isset($_POST['coco_text_' . $this->name])) {
             $this->csrfProtector->check();
             $content = $_POST['coco_text_' . $this->name];
