@@ -82,15 +82,9 @@ class MainController
 
         $text = evaluate_scripting((string) $this->cocoService->find($this->name, $s));
         if (isset($_GET['search'])) {
-            $class = 'xh_find';
-            $search = urldecode($_GET['search']);
-            $search = XH_hsc($search);
-            $words = explode(',', $search);
-            $func = function ($w) {
-                return "/" . preg_quote($w, "/") . "(?!([^<]+)?>)/isU";
-            };
-            $words = array_map($func, $words);
-            $text = preg_replace($words, '<span class="' . $class . '">\\0</span>', $text);
+            $search = XH_hsc(trim(preg_replace('/\s+/u', ' ', ($_GET['search']))));
+            $words = explode(' ', $search);
+            $text = XH_highlightSearchWords($words, $text);
         }
         echo $text;
     }
