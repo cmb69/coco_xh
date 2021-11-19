@@ -88,13 +88,13 @@ class View
     }
 
     /**
-     * @param mixed $value
-     * @return mixed
+     * @param string|HtmlString $value
+     * @return string
      */
     public function esc($value)
     {
         if ($value instanceof HtmlString) {
-            return $value;
+            return (string) $value;
         } else {
             return XH_hsc($value);
         }
