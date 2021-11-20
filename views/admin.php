@@ -7,8 +7,6 @@ use Coco\View;
  * @var View $this
  * @var HtmlString $csrfTokenInput
  * @var string $url
- * @var string $deleteIcon
- * @var string $alt
  * @var stdClass[] $cocos
  */
 
