@@ -175,7 +175,7 @@ final class CocoService
     private function doFind($content, $id)
     {
         $pattern = sprintf(
-            '/<h[1-9].*?id="%s".*?>.*?<\/h[1-9]>(.*?)<(?:h[1-9].*?id=|\/body)/isu',
+            '/<h[1-9][^>]+id="%s"[^>]*>[^<]*<\/h[1-9]>(.*?)<(?:h[1-9][^>]+?id=|\/body)/isu',
             $id
         );
         preg_match($pattern, $content, $matches);
