@@ -136,11 +136,8 @@ final class CocoService
      */
     public function save($name, $i, $text)
     {
-        global $cf;
-
         $fn = $this->filename($name);
         $old = is_readable($fn) ? (string) XH_readFile($fn) : '';
-        $ml = $cf['menu']['levels'];
         $cnt = '<html>' . PHP_EOL . '<body>' . PHP_EOL;
         for ($j = 0; $j < $this->pages->getCount(); $j++) {
             $pd = $this->pageData->find_page($j);
@@ -151,9 +148,7 @@ final class CocoService
             $cnt .= '<h' . $this->pages->level($j) . ' id="' . $pd['coco_id'] . '">' . $this->pages->heading($j)
                 . '</h' . $this->pages->level($j) . '>' . PHP_EOL;
             if ($j == $i) {
-                $text = (string) preg_replace('/<h' . $ml . '.*?>.*?<\/h' . $ml . '>/isu', '', (string) $text);
                 $text = trim($text);
-                $text = preg_replace('/(<\/?h)[1-' . $ml . ']/is', '${1}' . ($ml + 1), $text);
                 if (!empty($text)) {
                     $cnt .= $text . PHP_EOL;
                 }
@@ -176,15 +171,11 @@ final class CocoService
      */
     private function doFind($content, $id)
     {
-        global $cf;
-
-        $ml = $cf['menu']['levels'];
-        preg_match(
-            '/<h[1-' . $ml . '].*?id="' . $id . '".*?>.*?'
-            . '<\/h[1-' . $ml . ']>(.*?)<(?:h[1-' . $ml . ']|\/body)/isu',
-            $content,
-            $matches
+        $pattern = sprintf(
+            '/<h[1-9].*?id="%s".*?>.*?<\/h[1-9]>(.*?)<(?:h[1-9].*?id=|\/body)/isu',
+            $id
         );
+        preg_match($pattern, $content, $matches);
         return !empty($matches[1]) ? trim($matches[1]) : '';
     }
 
