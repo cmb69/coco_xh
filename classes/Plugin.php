@@ -241,7 +241,13 @@ final class Plugin
     {
         global $pth, $pd_router;
 
-        return new CocoService("{$pth['folder']['content']}coco", $pth['file']['content'], new Pages(), $pd_router);
+        return new CocoService(
+            "{$pth['folder']['content']}coco",
+            $pth['file']['content'],
+            new Pages(),
+            $pd_router,
+            new IdGenerator()
+        );
     }
 
     /**

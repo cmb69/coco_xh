@@ -38,11 +38,14 @@ final class CocoService
     /** @var PageData */
     private $pageData;
 
+    /** @var IdGenerator */
+    private $idGenerator;
+
     /**
      * @param string $dataDir
      * @param string $contentFile
      */
-    public function __construct($dataDir, $contentFile, Pages $pages, PageData $pageData)
+    public function __construct($dataDir, $contentFile, Pages $pages, PageData $pageData, IdGenerator $idGenerator)
     {
         if (!is_dir($dataDir)) {
             mkdir($dataDir, 0777, true);
@@ -52,6 +55,7 @@ final class CocoService
         $this->contentFile = $contentFile;
         $this->pages = $pages;
         $this->pageData = $pageData;
+        $this->idGenerator = $idGenerator;
     }
 
     /**
@@ -141,7 +145,7 @@ final class CocoService
         for ($j = 0; $j < $this->pages->getCount(); $j++) {
             $pd = $this->pageData->find_page($j);
             if (empty($pd['coco_id'])) {
-                $pd['coco_id'] = uniqid();
+                $pd['coco_id'] = $this->idGenerator->newId();
                 $this->pageData->update($j, $pd);
             }
             $cnt .= '<h' . $this->pages->level($j) . ' id="' . $pd['coco_id'] . '">' . $this->pages->heading($j)

@@ -19,8 +19,12 @@
  * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "../../cmsimple/functions.php";
-require_once "../../cmsimple/classes/PageDataRouter.php";
-require_once "../../cmsimple/classes/Pages.php";
-require_once "./classes/CocoService.php";
-require_once "./classes/IdGenerator.php";
+namespace Coco;
+
+class IdGenerator
+{
+    public function newId(): string
+    {
+        return uniqid();
+    }
+}

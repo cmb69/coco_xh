@@ -41,6 +41,9 @@ final class CocoServiceTest extends TestCase
     /** @var CocoService */
     private $subject;
 
+    /** @var IdGenerator */
+    private $idGenerator;
+
     public function setup(): void
     {
         $this->root = vfsStream::setup("test");
@@ -50,7 +53,15 @@ final class CocoServiceTest extends TestCase
         $this->pages->method("heading")->willReturn("Start");
         $this->pageData = $this->createMock(PageData::class);
         $this->pageData->method("find_page")->willReturnOnConsecutiveCalls([], ["coco_id" => "12345"]);
-        $this->subject = new CocoService(vfsStream::url("test/coco"), "", $this->pages, $this->pageData);
+        $this->idGenerator = $this->createMock(IdGenerator::class);
+        $this->idGenerator->method("newId")->willReturn("12345");
+        $this->subject = new CocoService(
+            vfsStream::url("test/coco"),
+            "",
+            $this->pages,
+            $this->pageData,
+            $this->idGenerator
+        );
     }
 
     public function testDataDirIsCreated()
