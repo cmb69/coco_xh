@@ -48,13 +48,11 @@ final class CocoServiceTest extends TestCase
     {
         $this->root = vfsStream::setup("test");
         $this->pages = $this->createMock(Pages::class);
-        $this->pages->method("getCount")->willReturn(1);
-        $this->pages->method("level")->willReturn(1);
-        $this->pages->method("heading")->willReturn("Start");
+        $this->pages->method("getCount")->willReturn(2);
+        $this->pages->method("level")->willReturnMap([[0, 1], [1, 2]]);
+        $this->pages->method("heading")->willReturnMap([[0, "Start"], [1, "Sub"]]);
         $this->pageData = $this->createMock(PageData::class);
-        $this->pageData->method("find_page")->willReturnOnConsecutiveCalls([], ["coco_id" => "12345"]);
         $this->idGenerator = $this->createMock(IdGenerator::class);
-        $this->idGenerator->method("newId")->willReturn("12345");
         $this->subject = new CocoService(
             vfsStream::url("test/coco"),
             "",
@@ -93,8 +91,10 @@ final class CocoServiceTest extends TestCase
 
     public function testFindAll()
     {
+        $this->idGenerator->method("newId")->willReturnOnConsecutiveCalls("12345", "23456");
+        $this->pageData->method("find_page")->willReturnOnConsecutiveCalls([], [], ["coco_id" => "12345"], ["coco_id" => "23456"]);
         $this->assertTrue($this->subject->save("foo", 0, "hello world"));
-        $this->assertSame(["hello world"], $this->subject->findAll("foo", 0));
+        $this->assertSame(["hello world", ""], $this->subject->findAll("foo", 0));
     }
 
     public function testFindNothing()
@@ -104,6 +104,8 @@ final class CocoServiceTest extends TestCase
 
     public function testFind()
     {
+        $this->idGenerator->method("newId")->willReturnOnConsecutiveCalls("12345", "23456");
+        $this->pageData->method("find_page")->willReturnOnConsecutiveCalls([], [], ["coco_id" => "12345"]);
         $this->assertTrue($this->subject->save("foo", 0, "hello world"));
         $this->assertSame("hello world", $this->subject->find("foo", 0));
     }
