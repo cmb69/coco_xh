@@ -15,6 +15,9 @@ $plugin_tx['coco']['label_delete']="Delete";
 
 $plugin_tx['coco']['confirm_delete']="All contents of \"%s\" will be deleted!";
 
+$plugin_tx['coco']['info_created']="%s created";
+$plugin_tx['coco']['info_deleted']="%s deleted";
+
 $plugin_tx['coco']['error_invalid_name']="Co-content names may contain a-z, 0-9 and _ only!";
 $plugin_tx['coco']['error_save']="%s could not be saved!";
 $plugin_tx['coco']['error_delete']="%s could not be deleted!";

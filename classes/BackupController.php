@@ -29,13 +29,17 @@ final class BackupController
     /** @var CocoService */
     private $cocoService;
 
+    /** @var View */
+    private $view;
+
     /**
      * @param int $maxBackups
      */
-    public function __construct($maxBackups, CocoService $cocoService)
+    public function __construct($maxBackups, CocoService $cocoService, View $view)
     {
         $this->maxBackups = $maxBackups;
         $this->cocoService = $cocoService;
+        $this->view = $view;
     }
 
     /**
@@ -44,34 +48,22 @@ final class BackupController
      */
     public function execute($backupDate)
     {
-        global $tx;
-
         $dir = $this->cocoService->dataDir() . "/";
-        $o = '';
         foreach ($this->cocoService->findAllNames() as $coco) {
             $fn = $dir . $backupDate . '_' . $coco . '.htm';
             if (copy($dir . $coco . '.htm', $fn)) {
-                $o .= XH_message(
-                    'info',
-                    ucfirst($tx['filetype']['backup']) . ' ' . $fn . ' '
-                    . $tx['result']['created']
-                ) . PHP_EOL;
+                $this->view->message("info", "info_created", $fn);
                 $bus = glob($dir . '????????_??????_' . $coco . '.htm') ?: [];
                 for ($i = 0; $i < count($bus) - $this->maxBackups; $i++) {
                     if (unlink($bus[$i])) {
-                        $o .= XH_message(
-                            'info',
-                            ucfirst($tx['filetype']['backup']) . ' ' . $bus[$i]
-                            . ' ' . $tx['result']['deleted']
-                        ) . PHP_EOL;
+                        $this->view->message("info", "info_deleted", $bus[$i]);
                     } else {
-                        e('cntdelete', 'backup', $bus[$i]);
+                        $this->view->message("fail", "error_delete", $bus[$i]);
                     }
                 }
             } else {
-                e('cntsave', 'backup', $fn);
+                $this->view->message("fail", "error_save", $fn);
             }
         }
-        echo $o;
     }
 }
