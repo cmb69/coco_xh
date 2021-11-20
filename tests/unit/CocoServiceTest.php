@@ -109,4 +109,12 @@ final class CocoServiceTest extends TestCase
         $this->assertTrue($this->subject->save("foo", 0, "hello world"));
         $this->assertSame("hello world", $this->subject->find("foo", 0));
     }
+
+    public function testDelete()
+    {
+        $this->assertTrue($this->subject->save("foo", 0, "hello world"));
+        $this->assertTrue($this->subject->save("bar", 0, "hello world"));
+        $this->assertSame([$this->subject->filename("foo") => true], $this->subject->delete("foo"));
+        $this->assertSame(["bar"], $this->subject->findAllNames());
+    }
 }
