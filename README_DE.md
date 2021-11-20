@@ -180,10 +180,6 @@ von Ricardo Serpell inspiriert.
 Das Plugin-Icon wurde von [Andy Gongea](https://gongea.com/) gestaltet. 
 Vielen Dank für die Veröffentlichung als Freeware.
 
-Dieses Plugin verwendet „Free Application Icons“ von
-[Aha-Soft](https://www.aha-soft.com/).
-Vielen Dank für die Veröffentlichung als Freeware.
-
 Vielen Dank an die Community im
 [CMSimple_XH-Forum](https://www.cmsimpleforum.com/)
 für Tipps, Vorschläge und das Testen.

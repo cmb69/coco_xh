@@ -22,7 +22,7 @@ use Coco\View;
             <form action="<?=$this->esc($url)?>" method="POST" onsubmit="return confirm('<?=$this->esc($coco->message)?>')">
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" name="coco_name" value="<?=$this->esc($coco->name)?>">
-                <input type="image" src="<?=$this->esc($deleteIcon)?>" alt="<?=$this->esc($alt)?>" title="<?=$this->esc($alt)?>">
+                <button><?=$this->text("label_delete")?></button>
                 <?=$this->esc($csrfTokenInput)?>
             </form>
             <?=$this->esc($coco->name)?>

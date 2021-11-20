@@ -170,10 +170,6 @@ Coco_XH was inspired by Ricardo Serpell’s
 The plugin icon is designed by [Andy Gongea](https://gongea.com/).
 Many thanks for publishing this icon as freeware.
 
-This plugin uses free applications icons by
-[Aha-Soft](https://www.aha-soft.com/).
-Many thanks for making these icons freely available.
-
 Many thanks to the community at the [CMSimple_XH forum](https://www.cmsimpleforum.com/)
 for tips, suggestions and testing.
 Especially, my thanks go to *snafu* and *Ulrich*, who pointed out the

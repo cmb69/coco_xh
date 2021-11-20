@@ -62,7 +62,7 @@ class MainAdminController
      */
     public function defaultAction()
     {
-        global $sn, $tx;
+        global $sn;
 
         $cocos = [];
         foreach ($this->cocoService->findAllNames() as $coco) {
@@ -72,8 +72,6 @@ class MainAdminController
         $this->view->render("admin", [
             "csrfTokenInput" => new HtmlString($this->csrfProtector->tokenInput()),
             "url" => "$sn?&coco&admin=plugin_main",
-            "deleteIcon" => "{$this->pluginFolder}images/delete.png",
-            "alt" => ucfirst($tx['action']['delete']),
             "cocos" => $cocos,
         ]);
     }
