@@ -1,0 +1,31 @@
+name: checks
+on: [push, pull_request]
+jobs:
+  checks:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: phive
+      - name: Install CMSimple_XH
+        run: |
+          curl -fsSL -o CMSimple_XH-1.7.5.zip https://github.com/cmsimple-xh/cmsimple-xh/releases/download/1.7.5/CMSimple_XH-1.7.5.zip
+          unzip -q CMSimple_XH-1.7.5.zip
+      - name: Checkout Coco_XH
+        uses: actions/checkout@v2
+        with:
+          path: 'cmsimplexh/plugins/coco'
+      - name: phive install
+        run: cd cmsimplexh/plugins/coco && phive --no-progress install --trust-gpg-keys 0xCF1A108D0E7AE720
+      - name: composer install
+        run: cd cmsimplexh/plugins/coco && composer install
+      - name: phing sniff
+        run: cd cmsimplexh/plugins/coco && PATH=vendor/bin:$PATH phing sniff
+      - name: phing mess
+        run: cd cmsimplexh/plugins/coco && PATH=vendor/bin:$PATH phing mess
+      - name: phing stan
+        run: cd cmsimplexh/plugins/coco && PATH=tools:$PATH phing stan
+      - name: phing unit-tests
+        run: cd cmsimplexh/plugins/coco && PATH=vendor/bin:$PATH phing unit-tests

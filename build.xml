@@ -76,6 +76,7 @@
         <delete file="export.zip"/>
         <move todir="dist">
             <fileset dir="export">
+                <exclude name=".github/**"/>
                 <exclude name=".phive/**"/>
                 <exclude name=".phpstan/**"/>
                 <exclude name="help/template.htm"/>
