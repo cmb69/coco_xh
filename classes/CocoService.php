@@ -145,6 +145,9 @@ final class CocoService
         for ($j = 0; $j < $this->pages->getCount(); $j++) {
             $pd = $this->pageData->find_page($j);
             if (empty($pd['coco_id'])) {
+                if ($j !== $i) {
+                    continue;
+                }
                 $pd['coco_id'] = $this->idGenerator->newId();
                 $this->pageData->update($j, $pd);
             }
