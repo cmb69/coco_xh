@@ -76,15 +76,14 @@ final class CocoService
      */
     public function findAllNames()
     {
-        $cocos = glob("$this->dataDir/*.htm") ?: [];
-        $func = function ($fn) {
-            return basename($fn, '.htm');
-        };
-        $cocos = array_map($func, $cocos);
-        $func = function ($fn) {
-            return !preg_match('/^\d{8}_\d{6}_/', $fn);
-        };
-        $cocos = array_filter($cocos, $func);
+        $cocos = [];
+        if ($dir = opendir($this->dataDir)) {
+            while (($filename = readdir($dir)) !== false) {
+                if (preg_match('/\.htm$/', $filename) && !preg_match('/^\d{8}_\d{6}_/', $filename)) {
+                    $cocos[] = basename($filename, '.htm');
+                }
+            }
+        }
         return $cocos;
     }
 
@@ -186,12 +185,16 @@ final class CocoService
     public function delete($name)
     {
         $result = [];
-        $fns = glob("$this->dataDir/????????_??????_$name.htm") ?: [];
-        foreach ($fns as $fn) {
-            $result[$fn] = unlink($fn);
+        if (($dir = opendir($this->dataDir))) {
+            $pattern = sprintf('/^\d{8}_\d{6}_%s\.htm$/', $name);
+            if (($filename = readdir($dir)) !== false) {
+                if (preg_match($pattern, $filename)) {
+                    $result[$filename] = unlink($filename);
+                }
+            }
         }
-        $fn = "$this->dataDir/$name.htm";
-        $result[$fn] = unlink($fn);
+        $filename = $this->filename($name);
+        $result[$filename] = unlink($filename);
         return $result;
     }
 }
