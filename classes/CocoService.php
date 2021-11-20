@@ -93,13 +93,13 @@ final class CocoService
 
     /**
      * @param string $name
-     * @return string[]|false
+     * @return string[]
      */
     public function findAll($name)
     {
         $fn = $this->filename($name);
         if (!is_readable($fn) || ($text = XH_readFile($fn)) === false) {
-            return false;
+            return [];
         }
         $result = [];
         for ($i = 0; $i < $this->pages->getCount(); $i++) {
@@ -116,13 +116,13 @@ final class CocoService
     /**
      * @param string $name
      * @param int $i
-     * @return string|false
+     * @return string
      */
     public function find($name, $i)
     {
         $fn = $this->filename($name);
         if (!is_readable($fn) || ($text = XH_readFile($fn)) === false) {
-            return false;
+            return "";
         }
         $pd = $this->pageData->find_page($i);
         if (empty($pd['coco_id'])) {

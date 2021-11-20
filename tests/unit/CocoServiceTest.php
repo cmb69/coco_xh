@@ -86,7 +86,7 @@ final class CocoServiceTest extends TestCase
 
     public function testFindAllNothing()
     {
-        $this->assertFalse($this->subject->findAll("foo", 0));
+        $this->assertEmpty($this->subject->findAll("foo", 0));
     }
 
     public function testFindAll()
@@ -99,7 +99,7 @@ final class CocoServiceTest extends TestCase
 
     public function testFindNothing()
     {
-        $this->assertFalse($this->subject->find("foo", 0));
+        $this->assertEmpty($this->subject->find("foo", 0));
     }
 
     public function testFind()

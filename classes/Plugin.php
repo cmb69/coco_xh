@@ -197,9 +197,6 @@ final class Plugin
             $cocos = $c;
         } else {
             $cocos = self::cocoService()->findAll($name);
-            if ($cocos === false) {
-                return [];
-            }
         }
         $ta = array();
         for ($i = 0; $i < $cl; $i++) {
