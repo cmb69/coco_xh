@@ -42,6 +42,18 @@
         <exec command="phpcompatinfo analyser:run --alias current" logoutput="true"/>
     </target>
 
+    <target name="unit-tests" description="runs all unit tests">
+        <exec executable="phpunit" passthru="true" checkreturn="true">
+            <arg line="--bootstrap=tests/unit/bootstrap.php tests/unit"/>
+        </exec>
+    </target>
+
+    <target name="coverage" description="generates coverage report">
+        <exec executable="phpunit" passthru="true" checkreturn="true">
+            <arg line="--configuration coverage.xml"/>
+        </exec>
+    </target>
+
     <target name="attack-tests" description="runs all attack tests">
         <fail unless="env.CMSIMPLEDIR" message="CMSIMPLEDIR undefined!"/>
         <exec executable="phpunit" passthru="true" checkreturn="true">
@@ -70,6 +82,7 @@
                 <exclude name="tests/**"/>
                 <exclude name="composer.*"/>
                 <exclude name="build.xml"/>
+                <exclude name="coverage.xml"/>
                 <exclude name="phpcompatinfo.*"/>
                 <exclude name="phpstan.neon"/>
                 <exclude name="README*.md"/>
