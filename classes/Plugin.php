@@ -186,12 +186,11 @@ final class Plugin
      * @return int[]
      *
      * @global array The content of the pages.
-     * @global int   The number of pages.
      * @global array The configuration of the core.
      */
     private static function searchContent($name, array $words)
     {
-        global $c, $cl, $cf;
+        global $c, $cf;
 
         if ($name === null) {
             $cocos = $c;
@@ -199,10 +198,9 @@ final class Plugin
             $cocos = self::cocoService()->findAll($name);
         }
         $ta = array();
-        for ($i = 0; $i < $cl; $i++) {
+        foreach ($cocos as $i => $coco) {
             if (!hide($i) || $cf['hidden']['pages_search'] == 'true') {
-                $text = $cocos[$i];
-                if (self::doSearch($words, $text)) {
+                if (self::doSearch($words, $coco)) {
                     $ta[] = $i;
                 }
             }
