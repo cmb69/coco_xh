@@ -26,11 +26,6 @@ use XH\CSRFProtection as CsrfProtector;
 class MainAdminController
 {
     /**
-     * @var string
-     */
-    private $pluginFolder;
-
-    /**
      * @var array<string,string>
      */
     private $lang;
@@ -48,9 +43,8 @@ class MainAdminController
 
     public function __construct(CocoService $cocoService, CsrfProtector $csrfProtector, View $view)
     {
-        global $pth, $plugin_tx;
+        global $plugin_tx;
 
-        $this->pluginFolder = "{$pth['folder']['plugins']}coco/";
         $this->lang = $plugin_tx['coco'];
         $this->cocoService = $cocoService;
         $this->csrfProtector = $csrfProtector;
