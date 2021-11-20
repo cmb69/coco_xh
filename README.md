@@ -106,10 +106,10 @@ If you want to change the width, you can do so in the stylesheet.
 The co-contents are stored in the subfolder `coco/` of the `content/` folder
 of CMSimple_XH in an HTML file with the name given as first parameter,
 e.g. `my_content.htm`.
-The structure is similar to that of the content.htm file of CMSimple_XH.
-The pages are separated by `<h1>`, `<h2>` or `<h3>` according to their menu level.
-Therefore it is not possible to use these headings in the co-contents;
-they will be automatically converted to `<h4>`.
+The structure is similar to that of the content.htm file of CMSimple_XH 1.7 and up,
+but for historic reasons,
+the pages are separated by `<h1>`, `<h2>` … `<h9>` according to their menu level,
+instead of respective HTML comments.
 The names of the page headings are inserted for better readability only;
 they are ignored by Coco_XH.
 Instead the link to the page is made with the id given for the heading.

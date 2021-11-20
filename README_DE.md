@@ -113,11 +113,9 @@ Die Co-Contents werden im Unterordner `coco/` des `content/` Ordners
 von CMSimple_XH in einer HTML-Datei mit dem Namen,
 der als erster Parameter angegeben wurde, gespeichert,
 z.B. `mein_content.htm`.
-Die Struktur ist ähnlich zu derjenigen der CMSimple_XH `content.htm`-Datei. Die Seiten werden entsprechend Ihrer Menüebene durch
-`<h1>`, `<h2>` oder `<h3>` getrennt.
-Daher ist es auch nicht möglich,
-diese Überschriften in Co-Contents zu verwenden;
-sie werden automatisch durch `<h4>` ersetzt.
+Die Struktur ist ähnlich zu derjenigen der CMSimple_XH `content.htm`-Datei von Version 1.7 und höher,
+aber aus historischen Gründen werden die Seiten entsprechend Ihrer Menüebene durch
+`<h1>`, `<h2>` … `<h3>` getrennt, statt durch die entsprechenden HTML-Kommentare.
 Die Namen der Seitenüberschriften werden nur zur besseren Lesbarkeit eingefügt;
 sie werden von Coco_XH ignoriert.
 Statt dessen wird die Verknüpfung zur Seite durch die id der Überschrift hergestellt.
