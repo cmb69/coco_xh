@@ -199,7 +199,7 @@ final class Plugin
         }
         $ta = array();
         foreach ($cocos as $i => $coco) {
-            if (!hide($i) || $cf['hidden']['pages_search'] == 'true') {
+            if (!hide($i) || $cf['show_hidden']['pages_search'] == 'true') {
                 if (self::doSearch($words, $coco)) {
                     $ta[] = $i;
                 }
