@@ -88,7 +88,7 @@ final class Plugin
         global $cf;
 
         ob_start();
-        $controller = new BackupController((int) $cf['backup']['numberoffiles'], self::cocoService());
+        $controller = new BackupController((int) $cf['backup']['numberoffiles'], self::cocoService(), self::view());
         $controller->execute(date("Ymd_His"));
         return (string) ob_get_clean();
     }
