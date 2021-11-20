@@ -9,10 +9,6 @@ $plugin_tx['coco']['syscheck_warning']="warning";
 $plugin_tx['coco']['syscheck_writable']="'%s' is writable";
 $plugin_tx['coco']['syscheck_xhversion']="CMSimple_XH version ≥ %s";
 
-$plugin_tx['coco']['label_info']="Info";
-
-$plugin_tx['coco']['alt_logo']="Box with stuff";
-
 $plugin_tx['coco']['menu_main']="Co-Contents";
 
 $plugin_tx['coco']['confirm_delete']="All contents of \"%s\" will be deleted!";
