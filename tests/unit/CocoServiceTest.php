@@ -86,7 +86,7 @@ final class CocoServiceTest extends TestCase
 
     public function testFindAllNothing()
     {
-        $this->assertEmpty($this->subject->findAll("foo", 0));
+        $this->assertEmpty(iterator_to_array($this->subject->findAll("foo", 0)));
     }
 
     public function testFindAll()
@@ -94,7 +94,7 @@ final class CocoServiceTest extends TestCase
         $this->idGenerator->method("newId")->willReturnOnConsecutiveCalls("12345", "23456");
         $this->pageData->method("find_page")->willReturnOnConsecutiveCalls([], [], ["coco_id" => "12345"], ["coco_id" => "23456"]);
         $this->assertTrue($this->subject->save("foo", 0, "hello world"));
-        $this->assertSame(["hello world", ""], $this->subject->findAll("foo", 0));
+        $this->assertSame(["hello world", ""], iterator_to_array($this->subject->findAll("foo", 0)));
     }
 
     public function testFindNothing()

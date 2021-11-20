@@ -93,7 +93,7 @@ final class CocoService
 
     /**
      * @param string $name
-     * @return string[]
+     * @return iterable<string>
      */
     public function findAll($name)
     {
@@ -101,16 +101,14 @@ final class CocoService
         if (!is_readable($fn) || ($text = XH_readFile($fn)) === false) {
             return [];
         }
-        $result = [];
         for ($i = 0; $i < $this->pages->getCount(); $i++) {
             $pd = $this->pageData->find_page($i);
             if (empty($pd['coco_id'])) {
-                $result[] = "";
+                yield "";
             } else {
-                $result[] = $this->doFind($text, $pd['coco_id']);
+                yield $this->doFind($text, $pd['coco_id']);
             }
         }
-        return $result;
     }
 
     /**
