@@ -252,6 +252,6 @@ final class Plugin
     {
         global $pth, $plugin_tx;
 
-        return new View($plugin_tx["coco"], "{$pth['folder']['plugins']}coco/views");
+        return new View("{$pth['folder']['plugins']}coco/views", $plugin_tx["coco"]);
     }
 }

@@ -23,20 +23,20 @@ namespace Coco;
 
 class View
 {
-    /** @var array<string,string> */
-    private $lang;
-
     /** @var string */
     private $templateDir;
+
+    /** @var array<string,string> */
+    private $lang;
 
     /**
      * @param array<string,string> $lang
      * @param string $templateDir
      */
-    public function __construct(array $lang, $templateDir)
+    public function __construct($templateDir, array $lang)
     {
-        $this->lang = $lang;
         $this->templateDir = $templateDir;
+        $this->lang = $lang;
     }
 
     /**
