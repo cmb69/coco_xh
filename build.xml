@@ -2,20 +2,6 @@
 
 <project name="Coco" default="help">
 
-    <fileset id="php-sources" dir=".">
-        <include name="classes/**"/>
-        <include name="index.php"/>
-        <include name="search.php"/>
-    </fileset>
-
-    <fileset id="js-sources" dir=".">
-        <include name="*.js"/>
-    </fileset>
-
-    <fileset id="attack-tests" dir="tests/attack">
-        <include name="*Test.php"/>
-    </fileset>
-
     <target name="help" description="lists available targets">
         <exec command="phing -l" outputProperty="help"/>
         <echo>${help}</echo>
