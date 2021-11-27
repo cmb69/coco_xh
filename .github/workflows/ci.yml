@@ -20,11 +20,11 @@ jobs:
         with:
           path: 'cmsimplexh/plugins/coco'
       - name: phive install
-        run: cd cmsimplexh/plugins/coco && phive --no-progress install --trust-gpg-keys 0xCF1A108D0E7AE720
+        run: cd cmsimplexh/plugins/coco && phive --no-progress install --trust-gpg-keys 0x31C7E470E2138192,0xCF1A108D0E7AE720
       - name: composer install
         run: cd cmsimplexh/plugins/coco && composer install
       - name: phing sniff
-        run: cd cmsimplexh/plugins/coco && PATH=vendor/bin:$PATH phing sniff
+        run: cd cmsimplexh/plugins/coco && PATH=tools:vendor/bin:$PATH phing sniff
       - name: phing mess
         run: cd cmsimplexh/plugins/coco && PATH=vendor/bin:$PATH phing mess
       - name: phing stan
