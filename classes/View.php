@@ -41,18 +41,19 @@ class View
 
     /**
      * @param string $key
-     * @param mixed $args
+     * @param string|HtmlString $args
      * @return string
      */
     public function text($key, ...$args)
     {
-        return $this->esc(vsprintf($this->lang[$key], $args));
+        $args = array_map([$this, "esc"], $args);
+        return sprintf($this->esc($this->lang[$key]), ...$args);
     }
 
     /**
      * @param string $key
      * @param int $count
-     * @param mixed $args
+     * @param string|HtmlString $args
      * @return string
      */
     public function plural($key, $count, ...$args)
@@ -62,13 +63,14 @@ class View
         } else {
             $key .= XH_numberSuffix($count);
         }
-        return $this->esc(vsprintf($this->lang[$key], $args));
+        $args = array_map([$this, "esc"], $args);
+        return sprintf($this->esc($this->lang[$key]), $count, ...$args);
     }
 
     /**
      * @param string $type
      * @param string $key
-     * @param mixed $args
+     * @param string|HtmlString $args
      * @return void
      */
     public function message($type, $key, ...$args)
