@@ -63,7 +63,7 @@ class MainAdminController
             $message = addcslashes(sprintf($this->lang['confirm_delete'], $coco), "\n\r\t\\");
             $cocos[] = (object) ['name' => $coco, 'message' => $message];
         }
-        $this->view->render("admin", [
+        echo $this->view->render("admin", [
             "csrfTokenInput" => new HtmlString($this->csrfProtector->tokenInput()),
             "url" => "$sn?&coco&admin=plugin_main",
             "cocos" => $cocos,
@@ -80,7 +80,7 @@ class MainAdminController
         $result = $this->cocoService->delete($name);
         foreach ($result as $filename => $success) {
             if (!$success) {
-                $this->view->message("fail", "error_delete", $filename);
+                echo $this->view->message("fail", "error_delete", $filename);
             }
         }
         $this->defaultAction();

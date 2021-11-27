@@ -71,22 +71,24 @@ class View
      * @param string $type
      * @param string $key
      * @param string|HtmlString $args
-     * @return void
      */
-    public function message($type, $key, ...$args)
+    public function message($type, $key, ...$args): string
     {
-        printf('<p class="xh_%s">%s</p>', $type, $this->text($key, ...$args));
+        return sprintf('<p class="xh_%s">%s</p>', $type, $this->text($key, ...$args));
     }
 
     /**
      * @param string $_template
      * @param array<string,mixed> $_data
-     * @return void
      */
-    public function render($_template, array $_data)
+    public function render($_template, array $_data): string
     {
         extract($_data);
+        ob_start();
         include "{$this->templateDir}/$_template.php";
+        $result = ob_get_clean();
+        assert($result !== false);
+        return $result;
     }
 
     /**

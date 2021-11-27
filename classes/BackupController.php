@@ -52,17 +52,17 @@ final class BackupController
         foreach ($this->cocoService->findAllNames() as $coco) {
             $fn = $dir . $backupDate . '_' . $coco . '.htm';
             if (copy($dir . $coco . '.htm', $fn)) {
-                $this->view->message("info", "info_created", $fn);
+                echo $this->view->message("info", "info_created", $fn);
                 $bus = glob($dir . '????????_??????_' . $coco . '.htm') ?: [];
                 for ($i = 0; $i < count($bus) - $this->maxBackups; $i++) {
                     if (unlink($bus[$i])) {
-                        $this->view->message("info", "info_deleted", $bus[$i]);
+                        echo $this->view->message("info", "info_deleted", $bus[$i]);
                     } else {
-                        $this->view->message("fail", "error_delete", $bus[$i]);
+                        echo $this->view->message("fail", "error_delete", $bus[$i]);
                     }
                 }
             } else {
-                $this->view->message("fail", "error_save", $fn);
+                echo $this->view->message("fail", "error_save", $fn);
             }
         }
     }

@@ -101,14 +101,14 @@ class MainController
             $this->csrfProtector->check();
             $content = $_POST['coco_text_' . $this->name];
             if (!$this->cocoService->save($this->name, $s, $content)) {
-                $this->view->message("fail", "error_save", $this->cocoService->filename($this->name));
+                echo $this->view->message("fail", "error_save", $this->cocoService->filename($this->name));
             }
         } else {
             $content = $this->cocoService->find($this->name, $s);
         }
         $id = 'coco_text_' . $this->name;
         $editor = editor_replace($id, $this->config);
-        $this->view->render("edit-form", [
+        echo $this->view->render("edit-form", [
             "id" => $id,
             "name" => $this->name,
             "style" => 'width:100%; height:' . $this->height,
