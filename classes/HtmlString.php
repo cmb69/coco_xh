@@ -21,7 +21,7 @@
 
 namespace Coco;
 
-class HtmlString
+final class HtmlString
 {
     /** @var string */
     private $value;
