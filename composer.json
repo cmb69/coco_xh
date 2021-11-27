@@ -1,6 +1,5 @@
 {
     "require-dev": {
-        "phing/phing": "2.17.*",
         "bartlett/php-compatinfo": "5.3.*",
         "phpunit/phpunit": "7.5.*",
         "mikey179/vfsstream": "1.6.*"
