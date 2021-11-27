@@ -37,9 +37,9 @@
     </target>
 
     <target name="mess" description="detects code flaws">
-        <phpmd>
-            <fileset refid="php-sources"/>
-         </phpmd>
+        <exec executable="phpmd" passthru="true">
+            <arg line="classes,index.php,search.php ansi codesize,unusedcode"/>
+        </exec>
     </target>
 
     <target name="compat" description="checks PHP requirements">
