@@ -43,7 +43,9 @@
     </target>
 
     <target name="compat" description="checks PHP requirements">
-        <exec command="phpcompatinfo analyser:run --alias current" logoutput="true"/>
+        <exec executable="phpcompatinfo" passthru="true" checkreturn="true">
+            <arg line=" analyser:run --alias current"/>
+        </exec>
     </target>
 
     <target name="unit-tests" description="runs all unit tests">
