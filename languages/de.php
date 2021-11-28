@@ -12,6 +12,7 @@ $plugin_tx['coco']['syscheck_xhversion']="die CMSimple_XH-Version ≥ %s";
 $plugin_tx['coco']['menu_main']="Co-Contents";
 
 $plugin_tx['coco']['label_delete']="Löschen";
+$plugin_tx['coco']['label_save']="Speichern";
 
 $plugin_tx['coco']['confirm_delete']="Der gesamte Inhalt von \"%s\" wird gelöscht!";
 

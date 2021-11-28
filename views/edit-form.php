@@ -10,7 +10,6 @@ use Plib\HtmlView as View;
  * @var string $style
  * @var string $content
  * @var HtmlString|false $editor
- * @var string $saveLabel
  * @var HtmlString $csrfTokenInput
  */
 
@@ -22,6 +21,6 @@ use Plib\HtmlView as View;
 <?php if ($editor):?>
     <script type="text/javascript"><?=$this->esc($editor)?></script>
 <?php else:?>
-    <input type="submit" class="submit" value="<?=$this->esc($saveLabel)?>">
+    <input type="submit" class="submit" value="<?=$this->text("label_save")?>">
 <?php endif?>
 </form>

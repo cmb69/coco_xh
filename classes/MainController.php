@@ -116,7 +116,6 @@ class MainController
             "style" => 'width:100%; height:' . $this->height,
             "content" => $content,
             "editor" => $editor !== false ? new HtmlString($editor) : false,
-            "saveLabel" => ucfirst($tx['action']['save']),
             "csrfTokenInput" => new HtmlString($this->csrfProtector->tokenInput()),
         ]);
     }
