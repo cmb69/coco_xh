@@ -1,6 +1,6 @@
 <?php
 
-use Coco\View;
+use Plib\HtmlView as View;
 
 /**
  * @var View $this

@@ -21,6 +21,8 @@
 
 namespace Coco;
 
+use Plib\HtmlString;
+use Plib\HtmlView as View;
 use XH\CSRFProtection as CsrfProtector;
 
 class MainAdminController

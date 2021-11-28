@@ -1,7 +1,7 @@
 <?php
 
-use Coco\HtmlString;
-use Coco\View;
+use Plib\HtmlString;
+use Plib\HtmlView as View;
 
 /**
  * @var View $this

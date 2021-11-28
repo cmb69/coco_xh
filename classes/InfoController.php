@@ -21,6 +21,8 @@
 
 namespace Coco;
 
+use Plib\HtmlView as View;
+
 class InfoController
 {
     /** @var SystemCheckService */

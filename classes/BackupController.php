@@ -21,6 +21,8 @@
 
 namespace Coco;
 
+use Plib\HtmlView as View;
+
 final class BackupController
 {
     /** @var int */

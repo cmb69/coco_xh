@@ -21,6 +21,7 @@
 
 namespace Coco;
 
+use Plib\HtmlView as View;
 use XH\Pages;
 
 final class Plugin
