@@ -96,7 +96,7 @@ class MainController
      */
     public function editAction()
     {
-        global $s, $tx;
+        global $s;
 
         assert($this->csrfProtector !== null);
         if (isset($_POST['coco_text_' . $this->name])) {
