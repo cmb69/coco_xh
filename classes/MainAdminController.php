@@ -61,7 +61,7 @@ class MainAdminController
         }
         echo $this->view->render("admin", [
             "csrfTokenInput" => new HtmlString($this->csrfProtector->tokenInput()),
-            "url" => "$sn?&coco&admin=plugin_main",
+            "url" => (new Url($sn))->withPage("coco")->withParam("admin", "plugin_main"),
             "cocos" => $cocos,
         ]);
     }
