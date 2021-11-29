@@ -55,7 +55,7 @@ final class Plugin
      */
     private static function handlePluginAdministration()
     {
-        global $o, $admin, $action, $_XH_csrfProtection;
+        global $o, $admin, $action, $_XH_csrfProtection, $sn;
 
         $o .= print_plugin_admin('on');
         switch ($admin) {
@@ -65,7 +65,12 @@ final class Plugin
                 $o .= ob_get_clean();
                 break;
             case 'plugin_main':
-                $controller = new MainAdminController(self::cocoService(), $_XH_csrfProtection, self::view());
+                $controller = new MainAdminController(
+                    new Url($sn),
+                    self::cocoService(),
+                    $_XH_csrfProtection,
+                    self::view()
+                );
                 ob_start();
                 switch ($action) {
                     case 'delete':

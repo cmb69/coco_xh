@@ -27,6 +27,9 @@ use XH\CSRFProtection as CsrfProtector;
 
 class MainAdminController
 {
+    /** @var Url */
+    private $url;
+
     /** @var CocoService */
     private $cocoService;
 
@@ -38,8 +41,9 @@ class MainAdminController
     /** @var View */
     private $view;
 
-    public function __construct(CocoService $cocoService, CsrfProtector $csrfProtector, View $view)
+    public function __construct(Url $url, CocoService $cocoService, CsrfProtector $csrfProtector, View $view)
     {
+        $this->url = $url;
         $this->cocoService = $cocoService;
         $this->csrfProtector = $csrfProtector;
         $this->view = $view;
@@ -50,8 +54,6 @@ class MainAdminController
      */
     public function defaultAction()
     {
-        global $sn;
-
         $cocos = [];
         foreach ($this->cocoService->findAllNames() as $coco) {
             $message = new HtmlString(
@@ -61,7 +63,7 @@ class MainAdminController
         }
         echo $this->view->render("admin", [
             "csrfTokenInput" => new HtmlString($this->csrfProtector->tokenInput()),
-            "url" => (new Url($sn))->withPage("coco")->withParam("admin", "plugin_main"),
+            "url" => $this->url->withPage("coco")->withParam("admin", "plugin_main"),
             "cocos" => $cocos,
         ]);
     }
