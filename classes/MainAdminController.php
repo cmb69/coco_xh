@@ -27,11 +27,6 @@ use XH\CSRFProtection as CsrfProtector;
 
 class MainAdminController
 {
-    /**
-     * @var array<string,string>
-     */
-    private $lang;
-
     /** @var CocoService */
     private $cocoService;
 
@@ -45,9 +40,6 @@ class MainAdminController
 
     public function __construct(CocoService $cocoService, CsrfProtector $csrfProtector, View $view)
     {
-        global $plugin_tx;
-
-        $this->lang = $plugin_tx['coco'];
         $this->cocoService = $cocoService;
         $this->csrfProtector = $csrfProtector;
         $this->view = $view;
@@ -62,7 +54,9 @@ class MainAdminController
 
         $cocos = [];
         foreach ($this->cocoService->findAllNames() as $coco) {
-            $message = addcslashes(sprintf($this->lang['confirm_delete'], $coco), "\n\r\t\\");
+            $message = new HtmlString(
+                addcslashes($this->view->text('confirm_delete', new HtmlString($coco)), "\n\r\t\\")
+            );
             $cocos[] = (object) ['name' => $coco, 'message' => $message];
         }
         echo $this->view->render("admin", [
