@@ -66,7 +66,7 @@ final class Plugin
                 break;
             case 'plugin_main':
                 $controller = new MainAdminController(
-                    new Url($sn),
+                    new Url($sn, ""),
                     self::cocoService(),
                     $_XH_csrfProtection,
                     self::view()

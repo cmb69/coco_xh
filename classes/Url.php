@@ -27,24 +27,25 @@ final class Url
     private $base;
 
     /** @var string */
-    private $page = "";
+    private $page;
 
     /** @var array<string,string> */
     private $params = [];
 
-    public function __construct(string $base)
+    public function __construct(string $base, string $page)
     {
         $this->base = $base;
+        $this->page = $page;
     }
 
-    public function withPage(string $page): self
+    public function page(string $page): self
     {
         $url = clone $this;
         $url->page = $page;
         return $url;
     }
 
-    public function withParam(string $name, string $value): self
+    public function with(string $name, string $value): self
     {
         $url = clone $this;
         $url->params[$name] = $value;
