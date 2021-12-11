@@ -21,8 +21,6 @@
 
 namespace Coco;
 
-use stdClass;
-
 class SystemCheckService
 {
     /**
@@ -48,7 +46,7 @@ class SystemCheckService
     }
 
     /**
-     * @return stdClass[]
+     * @return array<array{state:string,label:string,stateLabel:string}>
      */
     public function getChecks()
     {
@@ -63,37 +61,37 @@ class SystemCheckService
 
     /**
      * @param string $version
-     * @return stdClass
+     * @return array{state:string,label:string,stateLabel:string}
      */
     private function checkPhpVersion($version)
     {
         $state = version_compare(PHP_VERSION, $version, 'ge') ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_phpversion'], $version);
         $stateLabel = $this->lang["syscheck_$state"];
-        return (object) compact('state', 'label', 'stateLabel');
+        return compact('state', 'label', 'stateLabel');
     }
 
     /**
      * @param string $version
-     * @return stdClass
+     * @return array{state:string,label:string,stateLabel:string}
      */
     private function checkXhVersion($version)
     {
         $state = version_compare(CMSIMPLE_XH_VERSION, "CMSimple_XH $version", 'ge') ? 'success' : 'fail';
         $label = sprintf($this->lang['syscheck_xhversion'], $version);
         $stateLabel = $this->lang["syscheck_$state"];
-        return (object) compact('state', 'label', 'stateLabel');
+        return compact('state', 'label', 'stateLabel');
     }
 
     /**
      * @param string $folder
-     * @return stdClass
+     * @return array{state:string,label:string,stateLabel:string}
      */
     private function checkWritability($folder)
     {
         $state = is_writable($folder) ? 'success' : 'warning';
         $label = sprintf($this->lang['syscheck_writable'], $folder);
         $stateLabel = $this->lang["syscheck_$state"];
-        return (object) compact('state', 'label', 'stateLabel');
+        return compact('state', 'label', 'stateLabel');
     }
 }
