@@ -55,7 +55,7 @@ final class Plugin
      */
     private static function handlePluginAdministration()
     {
-        global $o, $admin, $action, $_XH_csrfProtection, $sn;
+        global $o, $admin, $action, $_XH_csrfProtection;
 
         $o .= print_plugin_admin('on');
         switch ($admin) {
@@ -66,7 +66,7 @@ final class Plugin
                 break;
             case 'plugin_main':
                 $controller = new MainAdminController(
-                    new Url($sn, ""),
+                    self::url(),
                     self::cocoService(),
                     $_XH_csrfProtection,
                     self::view()
@@ -259,5 +259,14 @@ final class Plugin
         global $pth, $plugin_tx;
 
         return new View("{$pth['folder']['plugins']}coco/views", $plugin_tx["coco"]);
+    }
+
+    private static function url(): Url
+    {
+        global $sl, $cf, $su;
+
+        $base = preg_replace(['/index\.php$/', "/(?<=\\/)$sl\\/$/"], "", CMSIMPLE_URL);
+        assert($base !== null);
+        return new Url($base, $sl === $cf["language"]["default"] ? "" : $sl, $su);
     }
 }

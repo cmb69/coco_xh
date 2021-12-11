@@ -18,7 +18,7 @@ use Plib\HtmlView as View;
     <ul>
 <?php foreach ($cocos as $coco):?>
         <li>
-            <form action="<?=$this->esc($url->asString())?>" method="POST" onsubmit="return confirm('<?=$this->esc($coco->message)?>')">
+            <form action="<?=$this->esc($url->relative())?>" method="POST" onsubmit="return confirm('<?=$this->esc($coco->message)?>')">
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" name="coco_name" value="<?=$this->esc($coco->name)?>">
                 <button><?=$this->text("label_delete")?></button>

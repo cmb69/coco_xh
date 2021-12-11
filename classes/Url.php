@@ -21,10 +21,23 @@
 
 namespace Coco;
 
+use const PHP_QUERY_RFC3986;
+use const PHP_URL_PATH;
+
+use function count;
+use function http_build_query;
+use function is_string;
+use function parse_url;
+use function preg_match;
+use function preg_replace;
+
 final class Url
 {
     /** @var string */
     private $base;
+
+    /** @var string */
+    private $lang;
 
     /** @var string */
     private $page;
@@ -32,9 +45,11 @@ final class Url
     /** @var array<string,string> */
     private $params = [];
 
-    public function __construct(string $base, string $page)
+    public function __construct(string $base, string $lang, string $page)
     {
+        assert((bool) preg_match('/^http[s]?:\/\/.*\/$/', $base));
         $this->base = $base;
+        $this->lang = $lang;
         $this->page = $page;
     }
 
@@ -52,16 +67,38 @@ final class Url
         return $url;
     }
 
-    public function asString(): string
+    public function absolute(): string
+    {
+        return $this->base . $this->suffix();
+    }
+
+    public function relative(): string
+    {
+        $relative = parse_url($this->base, PHP_URL_PATH);
+        assert(is_string($relative));
+        return $relative . $this->suffix();
+    }
+
+    private function suffix(): string
+    {
+        $suffix = "";
+        if ($this->lang !== "") {
+            $suffix .= $this->lang . "/";
+        }
+        $query = $this->query();
+        if ($query !== "") {
+            $suffix .= "?" . $query;
+        }
+        return $suffix;
+    }
+
+    private function query(): string
     {
         $query = $this->page;
         if (count($this->params) > 0) {
-            $query .= "&" . http_build_query($this->params, "", "&", PHP_QUERY_RFC3986);
+            $rest = http_build_query($this->params, "", "&", PHP_QUERY_RFC3986);
+            $query .= "&" . preg_replace('/=(?=&|$)/', "", $rest);
         }
-        $result = $this->base;
-        if ($query !== "") {
-            $result .= "?$query";
-        }
-        return $result;
+        return $query;
     }
 }
