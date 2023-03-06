@@ -21,6 +21,7 @@
 
 namespace Coco;
 
+use Coco\Infra\Backups;
 use Coco\Infra\CocoService;
 use Plib\HtmlView as View;
 
@@ -32,41 +33,49 @@ final class BackupController
     /** @var CocoService */
     private $cocoService;
 
+    /** @var Backups */
+    private $backups;
+
     /** @var View */
     private $view;
 
     /**
      * @param int $maxBackups
      */
-    public function __construct($maxBackups, CocoService $cocoService, View $view)
+    public function __construct($maxBackups, CocoService $cocoService, Backups $backups, View $view)
     {
         $this->maxBackups = $maxBackups;
         $this->cocoService = $cocoService;
+        $this->backups = $backups;
         $this->view = $view;
     }
 
-    /**
-     * @param string $backupDate
-     * @return void
-     */
-    public function execute($backupDate)
+    public function __invoke(int $timestamp): string
+    {
+        $o = "";
+        foreach ($this->cocoService->findAllNames() as $coco) {
+            $o .= $this->backup($coco, date("Ymd_His", $timestamp));
+        }
+        return $o;
+    }
+
+    private function backup(string $coconame, string $backupDate): string
     {
         $dir = $this->cocoService->dataDir() . "/";
-        foreach ($this->cocoService->findAllNames() as $coco) {
-            $fn = $dir . $backupDate . '_' . $coco . '.htm';
-            if (copy($dir . $coco . '.htm', $fn)) {
-                echo $this->view->message("info", "info_created", $fn);
-                $bus = glob($dir . '????????_??????_' . $coco . '.htm') ?: [];
-                for ($i = 0; $i < count($bus) - $this->maxBackups; $i++) {
-                    if (unlink($bus[$i])) {
-                        echo $this->view->message("info", "info_deleted", $bus[$i]);
-                    } else {
-                        echo $this->view->message("fail", "error_delete", $bus[$i]);
-                    }
-                }
+        if (!$this->backups->create($dir, $coconame, $backupDate)) {
+            return $this->view->message("fail", "error_save", $this->backups->filename($dir, $coconame, $backupDate))
+                . "\n";
+        }
+        $o = $this->view->message("info", "info_created", $this->backups->filename($dir, $coconame, $backupDate))
+            . "\n";
+        $backups = $this->backups->all($dir, $coconame);
+        for ($i = 0; $i < count($backups) - $this->maxBackups; $i++) {
+            if ($this->backups->delete($backups[$i])) {
+                $o .= $this->view->message("info", "info_deleted", $backups[$i]) . "\n";
             } else {
-                echo $this->view->message("fail", "error_save", $fn);
+                $o .= $this->view->message("fail", "error_delete", $backups[$i]) . "\n";
             }
         }
+        return $o;
     }
 }

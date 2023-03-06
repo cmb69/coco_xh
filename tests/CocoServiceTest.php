@@ -66,6 +66,7 @@ final class CocoServiceTest extends TestCase
 
     public function testDataDirIsCreated()
     {
+        $this->assertEquals(vfsStream::url("test/coco"), $this->subject->dataDir());
         $this->assertTrue($this->root->hasChild("coco"));
     }
 

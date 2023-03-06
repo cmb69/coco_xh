@@ -47,10 +47,6 @@ class CocoService
      */
     public function __construct($dataDir, $contentFile, Pages $pages, PageData $pageData, IdGenerator $idGenerator)
     {
-        if (!is_dir($dataDir)) {
-            mkdir($dataDir, 0777, true);
-            chmod($dataDir, 0777);
-        }
         $this->dataDir = $dataDir;
         $this->contentFile = $contentFile;
         $this->pages = $pages;
@@ -63,6 +59,10 @@ class CocoService
      */
     public function dataDir()
     {
+        if (!is_dir($this->dataDir)) {
+            mkdir($this->dataDir, 0777, true);
+            chmod($this->dataDir, 0777);
+        }
         return $this->dataDir;
     }
 
@@ -72,7 +72,7 @@ class CocoService
      */
     public function filename($name)
     {
-        return "$this->dataDir/$name.htm";
+        return $this->dataDir() . "/$name.htm";
     }
 
     /**
@@ -81,7 +81,7 @@ class CocoService
     public function findAllNames()
     {
         $cocos = [];
-        if ($dir = opendir($this->dataDir)) {
+        if ($dir = opendir($this->dataDir())) {
             while (($filename = readdir($dir)) !== false) {
                 if (preg_match('/\.htm$/', $filename) && !preg_match('/^\d{8}_\d{6}_/', $filename)) {
                     $cocos[] = basename($filename, '.htm');
@@ -190,7 +190,7 @@ class CocoService
     public function delete($name)
     {
         $result = [];
-        if (($dir = opendir($this->dataDir))) {
+        if (($dir = opendir($this->dataDir()))) {
             $pattern = sprintf('/^\d{8}_\d{6}_%s\.htm$/', $name);
             if (($filename = readdir($dir)) !== false) {
                 if (preg_match($pattern, $filename)) {

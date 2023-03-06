@@ -21,6 +21,7 @@
 
 namespace Coco;
 
+use Coco\Infra\Backups;
 use Coco\Infra\CocoService;
 use Coco\Infra\IdGenerator;
 use Coco\Infra\SystemChecker;
@@ -101,10 +102,13 @@ final class Plugin
     {
         global $cf;
 
-        ob_start();
-        $controller = new BackupController((int) $cf['backup']['numberoffiles'], self::cocoService(), self::view());
-        $controller->execute(date("Ymd_His"));
-        return (string) ob_get_clean();
+        $controller = new BackupController(
+            (int) $cf['backup']['numberoffiles'],
+            self::cocoService(),
+            new Backups,
+            self::view()
+        );
+        return $controller(time());
     }
 
     /**
