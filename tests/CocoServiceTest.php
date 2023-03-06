@@ -23,11 +23,10 @@ namespace Coco;
 
 use Coco\Infra\CocoService;
 use Coco\Infra\IdGenerator;
+use Coco\Infra\Pages as Pages;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
-use XH\PageDataRouter as PageData;
-use XH\Pages;
 
 final class CocoServiceTest extends TestCase
 {
@@ -36,9 +35,6 @@ final class CocoServiceTest extends TestCase
 
     /** @var Pages */
     private $pages;
-
-    /** @var PageData&MockObject */
-    private $pageData;
 
     /** @var CocoService */
     private $subject;
@@ -49,17 +45,15 @@ final class CocoServiceTest extends TestCase
     public function setup(): void
     {
         $this->root = vfsStream::setup("test");
-        $this->pages = $this->createMock(Pages::class);
-        $this->pages->method("getCount")->willReturn(2);
+        $this->pages = $this->createStub(Pages::class);
+        $this->pages->method("count")->willReturn(2);
         $this->pages->method("level")->willReturnMap([[0, 1], [1, 2]]);
         $this->pages->method("heading")->willReturnMap([[0, "Start"], [1, "Sub"]]);
-        $this->pageData = $this->createMock(PageData::class);
         $this->idGenerator = $this->createMock(IdGenerator::class);
         $this->subject = new CocoService(
             vfsStream::url("test/coco"),
             "",
             $this->pages,
-            $this->pageData,
             $this->idGenerator
         );
     }
@@ -95,7 +89,7 @@ final class CocoServiceTest extends TestCase
     public function testFindAll()
     {
         $this->idGenerator->method("newId")->willReturnOnConsecutiveCalls("12345", "23456");
-        $this->pageData->method("find_page")->willReturnOnConsecutiveCalls([], [], ["coco_id" => "12345"], ["coco_id" => "23456"]);
+        $this->pages->method("data")->willReturnOnConsecutiveCalls([], [], ["coco_id" => "12345"], ["coco_id" => "23456"]);
         $this->assertTrue($this->subject->save("foo", 0, "hello world"));
         $this->assertSame(["hello world", ""], iterator_to_array($this->subject->findAll("foo", 0)));
     }
@@ -108,7 +102,7 @@ final class CocoServiceTest extends TestCase
     public function testFind()
     {
         $this->idGenerator->method("newId")->willReturnOnConsecutiveCalls("12345", "23456");
-        $this->pageData->method("find_page")->willReturnOnConsecutiveCalls([], [], ["coco_id" => "12345"]);
+        $this->pages->method("data")->willReturnOnConsecutiveCalls([], [], ["coco_id" => "12345"]);
         $this->assertTrue($this->subject->save("foo", 0, "hello world"));
         $this->assertSame("hello world", $this->subject->find("foo", 0));
     }

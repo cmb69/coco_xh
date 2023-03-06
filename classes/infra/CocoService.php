@@ -21,9 +21,6 @@
 
 namespace Coco\Infra;
 
-use XH\PageDataRouter as PageData;
-use XH\Pages;
-
 class CocoService
 {
     /** @var string */
@@ -35,9 +32,6 @@ class CocoService
     /** @var Pages */
     private $pages;
 
-    /** @var PageData */
-    private $pageData;
-
     /** @var IdGenerator */
     private $idGenerator;
 
@@ -45,12 +39,11 @@ class CocoService
      * @param string $dataDir
      * @param string $contentFile
      */
-    public function __construct($dataDir, $contentFile, Pages $pages, PageData $pageData, IdGenerator $idGenerator)
+    public function __construct($dataDir, $contentFile, Pages $pages, IdGenerator $idGenerator)
     {
         $this->dataDir = $dataDir;
         $this->contentFile = $contentFile;
         $this->pages = $pages;
-        $this->pageData = $pageData;
         $this->idGenerator = $idGenerator;
     }
 
@@ -101,8 +94,8 @@ class CocoService
         if (!is_readable($fn) || ($text = XH_readFile($fn)) === false) {
             return [];
         }
-        for ($i = 0; $i < $this->pages->getCount(); $i++) {
-            $pd = $this->pageData->find_page($i);
+        for ($i = 0; $i < $this->pages->count(); $i++) {
+            $pd = $this->pages->data($i);
             if (empty($pd['coco_id'])) {
                 yield "";
             } else {
@@ -122,7 +115,7 @@ class CocoService
         if (!is_readable($fn) || ($text = XH_readFile($fn)) === false) {
             return "";
         }
-        $pd = $this->pageData->find_page($i);
+        $pd = $this->pages->data($i);
         if (empty($pd['coco_id'])) {
             return "";
         }
@@ -140,14 +133,14 @@ class CocoService
         $fn = $this->filename($name);
         $old = is_readable($fn) ? (string) XH_readFile($fn) : '';
         $cnt = '<html>' . PHP_EOL . '<body>' . PHP_EOL;
-        for ($j = 0; $j < $this->pages->getCount(); $j++) {
-            $pd = $this->pageData->find_page($j);
+        for ($j = 0; $j < $this->pages->count(); $j++) {
+            $pd = $this->pages->data($j);
             if (empty($pd['coco_id'])) {
                 if ($j !== $i) {
                     continue;
                 }
                 $pd['coco_id'] = $this->idGenerator->newId();
-                $this->pageData->update($j, $pd);
+                $this->pages->updateData($j, $pd);
             }
             $cnt .= '<h' . $this->pages->level($j) . ' id="' . $pd['coco_id'] . '">' . $this->pages->heading($j)
                 . '</h' . $this->pages->level($j) . '>' . PHP_EOL;

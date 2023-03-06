@@ -25,11 +25,11 @@ use Coco\Infra\Backups;
 use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\IdGenerator;
+use Coco\Infra\Pages;
 use Coco\Infra\SystemChecker;
 use Coco\Infra\XhStuff;
 use Plib\HtmlView as View;
 use Plib\Url;
-use XH\Pages;
 
 final class Plugin
 {
@@ -142,13 +142,12 @@ final class Plugin
      */
     private static function cocoService()
     {
-        global $pth, $pd_router;
+        global $pth;
 
         return new CocoService(
             "{$pth['folder']['content']}coco",
             $pth['file']['content'],
-            new Pages(),
-            $pd_router,
+            new Pages,
             new IdGenerator()
         );
     }

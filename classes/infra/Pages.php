@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * Copyright 2023 Christoph M. Becker
+ *
+ * This file is part of Coco_XH.
+ *
+ * Coco_XH is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Coco_XH is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Coco\Infra;
+
+use XH\PageDataRouter;
+use XH\Pages as XhPages;
+
+class Pages
+{
+    /** @var XhPages */
+    protected $xhPages;
+
+    /** @var PageDataRouter */
+    protected $pageDataRouter;
+
+    public function __construct()
+    {
+        global $pd_router;
+        $this->xhPages = new XhPages;
+        $this->pageDataRouter = $pd_router;
+    }
+
+    /** @return array<string,string> */
+    public function data(int $pageIndex): array
+    {
+        return $this->pageDataRouter->find_page($pageIndex);
+    }
+
+    /**
+     * @param array<string,string> $pageData
+     * @return void
+     */
+    public function updateData(int $pageIndex, array $pageData)
+    {
+        $this->pageDataRouter->update($pageIndex, $pageData);
+    }
+
+    public function count(): int
+    {
+        return $this->xhPages->getCount();
+    }
+
+    public function level(int $pageIndex): int
+    {
+        return $this->xhPages->level($pageIndex);
+    }
+
+    public function heading(int $pageIndex): string
+    {
+        return $this->xhPages->heading($pageIndex);
+    }
+}
