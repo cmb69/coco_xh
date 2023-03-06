@@ -45,6 +45,14 @@ class FakeCocoService extends CocoService
         return "<p>some HTML with {{{trim('scripting')}}}</p>";
     }
 
+    public function findAll($name)
+    {
+        return [
+            "<p>some other co-content</p>",
+            "<p>some regular co-content</p>",
+        ];
+    }
+
     public function save($name, $i, $text)
     {
         return $this->options["save"] ?? true;

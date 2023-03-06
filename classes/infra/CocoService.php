@@ -93,7 +93,7 @@ class CocoService
 
     /**
      * @param string $name
-     * @return iterable<string>
+     * @return iterable<int,string>
      */
     public function findAll($name)
     {

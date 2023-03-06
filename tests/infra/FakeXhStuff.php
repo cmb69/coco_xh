@@ -43,4 +43,24 @@ class FakeXhStuff extends XhStuff
     {
         return "tinymce.init('$id');";
     }
+
+    public function hide(int $pageIndex): bool
+    {
+        return false;
+    }
+
+    public function h(): array
+    {
+        return ["Welcome!", "Cocos"];
+    }
+
+    public function u(): array
+    {
+        return ["Welcome", "Cocos"];
+    }
+
+    public function c(): array
+    {
+        return ["<p>some page content</p>", "<p>other content</p>"];
+    }
 }

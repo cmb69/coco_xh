@@ -22,10 +22,11 @@ $plugin_tx['coco']['error_invalid_name']="Co-Content-Namen dürfen nur a-z, 0-9 
 $plugin_tx['coco']['error_save']="%s konnte nicht gespeichert werden!";
 $plugin_tx['coco']['error_delete']="%s konnte nicht gelöscht werden!";
 
-$plugin_tx['coco']['search_foundin']="wurde gefunden auf";
-$plugin_tx['coco']['search_notfound']="wurde nicht gefunden";
-$plugin_tx['coco']['search_pgplural']="Seiten";
-$plugin_tx['coco']['search_pgsingular']="Seite";
+$plugin_tx['coco']['search_found_0']="\"%2\$s\" wurde nicht gefunden";
+$plugin_tx['coco']['search_found_1']="\"%2\$s\" wurde auf einer Seite gefunden:";
+$plugin_tx['coco']['search_found_2_4']="\"%2\$s\" wurde auf %1\$d Seiten gefunden:";
+$plugin_tx['coco']['search_found_5']="\"%2\$s\" wurde auf %1\$d Seiten gefunden:";
 $plugin_tx['coco']['search_result']="Suchergebnis";
+$plugin_tx['coco']['search_title']="Suchergebnis";
 
 ?>

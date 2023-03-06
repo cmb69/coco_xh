@@ -39,4 +39,30 @@ class XhStuff
     {
         return editor_replace($id, $init);
     }
+
+    public function hide(int $pageIndex): bool
+    {
+        return hide($pageIndex);
+    }
+
+    /** @return list<string> */
+    public function h(): array
+    {
+        global $h;
+        return $h;
+    }
+
+    /** @return list<string> */
+    public function u(): array
+    {
+        global $u;
+        return $u;
+    }
+
+    /** @return list<string> */
+    public function c(): array
+    {
+        global $c;
+        return $c;
+    }
 }

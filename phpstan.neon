@@ -11,6 +11,7 @@ parameters:
     - ../../cmsimple/classes/CSRFProtection.php
     - ../../cmsimple/classes/PageDataRouter.php
     - ../../cmsimple/classes/Pages.php
+    - ../../cmsimple/classes/Publisher.php
     - ../../cmsimple/adminfuncs.php
     - ../../cmsimple/functions.php
     - ../../cmsimple/utf8.php
