@@ -21,6 +21,8 @@
 
 namespace Coco;
 
+use Coco\Infra\Request;
+
 final class Plugin
 {
     const VERSION = "2.0-dev";
@@ -35,7 +37,7 @@ final class Plugin
         $pd_router->add_interest('coco_id');
 
         if ($f == 'xh_loggedout') {
-            $o .= Dic::makeBackupController()(time());
+            $o .= Dic::makeBackupController()(Request::current());
         }
 
         if (XH_ADM) { // @phpstan-ignore-line
@@ -51,7 +53,7 @@ final class Plugin
      */
     private static function handlePluginAdministration()
     {
-        global $o, $admin, $action, $sn;
+        global $o, $admin;
 
         $o .= print_plugin_admin('on');
         switch ($admin) {
@@ -59,7 +61,7 @@ final class Plugin
                 $o .= Dic::makePluginInfo()();
                 break;
             case 'plugin_main':
-                $o .= Dic::makeMainAdminController()($action, $sn);
+                $o .= Dic::makeMainAdminController()(Request::current());
                 break;
             default:
                 $o .= plugin_admin_common();
@@ -74,16 +76,16 @@ final class Plugin
      */
     public static function coco($name, $config, $height)
     {
-        global $adm, $edit, $s, $cl;
+        global $cl;
 
-        return Dic::makeMainController()($adm && $edit, $cl, $s, $name, $config, $height);
+        return Dic::makeMainController()(Request::current(), $cl, $name, $config, $height);
     }
 
     /** @return void */
     public static function search()
     {
-        global $o, $sn, $search;
+        global $o;
 
-        $o .= Dic::makeSearch()($sn, $search);
+        $o .= Dic::makeSearch()(Request::current());
     }
 }

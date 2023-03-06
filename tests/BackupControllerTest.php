@@ -31,21 +31,21 @@ class BackupControllerTest extends TestCase
     public function testReportsBackupSuccess(): void
     {
         $sut = $this->sut();
-        $response = $sut(strtotime("2023-03-06T12:00:00"));
+        $response = $sut(new FakeRequest(["server" => ["REQUEST_TIME" => strtotime("2023-03-06T12:00:00")]]));
         Approvals::verifyHtml($response);
     }
 
     public function testReportsFailureToCreateBackup(): void
     {
         $sut = $this->sut(["backups" => ["create" => false]]);
-        $response = $sut(strtotime("2023-03-06T12:00:00"));
+        $response = $sut(new FakeRequest(["server" => ["REQUEST_TIME" => strtotime("2023-03-06T12:00:00")]]));
         Approvals::verifyHtml($response);
     }
 
     public function testReportsFailureToDeleteSurplusBackups(): void
     {
         $sut = $this->sut(["backups" => ["delete" => false]]);
-        $response = $sut(strtotime("2023-03-06T12:00:00"));
+        $response = $sut(new FakeRequest(["server" => ["REQUEST_TIME" => strtotime("2023-03-06T12:00:00")]]));
         Approvals::verifyHtml($response);
     }
 

@@ -22,6 +22,8 @@
 namespace Coco;
 
 use Coco\Infra\CocoService;
+use Coco\Infra\Request;
+use Coco\Infra\Response;
 use Coco\Infra\XhStuff;
 use Plib\HtmlView as View;
 
@@ -43,12 +45,9 @@ class Search
         $this->view = $view;
     }
 
-    public function __invoke(string $sn, string $search): string
+    public function __invoke(Request $request): Response
     {
-        global $title;
-
-        $title = $this->view->text("search_title");
-        $words = preg_split('/\s+/isu', $search, 0, PREG_SPLIT_NO_EMPTY) ?: [];
+        $words = preg_split('/\s+/isu', $request->search(), 0, PREG_SPLIT_NO_EMPTY) ?: [];
         $ta = $this->searchContent(null, $words);
         foreach ($this->cocoService->findAllNames() as $name) {
             $ta = array_merge($ta, $this->searchContent($name, $words));
@@ -60,13 +59,13 @@ class Search
         foreach ($ta as $i) {
             $pages[] = [
                 "heading" => $this->xhStuff->h()[$i],
-                "url" => $sn . "?" . $this->xhStuff->u()[$i] . "&search=" . urlencode($words),
+                "url" => $request->sn() . "?" . $this->xhStuff->u()[$i] . "&search=" . urlencode($words),
             ];
         }
-        return $this->view->render("search_results", [
-            "search_term" => $search,
+        return Response::create($this->view->render("search_results", [
+            "search_term" => $request->search(),
             "pages" => $pages,
-        ]);
+        ]))->withTitle($this->view->text("search_title"));
     }
 
     /**

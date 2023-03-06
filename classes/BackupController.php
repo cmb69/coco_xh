@@ -23,6 +23,7 @@ namespace Coco;
 
 use Coco\Infra\Backups;
 use Coco\Infra\CocoService;
+use Coco\Infra\Request;
 use Plib\HtmlView as View;
 
 final class BackupController
@@ -50,11 +51,11 @@ final class BackupController
         $this->view = $view;
     }
 
-    public function __invoke(int $timestamp): string
+    public function __invoke(Request $request): string
     {
         $o = "";
         foreach ($this->cocoService->findAllNames() as $coco) {
-            $o .= $this->backup($coco, date("Ymd_His", $timestamp));
+            $o .= $this->backup($coco, date("Ymd_His", (int) $request->server("REQUEST_TIME")));
         }
         return $o;
     }

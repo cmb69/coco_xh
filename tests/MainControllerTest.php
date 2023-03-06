@@ -24,6 +24,7 @@ namespace Coco;
 use ApprovalTests\Approvals;
 use Coco\Infra\FakeCocoService;
 use Coco\Infra\FakeCsrfProtector;
+use Coco\Infra\FakeRequest;
 use Coco\Infra\FakeXhStuff;
 use Plib\HtmlView as View;
 use PHPUnit\Framework\TestCase;
@@ -34,14 +35,14 @@ class MainControllerTest extends TestCase
     {
         $_GET = ["search" => "with"];
         $sut = $this->sut();
-        $response = $sut(false, 10, 1, "foo", false, "100%");
+        $response = $sut(new FakeRequest(["s" => 1]), 10, "foo", false, "100%");
         Approvals::verifyHtml($response);
     }
 
     public function testRendersCocoEditor(): void
     {
         $sut = $this->sut();
-        $response = $sut(true, 10, 1, "foo", false, "100%");
+        $response = $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), 10, "foo", false, "100%");
         Approvals::verifyHtml($response);
     }
 
@@ -50,14 +51,14 @@ class MainControllerTest extends TestCase
         $_POST = ["coco_text_foo" => "some content"];
         $sut = $this->sut(["csrf" => ["check" => true]]);
         $this->expectExceptionMessage("CSRF check failed!");
-        $sut(true, 10, 1, "foo", false, "100%");
+        $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), 10, "foo", false, "100%");
     }
 
     public function testRendersCocoEditorAfterSavingContent(): void
     {
         $_POST = ["coco_text_foo" => "some content"];
         $sut = $this->sut();
-        $response = $sut(true, 10, 1, "foo", false, "100%");
+        $response = $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), 10, "foo", false, "100%");
         Approvals::verifyHtml($response);
     }
 
@@ -65,21 +66,21 @@ class MainControllerTest extends TestCase
     {
         $_POST = ["coco_text_foo" => "some content"];
         $sut = $this->sut(["cocoService" => ["save" => false]]);
-        $response = $sut(true, 10, 1, "foo", false, "100%");
+        $response = $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), 10, "foo", false, "100%");
         Approvals::verifyHtml($response);
     }
 
     public function testReportsIllegalCocoName(): void
     {
         $sut = $this->sut();
-        $response = $sut(false, 10, 1, "foo bar", false, "100%");
+        $response = $sut(new FakeRequest(["s" => 1]), 10, "foo bar", false, "100%");
         Approvals::verifyHtml($response);
     }
 
     public function testIgnoresSearching(): void
     {
         $sut = $this->sut();
-        $response = $sut(false, 10, -1, "foo", false, "100%");
+        $response = $sut(new FakeRequest(["s" => -1]), 10, "foo", false, "100%");
         $this->assertEquals("", $response);
     }
 

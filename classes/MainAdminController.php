@@ -23,6 +23,7 @@ namespace Coco;
 
 use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
+use Coco\Infra\Request;
 use Plib\HtmlString;
 use Plib\HtmlView as View;
 
@@ -46,13 +47,13 @@ class MainAdminController
         $this->view = $view;
     }
 
-    public function __invoke(string $action, string $sn): string
+    public function __invoke(Request $request): string
     {
-        switch ($action) {
+        switch ($request->action()) {
             default:
-                return $this->show($sn);
+                return $this->show($request->sn());
             case "delete":
-                return $this->delete($sn);
+                return $this->delete($request->sn());
         }
     }
 

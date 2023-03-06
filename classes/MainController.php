@@ -23,6 +23,7 @@ namespace Coco;
 
 use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
+use Coco\Infra\Request;
 use Coco\Infra\XhStuff;
 use Plib\HtmlString;
 use Plib\HtmlView as View;
@@ -53,15 +54,15 @@ class MainController
         $this->view = $view;
     }
 
-    public function __invoke(bool $edit, int $cl, int $s, string $name, string $config, string $height): string
+    public function __invoke(Request $request, int $cl, string $name, string $config, string $height): string
     {
         if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
             return $this->view->message("fail", "error_invalid_name") . "\n";
         }
-        if ($s < 0 || $s >= $cl) {
+        if ($request->s() < 0 || $request->s() >= $cl) {
             return "";
         }
-        switch ($edit) {
+        switch ($request->adm() && $request->edit()) {
             default:
                 return $this->defaultAction($name);
             case true:

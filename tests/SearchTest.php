@@ -23,6 +23,7 @@ namespace Coco;
 
 use ApprovalTests\Approvals;
 use Coco\Infra\FakeCocoService;
+use Coco\Infra\FakeRequest;
 use Coco\Infra\FakeXhStuff;
 use PHPUnit\Framework\TestCase;
 use Plib\HtmlView as View;
@@ -32,22 +33,25 @@ class SearchTest extends TestCase
     public function testRendersSearchResultsWithTwoHits(): void
     {
         $sut = $this->sut();
-        $response = $sut("/", "some");
-        Approvals::verifyHtml($response);
+        $response = $sut(new FakeRequest(["search" => "some"]));
+        $this->assertEquals("Search Results", $response->title());
+        Approvals::verifyHtml($response->output());
     }
 
     public function testRendersSearchResultsWithOneHit(): void
     {
         $sut = $this->sut();
-        $response = $sut("/", "regular");
-        Approvals::verifyHtml($response);
+        $response = $sut(new FakeRequest(["search" => "regular"]));
+        $this->assertEquals("Search Results", $response->title());
+        Approvals::verifyHtml($response->output());
     }
 
     public function testRendersSearchResultsWithoutHit(): void
     {
         $sut = $this->sut();
-        $response = $sut("/", "doesnotexist");
-        Approvals::verifyHtml($response);
+        $response = $sut(new FakeRequest(["search" => "doesnotexist"]));
+        $this->assertEquals("Search Results", $response->title());
+        Approvals::verifyHtml($response->output());
     }
 
     private function sut(): Search

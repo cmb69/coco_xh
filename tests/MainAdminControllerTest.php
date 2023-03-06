@@ -24,6 +24,7 @@ namespace Coco;
 use ApprovalTests\Approvals;
 use Coco\Infra\FakeCocoService;
 use Coco\Infra\FakeCsrfProtector;
+use Coco\Infra\FakeRequest;
 use Plib\HtmlView as View;
 use PHPUnit\Framework\TestCase;
 
@@ -32,7 +33,7 @@ class MainAdminControllerTest extends TestCase
     public function testRendersCocoOverview(): void
     {
         $sut = $this->sut();
-        $response = $sut("", "/");
+        $response = $sut(new FakeRequest(["action" => ""]));
         Approvals::verifyHtml($response);
     }
 
@@ -40,14 +41,14 @@ class MainAdminControllerTest extends TestCase
     {
         $sut = $this->sut(["csrf" => ["check" => true]]);
         $this->expectExceptionMessage("CSRF check failed!");
-        $sut("delete", "/");
+        $sut(new FakeRequest(["action" => "delete"]));
     }
 
     public function testFailureToDeleteIsReported(): void
     {
         $_POST = ["coco_name" => "foo"];
         $sut = $this->sut();
-        $response = $sut("delete", "/");
+        $response = $sut(new FakeRequest(["action" => "delete"]));
         Approvals::verifyHtml($response);
     }
 
