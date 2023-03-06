@@ -21,6 +21,9 @@
 
 namespace Coco;
 
+use Coco\Infra\CocoService;
+use Coco\Infra\IdGenerator;
+use Coco\Infra\SystemCheckService;
 use Plib\HtmlView as View;
 use Plib\Url;
 use XH\Pages;

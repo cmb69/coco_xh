@@ -21,6 +21,8 @@
 
 namespace Coco;
 
+use Coco\Infra\CocoService;
+use Coco\Infra\IdGenerator;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;

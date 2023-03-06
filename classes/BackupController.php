@@ -21,6 +21,7 @@
 
 namespace Coco;
 
+use Coco\Infra\CocoService;
 use Plib\HtmlView as View;
 
 final class BackupController

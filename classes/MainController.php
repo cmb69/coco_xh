@@ -21,6 +21,7 @@
 
 namespace Coco;
 
+use Coco\Infra\CocoService;
 use Plib\HtmlString;
 use Plib\HtmlView as View;
 use XH\CSRFProtection as CsrfProtector;

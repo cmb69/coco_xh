@@ -19,7 +19,7 @@
  * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Coco;
+namespace Coco\Infra;
 
 class SystemCheckService
 {
