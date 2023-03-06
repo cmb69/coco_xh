@@ -19,15 +19,15 @@
  * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Prevent direct access.
- */
-if (!defined('CMSIMPLE_XH_VERSION')) {
-    header('HTTP/1.0 403 Forbidden');
+if (!defined("CMSIMPLE_XH_VERSION")) {
+    header("HTTP/1.0 403 Forbidden");
     exit;
 }
 
-use Coco\Plugin;
+use Coco\Dic;
+use Coco\Infra\Request;
+
+const COCO_VERSION = "2.0-dev";
 
 /**
  * @param string $name
@@ -35,9 +35,19 @@ use Coco\Plugin;
  * @param string $height
  * @return string
  */
-function coco($name, $config = false, $height = '100%')
+function coco($name, $config = false, $height = "100%")
 {
-    return Plugin::coco($name, (string) $config, $height);
+    return Dic::makeMainController()(Request::current(), $name, (string) $config, $height);
 }
 
-\Coco\Plugin::run();
+/**
+ * @var XH\PageDataRouter $pd_router
+ * @var string $f
+ * @var string $o
+ */
+
+$pd_router->add_interest("coco_id");
+
+if ($f == "xh_loggedout") {
+    $o .= Dic::makeBackupController()(Request::current());
+}

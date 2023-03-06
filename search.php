@@ -19,12 +19,14 @@
  * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Prevent direct access.
- */
-if (!defined('CMSIMPLE_XH_VERSION')) {
-    header('HTTP/1.0 403 Forbidden');
+if (!defined("CMSIMPLE_XH_VERSION")) {
+    header("HTTP/1.0 403 Forbidden");
     exit;
 }
 
-\Coco\Plugin::search();
+use Coco\Dic;
+use Coco\Infra\Request;
+
+/** @var string $o */
+
+$o .= Dic::makeSearch()(Request::current())->respond();

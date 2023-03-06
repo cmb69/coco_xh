@@ -54,7 +54,7 @@ class PluginInfo
     public function __invoke(): string
     {
         return $this->view->render("info", [
-            "version" => Plugin::VERSION,
+            "version" => COCO_VERSION,
             "checks" => $this->getChecks(),
         ]);
     }
