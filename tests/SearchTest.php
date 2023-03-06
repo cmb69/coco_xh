@@ -23,6 +23,7 @@ namespace Coco;
 
 use ApprovalTests\Approvals;
 use Coco\Infra\FakeCocoService;
+use Coco\Infra\FakePages;
 use Coco\Infra\FakeRequest;
 use Coco\Infra\FakeXhStuff;
 use PHPUnit\Framework\TestCase;
@@ -58,6 +59,7 @@ class SearchTest extends TestCase
     {
         return new Search(
             new FakeCocoService(),
+            new FakePages(["headings" => ["Welcome!", "Cocos"], "url" => ["Welcome", "Cocos"], "count" => 2]),
             new FakeXhStuff,
             new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["coco"])
         );

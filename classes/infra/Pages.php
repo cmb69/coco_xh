@@ -59,6 +59,11 @@ class Pages
         return $this->xhPages->getCount();
     }
 
+    public function isHidden(int $pageIndex): bool
+    {
+        return $this->xhPages->isHidden($pageIndex);
+    }
+
     public function level(int $pageIndex): int
     {
         return $this->xhPages->level($pageIndex);
@@ -67,5 +72,20 @@ class Pages
     public function heading(int $pageIndex): string
     {
         return $this->xhPages->heading($pageIndex);
+    }
+
+    public function url(int $pageIndex): string
+    {
+        return $this->xhPages->url($pageIndex);
+    }
+
+    /** @return list<string> */
+    public function contents(): array
+    {
+        $result = [];
+        for ($i = 0; $i < $this->xhPages->getCount(); $i++) {
+            $result[] = $this->xhPages->content($i);
+        }
+        return $result;
     }
 }

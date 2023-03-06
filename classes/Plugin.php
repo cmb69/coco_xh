@@ -76,9 +76,7 @@ final class Plugin
      */
     public static function coco($name, $config, $height)
     {
-        global $cl;
-
-        return Dic::makeMainController()(Request::current(), $cl, $name, $config, $height);
+        return Dic::makeMainController()(Request::current(), $name, $config, $height);
     }
 
     /** @return void */

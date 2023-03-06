@@ -23,6 +23,7 @@ namespace Coco;
 
 use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
+use Coco\Infra\Pages;
 use Coco\Infra\Request;
 use Coco\Infra\XhStuff;
 use Plib\HtmlString;
@@ -36,6 +37,9 @@ class MainController
     /** @var CsrfProtector */
     private $csrfProtector;
 
+    /** @var Pages */
+    private $pages;
+
     /** @var XhStuff */
     private $xhStuff;
 
@@ -45,21 +49,23 @@ class MainController
     public function __construct(
         CocoService $cocoService,
         CsrfProtector $csrfProtector,
+        Pages $pages,
         XhStuff $xhStuff,
         View $view
     ) {
         $this->cocoService = $cocoService;
         $this->csrfProtector = $csrfProtector;
+        $this->pages = $pages;
         $this->xhStuff = $xhStuff;
         $this->view = $view;
     }
 
-    public function __invoke(Request $request, int $cl, string $name, string $config, string $height): string
+    public function __invoke(Request $request, string $name, string $config, string $height): string
     {
         if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
             return $this->view->message("fail", "error_invalid_name") . "\n";
         }
-        if ($request->s() < 0 || $request->s() >= $cl) {
+        if ($request->s() < 0 || $request->s() >= $this->pages->count()) {
             return "";
         }
         switch ($request->adm() && $request->edit()) {

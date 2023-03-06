@@ -48,6 +48,7 @@ class Dic
         return new MainController(
             self::makeCocoService(),
             new CsrfProtector,
+            new Pages,
             new XhStuff,
             self::makeView()
         );
@@ -57,6 +58,7 @@ class Dic
     {
         return new Search(
             self::makeCocoService(),
+            new Pages,
             new XhStuff,
             self::makeView()
         );

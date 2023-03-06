@@ -22,6 +22,7 @@
 namespace Coco;
 
 use Coco\Infra\CocoService;
+use Coco\Infra\Pages;
 use Coco\Infra\Request;
 use Coco\Infra\Response;
 use Coco\Infra\XhStuff;
@@ -32,15 +33,19 @@ class Search
     /** @var CocoService */
     private $cocoService;
 
+    /** @var Pages */
+    private $pages;
+
     /** @var XhStuff */
     private $xhStuff;
 
     /** @var View */
     private $view;
 
-    public function __construct(CocoService $cocoService, XhStuff $xhStuff, View $view)
+    public function __construct(CocoService $cocoService, Pages $pages, XhStuff $xhStuff, View $view)
     {
         $this->cocoService = $cocoService;
+        $this->pages = $pages;
         $this->xhStuff = $xhStuff;
         $this->view = $view;
     }
@@ -58,8 +63,8 @@ class Search
         $pages = [];
         foreach ($ta as $i) {
             $pages[] = [
-                "heading" => $this->xhStuff->h()[$i],
-                "url" => $request->sn() . "?" . $this->xhStuff->u()[$i] . "&search=" . urlencode($words),
+                "heading" => $this->pages->heading($i),
+                "url" => $request->sn() . "?" . $this->pages->url($i) . "&search=" . urlencode($words),
             ];
         }
         return Response::create($this->view->render("search_results", [
@@ -83,13 +88,13 @@ class Search
     private function searchContent($name, array $words)
     {
         if ($name === null) {
-            $cocos = $this->xhStuff->c();
+            $cocos = $this->pages->contents();
         } else {
             $cocos = $this->cocoService->findAll($name);
         }
         $ta = array();
         foreach ($cocos as $i => $coco) {
-            if (!$this->xhStuff->hide((int) $i)) {
+            if (!$this->pages->isHidden((int) $i)) {
                 if ($this->doSearch($words, $coco)) {
                     $ta[] = $i;
                 }

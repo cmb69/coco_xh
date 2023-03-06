@@ -22,8 +22,8 @@
 namespace Coco;
 
 use Coco\Infra\CocoService;
+use Coco\Infra\FakePages;
 use Coco\Infra\IdGenerator;
-use Coco\Infra\Pages as Pages;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
@@ -33,85 +33,82 @@ final class CocoServiceTest extends TestCase
     /** @var vfsStreamDirectory */
     private $root;
 
-    /** @var Pages */
-    private $pages;
-
-    /** @var CocoService */
-    private $subject;
-
     /** @var IdGenerator */
     private $idGenerator;
 
     public function setup(): void
     {
         $this->root = vfsStream::setup("test");
-        $this->pages = $this->createStub(Pages::class);
-        $this->pages->method("count")->willReturn(2);
-        $this->pages->method("level")->willReturnMap([[0, 1], [1, 2]]);
-        $this->pages->method("heading")->willReturnMap([[0, "Start"], [1, "Sub"]]);
         $this->idGenerator = $this->createMock(IdGenerator::class);
-        $this->subject = new CocoService(
-            vfsStream::url("test/coco"),
-            "",
-            $this->pages,
-            $this->idGenerator
-        );
     }
 
     public function testDataDirIsCreated()
     {
-        $this->assertEquals(vfsStream::url("test/coco"), $this->subject->dataDir());
+        $this->assertEquals(vfsStream::url("test/coco"), $this->sut()->dataDir());
         $this->assertTrue($this->root->hasChild("coco"));
     }
 
     public function testDataDir()
     {
-        $this->assertSame(vfsStream::url("test/coco"), $this->subject->dataDir());
+        $this->assertSame(vfsStream::url("test/coco"), $this->sut()->dataDir());
     }
 
     public function testFilename()
     {
-        $this->assertSame(vfsStream::url("test/coco") . "/foo.htm", $this->subject->filename("foo"));
+        $this->assertSame(vfsStream::url("test/coco") . "/foo.htm", $this->sut()->filename("foo"));
     }
 
     public function testFindAllNames()
     {
-        $this->assertTrue($this->subject->save("foo", 0, "hello world"));
-        $this->assertTrue($this->subject->save("bar", 0, "hello world"));
-        $this->assertSame(["foo", "bar"], $this->subject->findAllNames());
+        $sut = $this->sut();
+        $this->assertTrue($sut->save("foo", 0, "hello world"));
+        $this->assertTrue($sut->save("bar", 0, "hello world"));
+        $this->assertSame(["foo", "bar"], $sut->findAllNames());
     }
 
     public function testFindAllNothing()
     {
-        $this->assertEmpty(iterator_to_array($this->subject->findAll("foo", 0)));
+        $this->assertEmpty(iterator_to_array($this->sut()->findAll("foo", 0)));
     }
 
     public function testFindAll()
     {
         $this->idGenerator->method("newId")->willReturnOnConsecutiveCalls("12345", "23456");
-        $this->pages->method("data")->willReturnOnConsecutiveCalls([], [], ["coco_id" => "12345"], ["coco_id" => "23456"]);
-        $this->assertTrue($this->subject->save("foo", 0, "hello world"));
-        $this->assertSame(["hello world", ""], iterator_to_array($this->subject->findAll("foo", 0)));
+        $sut = $this->sut(["pages" => ["data" => [[], [], ["coco_id" => "12345"], ["coco_id" => "23456"]]]]);
+        $this->assertTrue($sut->save("foo", 0, "hello world"));
+        $this->assertSame(["hello world", ""], iterator_to_array($sut->findAll("foo", 0)));
     }
 
     public function testFindNothing()
     {
-        $this->assertEmpty($this->subject->find("foo", 0));
+        $this->assertEmpty($this->sut()->find("foo", 0));
     }
 
     public function testFind()
     {
         $this->idGenerator->method("newId")->willReturnOnConsecutiveCalls("12345", "23456");
-        $this->pages->method("data")->willReturnOnConsecutiveCalls([], [], ["coco_id" => "12345"]);
-        $this->assertTrue($this->subject->save("foo", 0, "hello world"));
-        $this->assertSame("hello world", $this->subject->find("foo", 0));
+        $sut = $this->sut(["pages" => ["data" => [[], [], ["coco_id" => "12345"]]]]);
+        $this->assertTrue($sut->save("foo", 0, "hello world"));
+        $this->assertSame("hello world", $sut->find("foo", 0));
     }
 
     public function testDelete()
     {
-        $this->assertTrue($this->subject->save("foo", 0, "hello world"));
-        $this->assertTrue($this->subject->save("bar", 0, "hello world"));
-        $this->assertSame([$this->subject->filename("foo") => true], $this->subject->delete("foo"));
-        $this->assertSame(["bar"], $this->subject->findAllNames());
+        $sut = $this->sut();
+        $this->assertTrue($sut->save("foo", 0, "hello world"));
+        $this->assertTrue($sut->save("bar", 0, "hello world"));
+        $this->assertSame([$sut->filename("foo") => true], $sut->delete("foo"));
+        $this->assertSame(["bar"], $this->sut()->findAllNames());
+    }
+
+    private function sut($options = []): CocoService
+    {
+        $pageOptions = ($options["pages"] ?? []) + ["count" => 2, "levels" => [1, 2], "headings" => ["Start", "Sub"]];
+        return new CocoService(
+            vfsStream::url("test/coco"),
+            "",
+            new FakePages($pageOptions),
+            $this->idGenerator
+        );
     }
 }
