@@ -21,20 +21,9 @@
 
 namespace Coco;
 
-use Coco\Infra\Backups;
-use Coco\Infra\CocoService;
-use Coco\Infra\CsrfProtector;
-use Coco\Infra\IdGenerator;
-use Coco\Infra\Pages;
-use Coco\Infra\SystemChecker;
-use Coco\Infra\XhStuff;
-use Plib\HtmlView as View;
-use Plib\Url;
-
 final class Plugin
 {
     const VERSION = "2.0-dev";
-
 
     /**
      * @return void
@@ -46,7 +35,7 @@ final class Plugin
         $pd_router->add_interest('coco_id');
 
         if ($f == 'xh_loggedout') {
-            $o .= self::backup();
+            $o .= Dic::makeBackupController()(time());
         }
 
         if (XH_ADM) { // @phpstan-ignore-line
@@ -62,47 +51,19 @@ final class Plugin
      */
     private static function handlePluginAdministration()
     {
-        global $pth, $o, $admin, $action, $_XH_csrfProtection;
+        global $o, $admin, $action;
 
         $o .= print_plugin_admin('on');
         switch ($admin) {
             case '':
-                $controller = new PluginInfo(
-                    $pth["folder"]["plugin"],
-                    self::cocoService(),
-                    new SystemChecker,
-                    self::view()
-                );
-                $o .= $controller();
+                $o .= Dic::makePluginInfo()();
                 break;
             case 'plugin_main':
-                $controller = new MainAdminController(
-                    self::url(),
-                    self::cocoService(),
-                    new CsrfProtector,
-                    self::view()
-                );
-                $o .= $controller($action);
+                $o .= Dic::makeMainAdminController()($action);
                 break;
             default:
                 $o .= plugin_admin_common();
         }
-    }
-
-    /**
-     * @return string
-     */
-    private static function backup()
-    {
-        global $cf;
-
-        $controller = new BackupController(
-            (int) $cf['backup']['numberoffiles'],
-            self::cocoService(),
-            new Backups,
-            self::view()
-        );
-        return $controller(time());
     }
 
     /**
@@ -115,13 +76,7 @@ final class Plugin
     {
         global $adm, $edit, $s, $cl;
 
-        $controller = new MainController(
-            self::cocoService(),
-            new CsrfProtector,
-            new XhStuff,
-            self::view()
-        );
-        return $controller($adm && $edit, $cl, $s, $name, $config, $height);
+        return Dic::makeMainController()($adm && $edit, $cl, $s, $name, $config, $height);
     }
 
     /** @return void */
@@ -129,45 +84,6 @@ final class Plugin
     {
         global $o, $sn, $search;
 
-        $handler = new Search(
-            self::cocoService(),
-            new XhStuff,
-            self::view()
-        );
-        $o .= $handler($sn, $search);
-    }
-
-    /**
-     * @return CocoService
-     */
-    private static function cocoService()
-    {
-        global $pth;
-
-        return new CocoService(
-            "{$pth['folder']['content']}coco",
-            $pth['file']['content'],
-            new Pages,
-            new IdGenerator()
-        );
-    }
-
-    /**
-     * @return View
-     */
-    private static function view()
-    {
-        global $pth, $plugin_tx;
-
-        return new View("{$pth['folder']['plugins']}coco/views", $plugin_tx["coco"]);
-    }
-
-    private static function url(): Url
-    {
-        global $sl, $cf, $su;
-
-        $base = preg_replace(['/index\.php$/', "/(?<=\\/)$sl\\/$/"], "", CMSIMPLE_URL);
-        assert($base !== null);
-        return new Url($base, $sl === $cf["language"]["default"] ? "" : $sl, $su);
+        $o .= Dic::makeSearch()($sn, $search);
     }
 }
