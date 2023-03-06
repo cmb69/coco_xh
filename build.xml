@@ -2,93 +2,78 @@
 
 <project name="Coco" default="help">
 
-    <target name="help" description="lists available targets">
-        <exec executable="phing" outputProperty="help">
-            <arg value="-l"/>
-        </exec>
-        <echo>${help}</echo>
-    </target>
+  <target name="help" description="lists available targets">
+    <exec executable="phing" outputProperty="help">
+      <arg value="-l"/>
+    </exec>
+    <echo>${help}</echo>
+  </target>
 
-    <target name="sniff" description="checks adherence to coding standards">
-        <exec executable="phpcs" passthru="true" checkreturn="true">
-            <arg value="--standard=PSR2"/>
-            <arg line="--runtime-set ignore_warnings_on_exit true"/>
-            <arg file="classes"/>
-            <arg file="index.php"/>
-            <arg file="search.php"/>
-            <arg file="tests/attack"/>
-        </exec>
-    </target>
+  <target name="sniff" description="checks adherence to coding standards">
+    <exec executable="phpcs" passthru="true" checkreturn="true">
+      <arg line="--standard=PSR2 --runtime-set ignore_warnings_on_exit true classes index.php search.php tests/attack"/>
+    </exec>
+  </target>
 
-    <target name="stan" description="runs static code analysis">
-        <exec executable="phpstan" passthru="true" checkreturn="true"/>
-    </target>
+  <target name="stan" description="runs static code analysis">
+    <exec executable="phpstan" passthru="true" checkreturn="true"/>
+  </target>
 
-    <target name="mess" description="detects code flaws">
-        <exec executable="phpmd" passthru="true">
-            <arg line="classes,index.php,search.php ansi codesize,unusedcode"/>
-        </exec>
-    </target>
+  <target name="unit-tests" description="runs all unit tests">
+    <exec executable="phpunit" passthru="true" checkreturn="true">
+      <arg line="--bootstrap=tests/unit/bootstrap.php tests/unit"/>
+    </exec>
+  </target>
 
-    <target name="compat" description="checks PHP requirements">
-        <exec executable="phpcompatinfo" passthru="true" checkreturn="true">
-            <arg line=" analyser:run --alias current"/>
-        </exec>
-    </target>
+  <target name="coverage" description="generates coverage report">
+    <exec executable="phpunit" passthru="true" checkreturn="true">
+      <arg line="--configuration coverage.xml"/>
+    </exec>
+  </target>
 
-    <target name="unit-tests" description="runs all unit tests">
-        <exec executable="phpunit" passthru="true" checkreturn="true">
-            <arg line="--bootstrap=tests/unit/bootstrap.php tests/unit"/>
-        </exec>
-    </target>
+  <target name="attack-tests" description="runs all attack tests">
+    <fail unless="env.CMSIMPLEDIR" message="CMSIMPLEDIR undefined!"/>
+    <exec executable="phpunit" passthru="true" checkreturn="true">
+      <arg line="tests/attack"/>
+    </exec>
+  </target>
 
-    <target name="coverage" description="generates coverage report">
-        <exec executable="phpunit" passthru="true" checkreturn="true">
-            <arg line="--configuration coverage.xml"/>
-        </exec>
-    </target>
+  <target name="sat" description="runs all checks" depends="sniff,stan,unit-tests"/>
 
-    <target name="attack-tests" description="runs all attack tests">
-        <fail unless="env.CMSIMPLEDIR" message="CMSIMPLEDIR undefined!"/>
-        <exec executable="phpunit" passthru="true" checkreturn="true">
-            <arg line="tests/attack"/>
-        </exec>
-    </target>
+  <target name="gen-help" description="builds help.htm from README.md">
+    <exec executable="pandoc" passthru="true" checkreturn="true">
+      <arg line="-s --eol=lf --template=help/template.htm -Vlang=en -Vpagetitle=&quot;User Manual&quot; -o help/help.htm README.md -t html"/>
+    </exec>
+    <exec executable="pandoc" passthru="true" checkreturn="true">
+      <arg line="-s --eol=lf --template=help/template.htm -Vlang=de -Vpagetitle=&quot;Benutzerhandbuch&quot; -o help/help_de.htm README_de.md -t html"/>
+    </exec>
+  </target>
 
-    <target name="gen-help" description="builds help.htm from README.md">
-        <exec executable="pandoc" passthru="true" checkreturn="true">
-            <arg line="-s --eol=lf --template=help/template.htm -Vlang=en -Vpagetitle=&quot;User Manual&quot; -o help/help.htm README.md -t html"/>
-        </exec>
-        <exec executable="pandoc" passthru="true" checkreturn="true">
-            <arg line="-s --eol=lf --template=help/template.htm -Vlang=de -Vpagetitle=&quot;Benutzerhandbuch&quot; -o help/help_de.htm README_de.md -t html"/>
-        </exec>
-    </target>
-
-    <target name="build" description="builds a distributable ZIP archive">
-        <exec command="git archive -o export.zip HEAD" checkreturn="true"/>
-        <unzip file="export.zip" todir="export"/>
-        <delete file="export.zip"/>
-        <move todir="dist">
-            <fileset dir="export">
-                <exclude name=".github/**"/>
-                <exclude name=".phive/**"/>
-                <exclude name=".phpstan/**"/>
-                <exclude name="help/template.htm"/>
-                <exclude name="tests/**"/>
-                <exclude name="composer.*"/>
-                <exclude name="build.xml"/>
-                <exclude name="coverage.xml"/>
-                <exclude name="phpcompatinfo.*"/>
-                <exclude name="phpstan.neon"/>
-                <exclude name="README*.md"/>
-                <exclude name="teplad.xml"/>
-            </fileset>
-        </move>
-        <delete dir="export"/>
-        <!--<copy file="dist/config/config.php" tofile="dist/config/defaultconfig.php"/>-->
-        <copy file="dist/languages/en.php" tofile="dist/languages/default.php"/>
-        <zip destfile="Coco_XH-2.0-dev.zip" basedir="dist" prefix="coco/"/>
-        <delete dir="dist"/>
-    </target>
+  <target name="build" description="builds a distributable ZIP archive">
+    <exec executable="git" checkreturn="true">
+      <arg line="archive -o export.zip HEAD"/>
+    </exec>
+    <unzip file="export.zip" todir="export"/>
+    <delete file="export.zip"/>
+    <move todir="dist">
+      <fileset dir="export">
+        <exclude name=".github/**"/>
+        <exclude name=".phive/**"/>
+        <exclude name="help/template.htm"/>
+        <exclude name="tests/**"/>
+        <exclude name="composer.*"/>
+        <exclude name="build.xml"/>
+        <exclude name="coverage.xml"/>
+        <exclude name="phpstan.*"/>
+        <exclude name="README*.md"/>
+        <exclude name="teplad.xml"/>
+      </fileset>
+    </move>
+    <delete dir="export"/>
+    <!--<copy file="dist/config/config.php" tofile="dist/config/defaultconfig.php"/>-->
+    <copy file="dist/languages/en.php" tofile="dist/languages/default.php"/>
+    <zip destfile="Coco_XH-2.0-dev.zip" basedir="dist" prefix="coco/"/>
+    <delete dir="dist"/>
+  </target>
 
 </project>

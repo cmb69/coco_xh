@@ -2,12 +2,15 @@ name: checks
 on: [push, pull_request]
 jobs:
   checks:
+    strategy:
+      matrix:
+        php: ['7.3', '7.4', '8.0', '8.1', '8.2']
     runs-on: ubuntu-20.04
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: ${{matrix.php}}
           tools: phive
       - name: Install CMSimple_XH
         run: |
@@ -16,22 +19,27 @@ jobs:
       - name: Patch CMSimple_XH
         run: cd cmsimplexh/cmsimple && sed -i 's/@return int The number of bytes written, or false on failure\./@return int\|false/g' functions.php
       - name: Checkout Plib_XH
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: cmb69/plib_xh
           path: cmsimplexh/plugins/plib
       - name: Checkout Coco_XH
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: 'cmsimplexh/plugins/coco'
-      - name: phive install
-        run: cd cmsimplexh/plugins/coco && phive --no-progress install --trust-gpg-keys 0x0F9684B8B16B7AB0,0x31C7E470E2138192,0xCF1A108D0E7AE720,0xD5F0CB76E2DD74F8
+      - name: Cache tools
+        id: cache-tools
+        uses: actions/cache@v3
+        with:
+          path: cmsimplexh/plugins/coco/tools
+          key: tools-${{matrix.php}}-${{hashFiles('cmsimplexh/plugins/coco/.phive')}}
+      - if: ${{steps.cache-tools.outputs.cache-hit != 'true'}}
+        name: phive install
+        run: cd cmsimplexh/plugins/coco && phive --no-progress install --copy --force-accept-unsigned --trust-gpg-keys 0x0F9684B8B16B7AB0,0x31C7E470E2138192,0xCF1A108D0E7AE720,0xD5F0CB76E2DD74F8
       - name: composer install
         run: cd cmsimplexh/plugins/coco && composer install
       - name: phing sniff
         run: cd cmsimplexh/plugins/coco && PATH=tools:vendor/bin:$PATH phing sniff
-      - name: phing mess
-        run: cd cmsimplexh/plugins/coco && PATH=tools:vendor/bin:$PATH phing mess
       - name: phing stan
         run: cd cmsimplexh/plugins/coco && PATH=tools:vendor/bin:$PATH phing stan
       - name: phing unit-tests
