@@ -1,12 +1,11 @@
 <?php
 
-use Plib\HtmlString;
 use Plib\HtmlView as View;
 use Plib\Url;
 
 /**
  * @var View $this
- * @var HtmlString $csrfTokenInput
+ * @var string $csrf_token
  * @var Url $url
  * @var stdClass[] $cocos
  */
@@ -22,7 +21,7 @@ use Plib\Url;
                 <input type="hidden" name="action" value="delete">
                 <input type="hidden" name="coco_name" value="<?=$this->esc($coco->name)?>">
                 <button><?=$this->text("label_delete")?></button>
-                <?=$this->esc($csrfTokenInput)?>
+                <input type="hidden" name="xh_csrf_token" value="<?=$this->esc($csrf_token)?>">
             </form>
             <?=$this->esc($coco->name)?>
         </li>

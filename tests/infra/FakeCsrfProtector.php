@@ -21,25 +21,34 @@
 
 namespace Coco\Infra;
 
-class FakeCocoService extends CocoService
+use Exception;
+
+class FakeCsrfProtector extends CsrfProtector
 {
-    public function __construct() {}
-
-    public function dataDir()
+    public function __construct($options = [])
     {
-        return "./content/coco";
+        $this->xhCsrfProtection = new FakeCSRFProtection($options);
+    }
+}
+
+class FakeCSRFProtection
+{
+    private $options;
+
+    public function __construct(array $options)
+    {
+        $this->options = $options;
     }
 
-    public function findAllNames()
+    public function tokenInput()
     {
-        return ["foo", "bar"];
+        return "<input type=\"hidden\" name=\"xh_csrf_token\" value=\"eee5e668b3bcc9b71a9e4cc1aa76393f\">";
     }
 
-    public function delete($name)
+    public function check()
     {
-        return [
-            "./content/coco/20230306_120000_$name.htm" => false,
-            "./content/coco/$name.htm" => false,
-        ];
+        if (($this->options["check"] ?? false) === true) {
+            throw new Exception("CSRF check failed!");
+        }
     }
 }

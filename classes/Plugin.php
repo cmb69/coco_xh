@@ -23,6 +23,7 @@ namespace Coco;
 
 use Coco\Infra\Backups;
 use Coco\Infra\CocoService;
+use Coco\Infra\CsrfProtector;
 use Coco\Infra\IdGenerator;
 use Coco\Infra\SystemChecker;
 use Plib\HtmlView as View;
@@ -77,18 +78,10 @@ final class Plugin
                 $controller = new MainAdminController(
                     self::url(),
                     self::cocoService(),
-                    $_XH_csrfProtection,
+                    new CsrfProtector,
                     self::view()
                 );
-                ob_start();
-                switch ($action) {
-                    case 'delete':
-                        $controller->deleteAction();
-                        break;
-                    default:
-                        $controller->defaultAction();
-                }
-                $o .= ob_get_clean();
+                $o .= $controller($action);
                 break;
             default:
                 $o .= plugin_admin_common();

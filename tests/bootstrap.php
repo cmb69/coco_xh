@@ -20,11 +20,14 @@
  */
 
 const CMSIMPLE_XH_VERSION = "CMSimple_XH 1.7.5";
+const CMSIMPLE_URL = "http://examle.com/";
 
 require_once "../../cmsimple/functions.php";
 require_once "../../cmsimple/classes/PageDataRouter.php";
 require_once "../../cmsimple/classes/Pages.php";
+require_once "../plib/classes/HtmlString.php";
 require_once "../plib/classes/HtmlView.php";
+require_once "../plib/classes/Url.php";
 
 spl_autoload_register(function (string $className) {
     $parts = explode("\\", $className);

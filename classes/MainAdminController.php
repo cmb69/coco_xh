@@ -22,10 +22,10 @@
 namespace Coco;
 
 use Coco\Infra\CocoService;
+use Coco\Infra\CsrfProtector;
 use Plib\HtmlString;
 use Plib\HtmlView as View;
 use Plib\Url;
-use XH\CSRFProtection as CsrfProtector;
 
 class MainAdminController
 {
@@ -51,10 +51,17 @@ class MainAdminController
         $this->view = $view;
     }
 
-    /**
-     * @return void
-     */
-    public function defaultAction()
+    public function __invoke(string $action): string
+    {
+        switch ($action) {
+            default:
+                return $this->show();
+            case "delete":
+                return $this->delete();
+        }
+    }
+
+    private function show(): string
     {
         $cocos = [];
         foreach ($this->cocoService->findAllNames() as $coco) {
@@ -63,26 +70,26 @@ class MainAdminController
             );
             $cocos[] = (object) ['name' => $coco, 'message' => $message];
         }
-        echo $this->view->render("admin", [
-            "csrfTokenInput" => new HtmlString($this->csrfProtector->tokenInput()),
+        return $this->view->render("admin", [
+            "csrf_token" => $this->csrfProtector->token(),
             "url" => $this->url->page("coco")->with("admin", "plugin_main"),
             "cocos" => $cocos,
         ]);
     }
 
-    /**
-     * @return void
-     */
-    public function deleteAction()
+    private function delete(): string
     {
         $this->csrfProtector->check();
         $name = $_POST['coco_name'];
         $result = $this->cocoService->delete($name);
+        $o = "";
         foreach ($result as $filename => $success) {
             if (!$success) {
-                echo $this->view->message("fail", "error_delete", $filename);
+                $o .= $this->view->message("fail", "error_delete", $filename);
             }
         }
-        $this->defaultAction();
+        // TODO: PRG on success
+        $o .= $this->show();
+        return $o;
     }
 }
