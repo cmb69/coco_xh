@@ -1,5 +1,5 @@
-/tests/coverage
+/coverage
 /vendor
 /composer.lock
 /tools
-/.phpunit.result.cache
+/.phpunit.cache

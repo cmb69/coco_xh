@@ -11,7 +11,7 @@
 
   <target name="sniff" description="checks adherence to coding standards">
     <exec executable="phpcs" passthru="true" checkreturn="true">
-      <arg line="--standard=PSR2 --runtime-set ignore_warnings_on_exit true classes index.php search.php tests/attack"/>
+      <arg line="--standard=PSR2 --runtime-set ignore_warnings_on_exit true classes index.php search.php"/>
     </exec>
   </target>
 
@@ -19,26 +19,17 @@
     <exec executable="phpstan" passthru="true" checkreturn="true"/>
   </target>
 
-  <target name="unit-tests" description="runs all unit tests">
-    <exec executable="phpunit" passthru="true" checkreturn="true">
-      <arg line="--bootstrap=tests/unit/bootstrap.php tests/unit"/>
-    </exec>
+  <target name="test" description="runs all developer tests">
+    <exec executable="phpunit" passthru="true" checkreturn="true"/>
   </target>
 
   <target name="coverage" description="generates coverage report">
     <exec executable="phpunit" passthru="true" checkreturn="true">
-      <arg line="--configuration coverage.xml"/>
+      <arg line="--coverage-html coverage"/>
     </exec>
   </target>
 
-  <target name="attack-tests" description="runs all attack tests">
-    <fail unless="env.CMSIMPLEDIR" message="CMSIMPLEDIR undefined!"/>
-    <exec executable="phpunit" passthru="true" checkreturn="true">
-      <arg line="tests/attack"/>
-    </exec>
-  </target>
-
-  <target name="sat" description="runs all checks" depends="sniff,stan,unit-tests"/>
+  <target name="sat" description="runs all checks" depends="sniff,stan,test"/>
 
   <target name="gen-help" description="builds help.htm from README.md">
     <exec executable="pandoc" passthru="true" checkreturn="true">
@@ -63,8 +54,8 @@
         <exclude name="tests/**"/>
         <exclude name="composer.*"/>
         <exclude name="build.xml"/>
-        <exclude name="coverage.xml"/>
         <exclude name="phpstan.*"/>
+        <exclude name="phpunit.xml"/>
         <exclude name="README*.md"/>
         <exclude name="teplad.xml"/>
       </fileset>
