@@ -22,102 +22,90 @@
 namespace Coco;
 
 use Coco\Infra\CocoService;
+use Coco\Infra\CsrfProtector;
+use Coco\Infra\XhStuff;
 use Plib\HtmlString;
 use Plib\HtmlView as View;
-use XH\CSRFProtection as CsrfProtector;
 
 class MainController
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $config;
-
-    /**
-     * @var string
-     */
-    private $height;
-
     /** @var CocoService */
     private $cocoService;
 
-    /**
-     * @var CsrfProtector|null
-     */
+    /** @var CsrfProtector */
     private $csrfProtector;
+
+    /** @var XhStuff */
+    private $xhStuff;
 
     /** @var View */
     private $view;
 
-    /**
-     * @param string $name
-     * @param string $config
-     * @param string $height
-     * @param CsrfProtector|null $csrfProtector
-     */
     public function __construct(
-        $name,
-        $config,
-        $height,
         CocoService $cocoService,
-        $csrfProtector,
+        CsrfProtector $csrfProtector,
+        XhStuff $xhStuff,
         View $view
     ) {
-        $this->name = $name;
-        $this->config = $config;
-        $this->height = $height;
         $this->cocoService = $cocoService;
         $this->csrfProtector = $csrfProtector;
+        $this->xhStuff = $xhStuff;
         $this->view = $view;
     }
 
-    /**
-     * @return void
-     */
-    public function defaultAction()
+    public function __invoke(bool $edit, int $cl, int $s, string $name, string $config, string $height): string
+    {
+        if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
+            return $this->view->message("fail", "error_invalid_name") . "\n";
+        }
+        if ($s < 0 || $s >= $cl) {
+            return "";
+        }
+        switch ($edit) {
+            default:
+                return $this->defaultAction($name);
+            case true:
+                return $this->editAction($name, $config, $height);
+        }
+    }
+
+    private function defaultAction(string $name): string
     {
         global $s;
 
-        $text = evaluate_scripting((string) $this->cocoService->find($this->name, $s));
+        $text = $this->xhStuff->evaluateScripting((string) $this->cocoService->find($name, $s));
         if (isset($_GET['search'])) {
             $search = XH_hsc(trim(preg_replace('/\s+/u', ' ', ($_GET['search']))));
             $words = explode(' ', $search);
-            $text = XH_highlightSearchWords($words, $text);
+            $text = $this->xhStuff->highlightSearchWords($words, $text);
         }
-        echo $text;
+        return $text;
     }
 
-    /**
-     * @return void
-     */
-    public function editAction()
+    private function editAction(string $name, string $config, string $height): string
     {
         global $s;
 
-        assert($this->csrfProtector !== null);
-        if (isset($_POST['coco_text_' . $this->name])) {
+        $o = "";
+        if (isset($_POST['coco_text_' . $name])) {
             $this->csrfProtector->check();
-            $content = $_POST['coco_text_' . $this->name];
-            if (!$this->cocoService->save($this->name, $s, $content)) {
-                echo $this->view->message("fail", "error_save", $this->cocoService->filename($this->name));
+            $content = $_POST['coco_text_' . $name];
+            if (!$this->cocoService->save($name, $s, $content)) {
+                $o .= $this->view->message("fail", "error_save", $this->cocoService->filename($name));
             }
         } else {
-            $content = $this->cocoService->find($this->name, $s);
+            $content = $this->cocoService->find($name, $s);
         }
-        $id = 'coco_text_' . $this->name;
-        $editor = editor_replace($id, $this->config);
-        echo $this->view->render("edit-form", [
+        $id = 'coco_text_' . $name;
+        $editor = $this->xhStuff->replaceEditor($id, $config);
+        $o .= $this->view->render("edit-form", [
             "id" => $id,
-            "name" => $this->name,
-            "style" => 'width:100%; height:' . $this->height,
+            "name" => $name,
+            "style" => 'width:100%; height:' . $height,
             "content" => $content,
             "editor" => $editor !== false ? new HtmlString($editor) : false,
-            "csrfTokenInput" => new HtmlString($this->csrfProtector->tokenInput()),
+            "csrf_token" => new HtmlString($this->csrfProtector->token()),
         ]);
+        return $o;
     }
 }

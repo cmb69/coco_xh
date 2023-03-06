@@ -10,13 +10,13 @@ use Plib\HtmlView as View;
  * @var string $style
  * @var string $content
  * @var HtmlString|false $editor
- * @var HtmlString $csrfTokenInput
+ * @var string $csrf_token
  */
 
 ?>
 
 <form action="" method="POST">
-    <?=$this->esc($csrfTokenInput)?>
+    <input type="hidden" name="xh_csrf_token" value="<?=$this->esc($csrf_token)?>">
     <textarea id="<?=$this->esc($id)?>" name="coco_text_<?=$this->esc($name)?>" style="<?=$this->esc($style)?>"><?=$this->esc($content)?></textarea>
 <?php if ($editor):?>
     <script type="text/javascript"><?=$this->esc($editor)?></script>

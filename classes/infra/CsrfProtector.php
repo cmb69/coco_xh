@@ -26,7 +26,7 @@ use XH\CSRFProtection;
 
 class CsrfProtector
 {
-    /** @var CSRFProtection */
+    /** @var CSRFProtection|null */
     protected $xhCsrfProtection;
 
     public function __construct()
@@ -46,12 +46,14 @@ class CsrfProtector
 
     public function tokenInput(): string
     {
+        assert($this->xhCsrfProtection !== null);
         return $this->xhCsrfProtection->tokenInput();
     }
 
     /** @return void|never */
     public function check()
     {
+        assert($this->xhCsrfProtection !== null);
         $this->xhCsrfProtection->check();
     }
 }

@@ -26,6 +26,7 @@ use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\IdGenerator;
 use Coco\Infra\SystemChecker;
+use Coco\Infra\XhStuff;
 use Plib\HtmlView as View;
 use Plib\Url;
 use XH\Pages;
@@ -112,29 +113,15 @@ final class Plugin
      */
     public static function coco($name, $config, $height)
     {
-        global $adm, $edit, $s, $cl, $plugin_tx, $_XH_csrfProtection;
+        global $adm, $edit, $s, $cl;
 
-        if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
-            return XH_message('fail', $plugin_tx['coco']['error_invalid_name']);
-        }
-        if ($s < 0 || $s >= $cl) {
-            return '';
-        }
         $controller = new MainController(
-            $name,
-            $config,
-            $height,
             self::cocoService(),
-            $_XH_csrfProtection,
+            new CsrfProtector,
+            new XhStuff,
             self::view()
         );
-        ob_start();
-        if ($adm && $edit) {
-            $controller->editAction();
-        } else {
-            $controller->defaultAction();
-        }
-        return (string) ob_get_clean();
+        return $controller($adm && $edit, $cl, $s, $name, $config, $height);
     }
 
     /**

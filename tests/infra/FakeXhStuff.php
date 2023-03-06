@@ -21,40 +21,26 @@
 
 namespace Coco\Infra;
 
-class FakeCocoService extends CocoService
+class FakeXhStuff extends XhStuff
 {
-    private $options;
-
-    public function __construct($options = [])
+    public function evaluateScripting(string $text): string
     {
-        $this->options = $options;
+        return preg_replace_callback(
+            '/{{{([^}]+)}}}/',
+             function (array $matches) {
+                return eval("return $matches[1];");
+             },
+             $text
+        );
     }
 
-    public function dataDir()
+    public function highlightSearchWords(array $words, string $text): string
     {
-        return "./content/coco";
+        return str_replace("with", "<span class=\"highlight\">with</span>", $text);
     }
 
-    public function findAllNames()
+    public function replaceEditor(string $id, string $init)
     {
-        return ["foo", "bar"];
-    }
-
-    public function find($name, $i)
-    {
-        return "<p>some HTML with {{{trim('scripting')}}}</p>";
-    }
-
-    public function save($name, $i, $text)
-    {
-        return $this->options["save"] ?? true;
-    }
-
-    public function delete($name)
-    {
-        return [
-            "./content/coco/20230306_120000_$name.htm" => false,
-            "./content/coco/$name.htm" => false,
-        ];
+        return "tinymce.init('$id');";
     }
 }
