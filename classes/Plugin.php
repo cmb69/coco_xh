@@ -51,7 +51,7 @@ final class Plugin
      */
     private static function handlePluginAdministration()
     {
-        global $o, $admin, $action;
+        global $o, $admin, $action, $sn;
 
         $o .= print_plugin_admin('on');
         switch ($admin) {
@@ -59,7 +59,7 @@ final class Plugin
                 $o .= Dic::makePluginInfo()();
                 break;
             case 'plugin_main':
-                $o .= Dic::makeMainAdminController()($action);
+                $o .= Dic::makeMainAdminController()($action, $sn);
                 break;
             default:
                 $o .= plugin_admin_common();

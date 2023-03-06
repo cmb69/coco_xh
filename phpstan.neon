@@ -17,4 +17,3 @@ parameters:
     - ../../cmsimple/utf8.php
     - ../plib/classes/HtmlString.php
     - ../plib/classes/HtmlView.php
-    - ../plib/classes/Url.php

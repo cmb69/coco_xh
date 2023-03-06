@@ -25,13 +25,9 @@ use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
 use Plib\HtmlString;
 use Plib\HtmlView as View;
-use Plib\Url;
 
 class MainAdminController
 {
-    /** @var Url */
-    private $url;
-
     /** @var CocoService */
     private $cocoService;
 
@@ -43,25 +39,24 @@ class MainAdminController
     /** @var View */
     private $view;
 
-    public function __construct(Url $url, CocoService $cocoService, CsrfProtector $csrfProtector, View $view)
+    public function __construct(CocoService $cocoService, CsrfProtector $csrfProtector, View $view)
     {
-        $this->url = $url;
         $this->cocoService = $cocoService;
         $this->csrfProtector = $csrfProtector;
         $this->view = $view;
     }
 
-    public function __invoke(string $action): string
+    public function __invoke(string $action, string $sn): string
     {
         switch ($action) {
             default:
-                return $this->show();
+                return $this->show($sn);
             case "delete":
-                return $this->delete();
+                return $this->delete($sn);
         }
     }
 
-    private function show(): string
+    private function show(string $sn): string
     {
         $cocos = [];
         foreach ($this->cocoService->findAllNames() as $coco) {
@@ -72,12 +67,12 @@ class MainAdminController
         }
         return $this->view->render("admin", [
             "csrf_token" => $this->csrfProtector->token(),
-            "url" => $this->url->page("coco")->with("admin", "plugin_main"),
+            "url" => $sn . "?coco&admin=plugin_main",
             "cocos" => $cocos,
         ]);
     }
 
-    private function delete(): string
+    private function delete(string $sn): string
     {
         $this->csrfProtector->check();
         $name = $_POST['coco_name'];
@@ -89,7 +84,7 @@ class MainAdminController
             }
         }
         // TODO: PRG on success
-        $o .= $this->show();
+        $o .= $this->show($sn);
         return $o;
     }
 }

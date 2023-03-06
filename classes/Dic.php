@@ -29,7 +29,6 @@ use Coco\Infra\Pages;
 use Coco\Infra\SystemChecker;
 use Coco\Infra\XhStuff;
 use Plib\HtmlView as View;
-use Plib\Url;
 
 class Dic
 {
@@ -66,7 +65,6 @@ class Dic
     public static function makeMainAdminController(): MainAdminController
     {
         return new MainAdminController(
-            self::makeUrl(),
             self::makeCocoService(),
             new CsrfProtector,
             self::makeView()
@@ -101,14 +99,5 @@ class Dic
         global $pth, $plugin_tx;
 
         return new View($pth["folder"]["plugins"] . "coco/views", $plugin_tx["coco"]);
-    }
-
-    private static function makeUrl(): Url
-    {
-        global $sl, $cf, $su;
-
-        $base = preg_replace(['/index\.php$/', "/(?<=\\/)$sl\\/$/"], "", CMSIMPLE_URL);
-        assert($base !== null);
-        return new Url($base, $sl === $cf["language"]["default"] ? "" : $sl, $su);
     }
 }
