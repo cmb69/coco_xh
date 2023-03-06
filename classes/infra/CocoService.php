@@ -24,7 +24,7 @@ namespace Coco\Infra;
 use XH\PageDataRouter as PageData;
 use XH\Pages;
 
-final class CocoService
+class CocoService
 {
     /** @var string */
     private $dataDir;

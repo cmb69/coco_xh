@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2012-2021 Christoph M. Becker
+ * Copyright 2023 Christoph M. Becker
  *
  * This file is part of Coco_XH.
  *
@@ -21,31 +21,26 @@
 
 namespace Coco;
 
-use Coco\Infra\SystemCheckService;
+use ApprovalTests\Approvals;
+use Coco\Infra\CocoService;
+use Coco\Infra\FakeSystemChecker;
+use PHPUnit\Framework\TestCase;
 use Plib\HtmlView as View;
 
-class InfoController
+class PluginInfoTest extends TestCase
 {
-    /** @var SystemCheckService */
-    private $systemCheckService;
-
-    /** @var View */
-    private $view;
-
-    public function __construct(SystemCheckService $systemCheckService, View $view)
+    public function testRendersPluginInfo(): void
     {
-        $this->systemCheckService = $systemCheckService;
-        $this->view = $view;
-    }
-
-    /**
-     * @return void
-     */
-    public function defaultAction()
-    {
-        echo $this->view->render("info", [
-            "version" => Plugin::VERSION,
-            "checks" => $this->systemCheckService->getChecks(),
-        ]);
+        $cocoService = $this->createStub(CocoService::class);
+        $cocoService->method("dataDir")->willReturn("./content/coco/");
+        $text = XH_includeVar("./languages/en.php", "plugin_tx")["coco"];
+        $sut = new PluginInfo(
+            "./plugins/coco/",
+            $cocoService,
+            new FakeSystemChecker,
+            new View("./views/", $text)
+        );
+        $response = $sut();
+        Approvals::verifyHtml($response);
     }
 }

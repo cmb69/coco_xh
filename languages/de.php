@@ -1,13 +1,12 @@
 <?php
 
 $plugin_tx['coco']['syscheck_fail']="Fehler";
-$plugin_tx['coco']['syscheck_message']="Prüfe, dass %1\$s … %2\$s";
-$plugin_tx['coco']['syscheck_phpversion']="die PHP-Version ≥ %s";
+$plugin_tx['coco']['syscheck_phpversion']="Prüfe, dass PHP-Version ≥ %s:";
 $plugin_tx['coco']['syscheck_success']="OK";
 $plugin_tx['coco']['syscheck_title']="System-Prüfung";
 $plugin_tx['coco']['syscheck_warning']="Warnung";
-$plugin_tx['coco']['syscheck_writable']="'%s' schreibbar ist";
-$plugin_tx['coco']['syscheck_xhversion']="die CMSimple_XH-Version ≥ %s";
+$plugin_tx['coco']['syscheck_writable']="Prüfe, dass '%s' schreibbar ist:";
+$plugin_tx['coco']['syscheck_xhversion']="Prüfe, dass CMSimple_XH-Version ≥ %s:";
 
 $plugin_tx['coco']['menu_main']="Co-Contents";
 

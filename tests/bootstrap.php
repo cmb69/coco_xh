@@ -19,9 +19,12 @@
  * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+const CMSIMPLE_XH_VERSION = "CMSimple_XH 1.7.5";
+
 require_once "../../cmsimple/functions.php";
 require_once "../../cmsimple/classes/PageDataRouter.php";
 require_once "../../cmsimple/classes/Pages.php";
+require_once "../plib/classes/HtmlView.php";
 
 spl_autoload_register(function (string $className) {
     $parts = explode("\\", $className);

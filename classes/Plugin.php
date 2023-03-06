@@ -23,7 +23,7 @@ namespace Coco;
 
 use Coco\Infra\CocoService;
 use Coco\Infra\IdGenerator;
-use Coco\Infra\SystemCheckService;
+use Coco\Infra\SystemChecker;
 use Plib\HtmlView as View;
 use Plib\Url;
 use XH\Pages;
@@ -59,14 +59,18 @@ final class Plugin
      */
     private static function handlePluginAdministration()
     {
-        global $o, $admin, $action, $_XH_csrfProtection;
+        global $pth, $o, $admin, $action, $_XH_csrfProtection;
 
         $o .= print_plugin_admin('on');
         switch ($admin) {
             case '':
-                ob_start();
-                (new InfoController(new SystemCheckService(self::cocoService()), self::view()))->defaultAction();
-                $o .= ob_get_clean();
+                $controller = new PluginInfo(
+                    $pth["folder"]["plugin"],
+                    self::cocoService(),
+                    new SystemChecker,
+                    self::view()
+                );
+                $o .= $controller();
                 break;
             case 'plugin_main':
                 $controller = new MainAdminController(
