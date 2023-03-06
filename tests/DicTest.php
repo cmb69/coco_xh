@@ -27,14 +27,12 @@ class DicTest extends TestCase
 {
     public function setUp(): void
     {
-        global $pth, $c, $cf, $plugin_tx, $sl, $su;
+        global $pth, $c, $cf, $plugin_tx;
 
         $pth = ["folder" => ["content" => "", "plugins" => ""], "file" => ["content" => ""]];
         $c = [];
         $cf = ["backup" => ["numberoffiles" => ""], "language" => ["default" => ""]];
         $plugin_tx = ["coco" => []];
-        $sl = "";
-        $su = "";
     }
 
     public function testMakesBackupController(): void
