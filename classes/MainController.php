@@ -72,7 +72,7 @@ class MainController
         if (!$request->adm() || !$request->edit()) {
             return $this->show($request, $name);
         }
-        if ($request->posts()->updateCoco($name) === null) {
+        if ($request->forms()->updateCoco($name) === null) {
             return $this->edit($request, $name, $config, $height);
         }
         return $this->update($request, $name, $config, $height);
@@ -98,7 +98,7 @@ class MainController
     private function update(Request $request, string $name, string $config, string $height): Response
     {
         $this->csrfProtector->check();
-        $post = $request->posts()->updateCoco($name);
+        $post = $request->forms()->updateCoco($name);
         assert($post !== null);
         if ($this->cocoService->save($name, $request->s(), $post["content"])) {
             return Response::redirect(CMSIMPLE_URL . "?" . $request->queryString());

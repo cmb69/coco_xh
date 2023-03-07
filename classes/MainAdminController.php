@@ -78,7 +78,7 @@ class MainAdminController
     private function delete(Request $request): Response
     {
         $this->csrfProtector->check();
-        $post = $request->posts()->deleteCocos();
+        $post = $request->forms()->deleteCocos();
         if ($post === null) {
             return $this->show($request);
         }

@@ -21,7 +21,7 @@
 
 namespace Coco\Infra;
 
-class Posts
+class Forms
 {
     /** @return array{content:string}|null */
     public function updateCoco(string $name): ?array

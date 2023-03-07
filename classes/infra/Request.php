@@ -74,8 +74,8 @@ class Request
         return $_SERVER["QUERY_STRING"];
     }
 
-    public function posts(): Posts
+    public function forms(): Forms
     {
-        return new Posts;
+        return new Forms;
     }
 }
