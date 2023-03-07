@@ -64,4 +64,9 @@ class FakeRequest extends Request
     {
         return $this->options["server"][$key] ?? null;
     }
+
+    public function method(): string
+    {
+        return $this->options["method"] ?? "";
+    }
 }

@@ -178,7 +178,7 @@ class CocoService
 
     /**
      * @param string $name
-     * @return array<string,bool>
+     * @return list<string>
      */
     public function delete($name)
     {
@@ -187,12 +187,16 @@ class CocoService
             $pattern = sprintf('/^\d{8}_\d{6}_%s\.htm$/', $name);
             if (($filename = readdir($dir)) !== false) {
                 if (preg_match($pattern, $filename)) {
-                    $result[$filename] = unlink($filename);
+                    if (!unlink($filename)) {
+                        $result[] = $filename;
+                    }
                 }
             }
         }
         $filename = $this->filename($name);
-        $result[$filename] = unlink($filename);
+        if (!unlink($filename)) {
+            $result[] = $filename;
+        }
         return $result;
     }
 }

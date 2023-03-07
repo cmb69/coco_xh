@@ -23,8 +23,8 @@ namespace Coco;
 
 use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
-use Coco\Infra\Html;
 use Coco\Infra\Request;
+use Coco\Infra\Response;
 use Coco\Infra\View;
 
 class MainAdminController
@@ -32,9 +32,7 @@ class MainAdminController
     /** @var CocoService */
     private $cocoService;
 
-    /**
-     * @var CsrfProtector
-     */
+    /** @var CsrfProtector */
     private $csrfProtector;
 
     /** @var View */
@@ -47,43 +45,51 @@ class MainAdminController
         $this->view = $view;
     }
 
-    public function __invoke(Request $request): string
+    public function __invoke(Request $request): Response
     {
-        switch ($request->action()) {
+        $action = $request->action();
+        if ($request->method() === "post") {
+            $action = "do_$action";
+        }
+        switch ($action) {
             default:
                 return $this->show($request->sn());
             case "delete":
+                return $this->confirmDelete();
+            case "do_delete":
                 return $this->delete($request->sn());
         }
     }
 
-    private function show(string $sn): string
+    private function show(string $sn): Response
     {
-        $cocos = [];
-        foreach ($this->cocoService->findAllNames() as $coco) {
-            $message = new Html(addcslashes($this->view->text('confirm_delete', $this->view->esc($coco)), "\n\r\t\\"));
-            $cocos[] = ['name' => $coco, 'message' => $message];
-        }
-        return $this->view->render("admin", [
-            "csrf_token" => $this->csrfProtector->token(),
-            "url" => $sn . "?coco&admin=plugin_main",
-            "cocos" => $cocos,
-        ]);
+        return Response::create($this->view->render("admin", [
+            "sn" => $sn,
+            "cocos" => $this->cocoService->findAllNames(),
+        ]));
     }
 
-    private function delete(string $sn): string
+    private function confirmDelete(): Response
+    {
+        return Response::create($this->view->render("confirm", [
+            "cocos" => array_keys($_GET["coco_name"]),
+            "csrf_token" => $this->csrfProtector->token(),
+        ]));
+    }
+
+    private function delete(string $sn): Response
     {
         $this->csrfProtector->check();
-        $name = $_POST['coco_name'];
-        $result = $this->cocoService->delete($name);
         $o = "";
-        foreach ($result as $filename => $success) {
-            if (!$success) {
+        foreach (array_keys($_GET["coco_name"]) as $name) {
+            $result = $this->cocoService->delete((string) $name);
+            foreach ($result as $filename) {
                 $o .= $this->view->message("fail", "error_delete", $filename);
             }
         }
-        // TODO: PRG on success
-        $o .= $this->show($sn);
-        return $o;
+        if ($o !== "") {
+            return Response::create($o)->merge($this->show($sn));
+        }
+        return Response::redirect(CMSIMPLE_URL . "?coco&admin=plugin_main");
     }
 }

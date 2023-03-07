@@ -30,16 +30,33 @@ class Response
         return $that;
     }
 
+    public static function redirect(string $location): self
+    {
+        $that = new self;
+        $that->location = $location;
+        return $that;
+    }
+
     /** @var string */
-    private $output;
+    private $output = "";
 
     /** @var string|null */
-    private $title;
+    private $title = null;
+
+    /** @var string|null */
+    private $location = null;
 
     public function withTitle(string $title): self
     {
         $that = clone $this;
         $that->title = $title;
+        return $that;
+    }
+
+    public function merge(Response $other): self
+    {
+        $that = clone $this;
+        $that->output .= $other->output;
         return $that;
     }
 
@@ -53,11 +70,26 @@ class Response
         return $this->title;
     }
 
-    /** @return string|never */
+    public function location(): ?string
+    {
+        return $this->location;
+    }
+
+    /**
+     * @return string|never
+     * @codeCoverageIgnore
+     */
     public function respond()
     {
         global $title;
 
+        if ($this->location !== null) {
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+            header("Location: " . $this->location, true, 303);
+            exit;
+        }
         if ($this->title !== null) {
             $title = $this->title;
         }

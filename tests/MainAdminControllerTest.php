@@ -34,28 +34,47 @@ class MainAdminControllerTest extends TestCase
     {
         $sut = $this->sut();
         $response = $sut(new FakeRequest(["action" => ""]));
-        Approvals::verifyHtml($response);
+        Approvals::verifyHtml($response->output());
+    }
+
+    public function testRendersDeleteConfirmation(): void
+    {
+        $_GET = ["coco_name" => ["foo" => "on"]];
+        $sut = $this->sut();
+        $response = $sut(new FakeRequest(["action" => "delete"]));
+        Approvals::verifyHtml($response->output());
     }
 
     public function testDeletionIsCsrfProtected(): void
     {
         $sut = $this->sut(["csrf" => ["check" => true]]);
         $this->expectExceptionMessage("CSRF check failed!");
-        $sut(new FakeRequest(["action" => "delete"]));
+        $sut(new FakeRequest(["action" => "delete", "method" => "post"]));
+    }
+
+    public function testSuccessfulDeletionRedirects(): void
+    {
+        $_GET = ["coco_name" => ["foo" => "on"]];
+        $sut = $this->sut();
+        $response = $sut(new FakeRequest(["action" => "delete", "method" => "post"]));
+        $this->assertEquals("http://examle.com/?coco&admin=plugin_main", $response->location());
     }
 
     public function testFailureToDeleteIsReported(): void
     {
-        $_POST = ["coco_name" => "foo"];
-        $sut = $this->sut();
-        $response = $sut(new FakeRequest(["action" => "delete"]));
-        Approvals::verifyHtml($response);
+        $_GET = ["coco_name" => ["foo" => "on"]];
+        $sut = $this->sut(["service" => ["delete" => [
+            "./content/coco/20230306_120000_foo.htm",
+            "./content/coco/foo.htm",
+        ]]]);
+        $response = $sut(new FakeRequest(["action" => "delete", "method" => "post"]));
+        Approvals::verifyHtml($response->output());
     }
 
     private function sut($options = []): MainAdminController
     {
         return new MainAdminController(
-            new FakeCocoService,
+            new FakeCocoService($options["service"] ?? []),
             new FakeCsrfProtector($options["csrf"] ?? []),
             new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["coco"])
         );

@@ -13,7 +13,7 @@ $plugin_tx['coco']['menu_main']="Co-Contents";
 $plugin_tx['coco']['label_delete']="Delete";
 $plugin_tx['coco']['label_save']="Save";
 
-$plugin_tx['coco']['confirm_delete']="All contents of \"%s\" will be deleted!";
+$plugin_tx['coco']['confirm_delete']="All contents and backups of the following co-contents will be deleted!";
 
 $plugin_tx['coco']['info_created']="%s created";
 $plugin_tx['coco']['info_deleted']="%s deleted";

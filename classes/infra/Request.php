@@ -68,4 +68,9 @@ class Request
     {
         return $_SERVER[$key] ?? null;
     }
+
+    public function method(): string
+    {
+        return strtolower($_SERVER["REQUEST_METHOD"]);
+    }
 }

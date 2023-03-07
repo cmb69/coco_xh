@@ -97,7 +97,7 @@ final class CocoServiceTest extends TestCase
         $sut = $this->sut();
         $this->assertTrue($sut->save("foo", 0, "hello world"));
         $this->assertTrue($sut->save("bar", 0, "hello world"));
-        $this->assertSame([$sut->filename("foo") => true], $sut->delete("foo"));
+        $this->assertSame([], $sut->delete("foo"));
         $this->assertSame(["bar"], $this->sut()->findAllNames());
     }
 

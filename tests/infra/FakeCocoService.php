@@ -60,9 +60,10 @@ class FakeCocoService extends CocoService
 
     public function delete($name)
     {
+        return $this->options["delete"] ?? [];
         return [
-            "./content/coco/20230306_120000_$name.htm" => false,
-            "./content/coco/$name.htm" => false,
+            "./content/coco/20230306_120000_$name.htm",
+            "./content/coco/$name.htm",
         ];
     }
 }

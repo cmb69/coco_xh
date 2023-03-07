@@ -13,7 +13,7 @@ $plugin_tx['coco']['menu_main']="Co-Contents";
 $plugin_tx['coco']['label_delete']="Löschen";
 $plugin_tx['coco']['label_save']="Speichern";
 
-$plugin_tx['coco']['confirm_delete']="Der gesamte Inhalt von \"%s\" wird gelöscht!";
+$plugin_tx['coco']['confirm_delete']="Der gesamte Inhalt und alle Sicherheitskopien der folgenden Co-Contents wird gelöscht!";
 
 $plugin_tx['coco']['info_created']="%s angelegt";
 $plugin_tx['coco']['info_deleted']="%s gelöscht";
