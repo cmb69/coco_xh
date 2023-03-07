@@ -4,22 +4,18 @@ use Coco\Infra\View;
 
 /**
  * @var View $this
- * @var string $action
  * @var string $csrf_token
  * @var list<string> $cocos
  */
 ?>
 <!-- coco confirmation -->
-<form action="<?=$action?>" method="post">
+<form method="post">
   <input type="hidden" name="xh_csrf_token" value="<?=$csrf_token?>">
   <p><?=$this->text('confirm_delete')?></p>
   <ul>
 <?foreach ($cocos as $coco):?>
-    <li>
-      <span><?=$coco?></span>
-      <input type="hidden" name="coco_name[]" value="<?=$coco?>">
-    </li>
+    <li><?=$coco?></li>
 <?endforeach?>
   </ul>
-  <p><button name="action" value="delete"><?=$this->text('label_delete')?></button></p>
+  <p><button name="action" value="do_delete"><?=$this->text('label_delete')?></button></p>
 </form>

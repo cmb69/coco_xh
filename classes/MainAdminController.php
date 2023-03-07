@@ -71,7 +71,6 @@ class MainAdminController
     private function confirmDelete(Request $request): Response
     {
         return Response::create($this->view->render("confirm", [
-            "action" => $request->sn() . "?coco&admin=plugin_main&action=do_delete",
             "cocos" => $_GET["coco_name"],
             "csrf_token" => $this->csrfProtector->token(),
         ]))->withTitle("Coco – " . $this->view->text("menu_main"));

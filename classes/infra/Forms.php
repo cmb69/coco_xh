@@ -35,9 +35,9 @@ class Forms
     /** @return array{names:list<string>}>|null */
     public function deleteCocos(): ?array
     {
-        if (!isset($_POST["coco_name"]) || !is_array($_POST["coco_name"])) {
+        if (!isset($_GET["coco_name"]) || !is_array($_GET["coco_name"])) {
             return null;
         }
-        return ["names" => array_values($_POST["coco_name"])];
+        return ["names" => array_values($_GET["coco_name"])];
     }
 }
