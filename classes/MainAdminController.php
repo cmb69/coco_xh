@@ -63,7 +63,7 @@ class MainAdminController
         return Response::create($this->view->render("admin", [
             "action" => $request->sn(),
             "cocos" => $this->cocoService->findAllNames(),
-        ]));
+        ]))->withTitle("Coco – " . $this->view->text("menu_main"));
     }
 
     private function confirmDelete(Request $request): Response
@@ -72,7 +72,7 @@ class MainAdminController
             "action" => $request->sn() . "?coco&admin=plugin_main&action=do_delete",
             "cocos" => $_GET["coco_name"],
             "csrf_token" => $this->csrfProtector->token(),
-        ]));
+        ]))->withTitle("Coco – " . $this->view->text("menu_main"));
     }
 
     private function delete(Request $request): Response

@@ -34,6 +34,7 @@ class MainAdminControllerTest extends TestCase
     {
         $sut = $this->sut();
         $response = $sut(new FakeRequest(["action" => ""]));
+        $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
     }
 
@@ -42,6 +43,7 @@ class MainAdminControllerTest extends TestCase
         $_GET = ["coco_name" => ["foo"]];
         $sut = $this->sut();
         $response = $sut(new FakeRequest(["action" => "delete"]));
+        $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
     }
 
