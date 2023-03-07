@@ -20,7 +20,7 @@ use Coco\Infra\View;
     </tr>
 <?foreach ($cocos as $coco):?>
     <tr>
-      <td><input type="checkbox" id="coco_name_<?=$coco?>" name="coco_name[<?=$coco?>]"></td>
+      <td><input type="checkbox" id="coco_name_<?=$coco?>" name="coco_name[]" value="<?=$coco?>"></td>
       <td><label for="coco_name_<?=$coco?>"><?=$coco?></label></td>
     </tr>
 <?endforeach?>

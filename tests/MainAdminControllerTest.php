@@ -39,7 +39,7 @@ class MainAdminControllerTest extends TestCase
 
     public function testRendersDeleteConfirmation(): void
     {
-        $_GET = ["coco_name" => ["foo" => "on"]];
+        $_GET = ["coco_name" => ["foo"]];
         $sut = $this->sut();
         $response = $sut(new FakeRequest(["action" => "delete"]));
         Approvals::verifyHtml($response->output());
