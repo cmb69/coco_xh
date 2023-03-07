@@ -23,8 +23,10 @@ namespace Coco;
 
 use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
+use Coco\Infra\Html;
 use Coco\Infra\Pages;
 use Coco\Infra\Request;
+use Coco\Infra\Response;
 use Coco\Infra\XhStuff;
 use Coco\Infra\View;
 
@@ -59,59 +61,65 @@ class MainController
         $this->view = $view;
     }
 
-    public function __invoke(Request $request, string $name, string $config, string $height): string
+    public function __invoke(Request $request, string $name, string $config, string $height): Response
     {
         if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
-            return $this->view->message("fail", "error_invalid_name") . "\n";
+            return Response::create($this->view->message("fail", "error_invalid_name") . "\n");
         }
         if ($request->s() < 0 || $request->s() >= $this->pages->count()) {
-            return "";
+            return Response::create("");
         }
-        switch ($request->adm() && $request->edit()) {
-            default:
-                return $this->defaultAction($name);
-            case true:
-                return $this->editAction($name, $config, $height);
+        if (!$request->adm() || !$request->edit()) {
+            return $this->show($request, $name);
         }
+        if ($request->posts()->updateCoco($name) === null) {
+            return $this->edit($request, $name, $config, $height);
+        }
+        return $this->update($request, $name, $config, $height);
     }
 
-    private function defaultAction(string $name): string
+    private function show(Request $request, string $name): Response
     {
-        global $s;
-
-        $text = $this->xhStuff->evaluateScripting((string) $this->cocoService->find($name, $s));
-        if (isset($_GET['search'])) {
-            $search = XH_hsc(trim(preg_replace('/\s+/u', ' ', ($_GET['search']))));
+        $text = $this->xhStuff->evaluateScripting((string) $this->cocoService->find($name, $request->s()));
+        if ($request->search() !== "") {
+            $search = XH_hsc(trim((string) preg_replace('/\s+/u', ' ', $request->search())));
             $words = explode(' ', $search);
             $text = $this->xhStuff->highlightSearchWords($words, $text);
         }
-        return $text;
+        return Response::create($text);
     }
 
-    private function editAction(string $name, string $config, string $height): string
+    private function edit(Request $request, string $name, string $config, string $height): Response
     {
-        global $s;
+        $content = $this->cocoService->find($name, $request->s());
+        return Response::create($this->renderEditor($name, $config, $height, $content));
+    }
 
-        $o = "";
-        if (isset($_POST['coco_text_' . $name])) {
-            $this->csrfProtector->check();
-            $content = $_POST['coco_text_' . $name];
-            if (!$this->cocoService->save($name, $s, $content)) {
-                $o .= $this->view->message("fail", "error_save", $this->cocoService->filename($name));
-            }
-        } else {
-            $content = $this->cocoService->find($name, $s);
+    private function update(Request $request, string $name, string $config, string $height): Response
+    {
+        $this->csrfProtector->check();
+        $post = $request->posts()->updateCoco($name);
+        assert($post !== null);
+        if ($this->cocoService->save($name, $request->s(), $post["content"])) {
+            return Response::redirect(CMSIMPLE_URL . "?" . $request->queryString());
         }
+        return Response::create(
+            $this->view->message("fail", "error_save", $this->cocoService->filename($name))
+            . $this->renderEditor($name, $config, $height, $post["content"])
+        );
+    }
+
+    private function renderEditor(string $name, string $config, string $height, string $content): string
+    {
         $id = 'coco_text_' . $name;
         $editor = $this->xhStuff->replaceEditor($id, $config);
-        $o .= $this->view->render("edit_form", [
+        return $this->view->render("edit_form", [
             "id" => $id,
             "name" => $name,
             "style" => 'width:100%; height:' . $height,
             "content" => $content,
-            "editor" => $editor !== false ? $editor : false,
+            "editor" => $editor !== false ? new Html($editor) : false,
             "csrf_token" => $this->csrfProtector->token(),
         ]);
-        return $o;
     }
 }

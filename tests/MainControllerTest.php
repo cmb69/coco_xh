@@ -34,17 +34,16 @@ class MainControllerTest extends TestCase
 {
     public function testRendersCoco(): void
     {
-        $_GET = ["search" => "with"];
         $sut = $this->sut();
-        $response = $sut(new FakeRequest(["s" => 1]), "foo", false, "100%");
-        Approvals::verifyHtml($response);
+        $response = $sut(new FakeRequest(["s" => 1, "search" => "with"]), "foo", false, "100%");
+        Approvals::verifyHtml($response->output());
     }
 
     public function testRendersCocoEditor(): void
     {
         $sut = $this->sut();
         $response = $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), "foo", false, "100%");
-        Approvals::verifyHtml($response);
+        Approvals::verifyHtml($response->output());
     }
 
     public function testSaveIsCsrfProtected(): void
@@ -52,37 +51,39 @@ class MainControllerTest extends TestCase
         $_POST = ["coco_text_foo" => "some content"];
         $sut = $this->sut(["csrf" => ["check" => true]]);
         $this->expectExceptionMessage("CSRF check failed!");
-        $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), "foo", false, "100%");
+        $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1, "method" => "post"]), "foo", false, "100%");
     }
 
-    public function testRendersCocoEditorAfterSavingContent(): void
+    public function testRedirectsAfterSavingContent(): void
     {
         $_POST = ["coco_text_foo" => "some content"];
         $sut = $this->sut();
-        $response = $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), "foo", false, "100%");
-        Approvals::verifyHtml($response);
+        $request = new FakeRequest(["adm" => true, "edit" => true, "s" => 1, "method" => "post"]);
+        $response = $sut($request, "foo", false, "100%");
+        $this->assertEquals("http://example.com/?", $response->location());
     }
 
     public function testReportsErrorOnFailureToSaveContent(): void
     {
         $_POST = ["coco_text_foo" => "some content"];
         $sut = $this->sut(["cocoService" => ["save" => false]]);
-        $response = $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), "foo", false, "100%");
-        Approvals::verifyHtml($response);
+        $request = new FakeRequest(["adm" => true, "edit" => true, "s" => 1, "method" => "post"]);
+        $response = $sut($request, "foo", false, "100%");
+        Approvals::verifyHtml($response->output());
     }
 
     public function testReportsIllegalCocoName(): void
     {
         $sut = $this->sut();
         $response = $sut(new FakeRequest(["s" => 1]), "foo bar", false, "100%");
-        Approvals::verifyHtml($response);
+        Approvals::verifyHtml($response->output());
     }
 
     public function testIgnoresSearching(): void
     {
         $sut = $this->sut();
         $response = $sut(new FakeRequest(["s" => -1]), "foo", false, "100%");
-        $this->assertEquals("", $response);
+        $this->assertEquals("", $response->output());
     }
 
     private function sut(array $options = []): MainController

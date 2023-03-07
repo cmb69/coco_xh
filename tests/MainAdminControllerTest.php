@@ -57,7 +57,7 @@ class MainAdminControllerTest extends TestCase
         $_GET = ["coco_name" => ["foo" => "on"]];
         $sut = $this->sut();
         $response = $sut(new FakeRequest(["action" => "delete", "method" => "post"]));
-        $this->assertEquals("http://examle.com/?coco&admin=plugin_main", $response->location());
+        $this->assertEquals("http://example.com/?coco&admin=plugin_main", $response->location());
     }
 
     public function testFailureToDeleteIsReported(): void

@@ -69,8 +69,18 @@ class Request
         return $_SERVER[$key] ?? null;
     }
 
+    public function queryString(): string
+    {
+        return $_SERVER["QUERY_STRING"];
+    }
+
     public function method(): string
     {
         return strtolower($_SERVER["REQUEST_METHOD"]);
+    }
+
+    public function posts(): Posts
+    {
+        return new Posts;
     }
 }

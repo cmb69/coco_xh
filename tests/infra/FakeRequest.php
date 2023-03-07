@@ -65,6 +65,11 @@ class FakeRequest extends Request
         return $this->options["server"][$key] ?? null;
     }
 
+    public function queryString(): string
+    {
+        return $this->options["query"] ?? "";
+    }
+
     public function method(): string
     {
         return $this->options["method"] ?? "";
