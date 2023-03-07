@@ -64,17 +64,15 @@ final class BackupController
     {
         $dir = $this->cocoService->dataDir() . "/";
         if (!$this->backups->create($dir, $coconame, $backupDate)) {
-            return $this->view->message("fail", "error_save", $this->backups->filename($dir, $coconame, $backupDate))
-                . "\n";
+            return $this->view->message("fail", "error_save", $this->backups->filename($dir, $coconame, $backupDate));
         }
-        $o = $this->view->message("info", "info_created", $this->backups->filename($dir, $coconame, $backupDate))
-            . "\n";
+        $o = $this->view->message("info", "info_created", $this->backups->filename($dir, $coconame, $backupDate));
         $backups = $this->backups->all($dir, $coconame);
         for ($i = 0; $i < count($backups) - $this->maxBackups; $i++) {
             if ($this->backups->delete($backups[$i])) {
-                $o .= $this->view->message("info", "info_deleted", $backups[$i]) . "\n";
+                $o .= $this->view->message("info", "info_deleted", $backups[$i]);
             } else {
-                $o .= $this->view->message("fail", "error_delete", $backups[$i]) . "\n";
+                $o .= $this->view->message("fail", "error_delete", $backups[$i]);
             }
         }
         return $o;

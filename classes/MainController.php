@@ -104,7 +104,7 @@ class MainController
         }
         $id = 'coco_text_' . $name;
         $editor = $this->xhStuff->replaceEditor($id, $config);
-        $o .= $this->view->render("edit-form", [
+        $o .= $this->view->render("edit_form", [
             "id" => $id,
             "name" => $name,
             "style" => 'width:100%; height:' . $height,

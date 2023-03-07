@@ -56,7 +56,7 @@ class View
     /** @param scalar $args */
     public function message(string $type, string $key, ...$args): string
     {
-        return XH_message($type, $this->text[$key], ...$args);
+        return XH_message($type, $this->text[$key], ...$args) . "\n";
     }
 
     public function esc(string $string): string
