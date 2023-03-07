@@ -27,8 +27,8 @@ use Coco\Infra\CsrfProtector;
 use Coco\Infra\IdGenerator;
 use Coco\Infra\Pages;
 use Coco\Infra\SystemChecker;
+use Coco\Infra\View;
 use Coco\Infra\XhStuff;
-use Plib\HtmlView as View;
 
 class Dic
 {
@@ -100,6 +100,6 @@ class Dic
     {
         global $pth, $plugin_tx;
 
-        return new View($pth["folder"]["plugins"] . "coco/views", $plugin_tx["coco"]);
+        return new View($pth["folder"]["plugins"] . "coco/views/", $plugin_tx["coco"]);
     }
 }

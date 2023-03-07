@@ -26,8 +26,8 @@ use Coco\Infra\FakeCocoService;
 use Coco\Infra\FakePages;
 use Coco\Infra\FakeRequest;
 use Coco\Infra\FakeXhStuff;
+use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
-use Plib\HtmlView as View;
 
 class SearchTest extends TestCase
 {

@@ -1,12 +1,12 @@
 <?php
 
-use Plib\HtmlView as View;
+use Coco\Infra\View;
 
 /**
  * @var View $this
  * @var string $csrf_token
  * @var string $url
- * @var stdClass[] $cocos
+ * @var list<array{name:string,message:string}> $cocos
  */
 
 ?>
@@ -16,13 +16,13 @@ use Plib\HtmlView as View;
     <ul>
 <?php foreach ($cocos as $coco):?>
         <li>
-            <form action="<?=$this->esc($url)?>" method="POST" onsubmit="return confirm('<?=$this->esc($coco->message)?>')">
+            <form action="<?=$url?>" method="POST" onsubmit="return confirm('<?=$coco['message']?>')">
                 <input type="hidden" name="action" value="delete">
-                <input type="hidden" name="coco_name" value="<?=$this->esc($coco->name)?>">
+                <input type="hidden" name="coco_name" value="<?=$coco['name']?>">
                 <button><?=$this->text("label_delete")?></button>
-                <input type="hidden" name="xh_csrf_token" value="<?=$this->esc($csrf_token)?>">
+                <input type="hidden" name="xh_csrf_token" value="<?=$csrf_token?>">
             </form>
-            <?=$this->esc($coco->name)?>
+            <?=$coco['name']?>
         </li>
 <?php endforeach?>
     </ul>

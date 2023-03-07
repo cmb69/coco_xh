@@ -18,11 +18,6 @@ jobs:
           unzip -q CMSimple_XH-1.7.5.zip
       - name: Patch CMSimple_XH
         run: cd cmsimplexh/cmsimple && sed -i 's/@return int The number of bytes written, or false on failure\./@return int\|false/g' functions.php
-      - name: Checkout Plib_XH
-        uses: actions/checkout@v3
-        with:
-          repository: cmb69/plib_xh
-          path: cmsimplexh/plugins/plib
       - name: Checkout Coco_XH
         uses: actions/checkout@v3
         with:

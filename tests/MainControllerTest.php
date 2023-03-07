@@ -27,7 +27,7 @@ use Coco\Infra\FakeCsrfProtector;
 use Coco\Infra\FakePages;
 use Coco\Infra\FakeRequest;
 use Coco\Infra\FakeXhStuff;
-use Plib\HtmlView as View;
+use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
 
 class MainControllerTest extends TestCase

@@ -1,6 +1,6 @@
 <?php
 
-use Plib\HtmlView as View;
+use Coco\Infra\View;
 
 /**
  * @var View $this
@@ -11,10 +11,10 @@ use Plib\HtmlView as View;
 
 ?>
 
-<h1>Coco <?=$this->esc($version)?></h1>
+<h1>Coco <?=$version?></h1>
 <div class="coco_syscheck">
     <h2><?=$this->text('syscheck_title')?></h2>
 <?php foreach ($checks as $check):?>
-    <p class="xh_<?=$this->esc($check["state"])?>"><?=$this->text($check['key'], $check['arg'])?> <?=$this->text($check['state_key'])?></p>
+    <p class="xh_<?=$check["state"]?>"><?=$this->text($check['key'], $check['arg'])?> <?=$this->text($check['state_key'])?></p>
 <?php endforeach?>
 </div>

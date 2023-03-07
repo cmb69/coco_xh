@@ -23,9 +23,9 @@ namespace Coco;
 
 use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
+use Coco\Infra\Html;
 use Coco\Infra\Request;
-use Plib\HtmlString;
-use Plib\HtmlView as View;
+use Coco\Infra\View;
 
 class MainAdminController
 {
@@ -61,10 +61,8 @@ class MainAdminController
     {
         $cocos = [];
         foreach ($this->cocoService->findAllNames() as $coco) {
-            $message = new HtmlString(
-                addcslashes($this->view->text('confirm_delete', new HtmlString($coco)), "\n\r\t\\")
-            );
-            $cocos[] = (object) ['name' => $coco, 'message' => $message];
+            $message = new Html(addcslashes($this->view->text('confirm_delete', $this->view->esc($coco)), "\n\r\t\\"));
+            $cocos[] = ['name' => $coco, 'message' => $message];
         }
         return $this->view->render("admin", [
             "csrf_token" => $this->csrfProtector->token(),

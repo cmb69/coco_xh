@@ -26,8 +26,7 @@ use Coco\Infra\CsrfProtector;
 use Coco\Infra\Pages;
 use Coco\Infra\Request;
 use Coco\Infra\XhStuff;
-use Plib\HtmlString;
-use Plib\HtmlView as View;
+use Coco\Infra\View;
 
 class MainController
 {
@@ -110,8 +109,8 @@ class MainController
             "name" => $name,
             "style" => 'width:100%; height:' . $height,
             "content" => $content,
-            "editor" => $editor !== false ? new HtmlString($editor) : false,
-            "csrf_token" => new HtmlString($this->csrfProtector->token()),
+            "editor" => $editor !== false ? $editor : false,
+            "csrf_token" => $this->csrfProtector->token(),
         ]);
         return $o;
     }

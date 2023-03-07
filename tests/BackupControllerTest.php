@@ -23,8 +23,8 @@ namespace Coco\Infra;
 
 use ApprovalTests\Approvals;
 use Coco\BackupController;
+use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
-use Plib\HtmlView as View;
 
 class BackupControllerTest extends TestCase
 {

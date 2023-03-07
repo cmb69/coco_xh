@@ -19,28 +19,20 @@
  * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Coco;
+namespace Coco\Infra;
 
-use ApprovalTests\Approvals;
-use Coco\Infra\CocoService;
-use Coco\Infra\FakeSystemChecker;
-use Coco\Infra\View;
-use PHPUnit\Framework\TestCase;
-
-class PluginInfoTest extends TestCase
+class Html
 {
-    public function testRendersPluginInfo(): void
+    /** @var string */
+    private $string;
+
+    public function __construct(string $string)
     {
-        $cocoService = $this->createStub(CocoService::class);
-        $cocoService->method("dataDir")->willReturn("./content/coco/");
-        $text = XH_includeVar("./languages/en.php", "plugin_tx")["coco"];
-        $sut = new PluginInfo(
-            "./plugins/coco/",
-            $cocoService,
-            new FakeSystemChecker,
-            new View("./views/", $text)
-        );
-        $response = $sut();
-        Approvals::verifyHtml($response);
+        $this->string = $string;
+    }
+
+    public function __toString(): string
+    {
+        return $this->string;
     }
 }

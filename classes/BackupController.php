@@ -24,7 +24,7 @@ namespace Coco;
 use Coco\Infra\Backups;
 use Coco\Infra\CocoService;
 use Coco\Infra\Request;
-use Plib\HtmlView as View;
+use Coco\Infra\View;
 
 final class BackupController
 {

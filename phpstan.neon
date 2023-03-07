@@ -16,5 +16,3 @@ parameters:
     - ../../cmsimple/adminfuncs.php
     - ../../cmsimple/functions.php
     - ../../cmsimple/utf8.php
-    - ../plib/classes/HtmlString.php
-    - ../plib/classes/HtmlView.php

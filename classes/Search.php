@@ -25,8 +25,8 @@ use Coco\Infra\CocoService;
 use Coco\Infra\Pages;
 use Coco\Infra\Request;
 use Coco\Infra\Response;
+use Coco\Infra\View;
 use Coco\Infra\XhStuff;
-use Plib\HtmlView as View;
 
 class Search
 {

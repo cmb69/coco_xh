@@ -23,7 +23,7 @@ namespace Coco;
 
 use Coco\Infra\CocoService;
 use Coco\Infra\SystemChecker;
-use Plib\HtmlView as View;
+use Coco\Infra\View;
 
 class PluginInfo
 {

@@ -25,7 +25,7 @@ use ApprovalTests\Approvals;
 use Coco\Infra\FakeCocoService;
 use Coco\Infra\FakeCsrfProtector;
 use Coco\Infra\FakeRequest;
-use Plib\HtmlView as View;
+use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
 
 class MainAdminControllerTest extends TestCase

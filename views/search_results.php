@@ -1,6 +1,6 @@
 <?php
 
-use Plib\HtmlView as View;
+use Coco\Infra\View;
 
 /**
  * @var View $this
@@ -15,7 +15,7 @@ use Plib\HtmlView as View;
 <?php if (!empty($pages)):?>
 <ul>
 <?php   foreach ($pages as $page):?>
-    <li><a href="<?=$this->esc($page['url'])?>"><?=$this->esc($page['heading'])?></a></li>
+    <li><a href="<?=$page['url']?>"><?=$page['heading']?></a></li>
 <?php   endforeach?>
 </ul>
 <?php endif?>
