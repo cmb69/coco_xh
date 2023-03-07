@@ -17,5 +17,5 @@ use Coco\Infra\View;
     <li><?=$coco?></li>
 <?endforeach?>
   </ul>
-  <p><button name="action" value="do_delete"><?=$this->text('label_delete')?></button></p>
+  <p><button name="coco_do" value="delete"><?=$this->text('label_delete')?></button></p>
 </form>

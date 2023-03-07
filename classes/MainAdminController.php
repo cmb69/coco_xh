@@ -47,15 +47,13 @@ class MainAdminController
 
     public function __invoke(Request $request): Response
     {
-        $action = $request->action();
-        switch ($action) {
-            default:
-                return $this->show($request);
-            case "delete":
-                return $this->confirmDelete($request);
-            case "do_delete":
-                return $this->delete($request);
+        if ($request->action() !== "delete") {
+            return $this->show($request);
         }
+        if (!isset($_POST["coco_do"])) {
+            return $this->confirmDelete($request);
+        }
+        return $this->delete($request);
     }
 
     /** @param list<array{key:string,arg:string}> $errors */

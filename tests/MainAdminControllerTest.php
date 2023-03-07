@@ -49,27 +49,31 @@ class MainAdminControllerTest extends TestCase
 
     public function testDeletionIsCsrfProtected(): void
     {
+        $_GET = ["coco_name" => ["foo"]];
+        $_POST = ["coco_do" => "delete"];
         $sut = $this->sut(["csrf" => ["check" => true]]);
         $this->expectExceptionMessage("CSRF check failed!");
-        $sut(new FakeRequest(["action" => "do_delete"]));
+        $sut(new FakeRequest(["action" => "delete"]));
     }
 
     public function testSuccessfulDeletionRedirects(): void
     {
-        $_POST = ["coco_name" => ["foo"]];
+        $_GET = ["coco_name" => ["foo"]];
+        $_POST = ["coco_do" => "delete"];
         $sut = $this->sut();
-        $response = $sut(new FakeRequest(["action" => "do_delete"]));
+        $response = $sut(new FakeRequest(["action" => "delete"]));
         $this->assertEquals("http://example.com/?coco&admin=plugin_main", $response->location());
     }
 
     public function testFailureToDeleteIsReported(): void
     {
-        $_POST = ["coco_name" => ["foo"]];
+        $_GET = ["coco_name" => ["foo"]];
+        $_POST = ["coco_do" => "delete"];
         $sut = $this->sut(["service" => ["delete" => [
             "./content/coco/20230306_120000_foo.htm",
             "./content/coco/foo.htm",
         ]]]);
-        $response = $sut(new FakeRequest(["action" => "do_delete"]));
+        $response = $sut(new FakeRequest(["action" => "delete"]));
         Approvals::verifyHtml($response->output());
     }
 
