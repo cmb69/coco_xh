@@ -74,6 +74,7 @@ class MainAdminControllerTest extends TestCase
             "./content/coco/foo.htm",
         ]]]);
         $response = $sut(new FakeRequest(["action" => "delete"]));
+        $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
     }
 

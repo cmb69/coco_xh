@@ -10,6 +10,7 @@ use Coco\Infra\View;
  */
 ?>
 <!-- coco confirmation -->
+<h1>Coco – <?=$this->text('menu_main')?></h1>
 <?foreach ($errors as $error):?>
 <p class="xh_fail"><?=$this->text($error['key'], $error['arg'])?></p>
 <?endforeach?>
