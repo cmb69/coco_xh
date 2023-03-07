@@ -4,13 +4,13 @@ use Coco\Infra\View;
 
 /**
  * @var View $this
- * @var string $sn
+ * @var string $action
  * @var list<string> $cocos
  */
 ?>
 <!-- coco administration -->
 <h1>Coco – <?=$this->text('menu_main')?></h1>
-<form id="coco_admin_cocos" action="<?=$sn?>" method="get">
+<form id="coco_admin_cocos" action="<?=$action?>" method="get">
   <input type="hidden" name="selected" value="coco"/>
   <input type="hidden" name="admin" value="plugin_main"/>
   <table>

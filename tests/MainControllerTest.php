@@ -51,14 +51,14 @@ class MainControllerTest extends TestCase
         $_POST = ["coco_text_foo" => "some content"];
         $sut = $this->sut(["csrf" => ["check" => true]]);
         $this->expectExceptionMessage("CSRF check failed!");
-        $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1, "method" => "post"]), "foo", false, "100%");
+        $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), "foo", false, "100%");
     }
 
     public function testRedirectsAfterSavingContent(): void
     {
         $_POST = ["coco_text_foo" => "some content"];
         $sut = $this->sut();
-        $request = new FakeRequest(["adm" => true, "edit" => true, "s" => 1, "method" => "post"]);
+        $request = new FakeRequest(["adm" => true, "edit" => true, "s" => 1]);
         $response = $sut($request, "foo", false, "100%");
         $this->assertEquals("http://example.com/?", $response->location());
     }
@@ -67,7 +67,7 @@ class MainControllerTest extends TestCase
     {
         $_POST = ["coco_text_foo" => "some content"];
         $sut = $this->sut(["cocoService" => ["save" => false]]);
-        $request = new FakeRequest(["adm" => true, "edit" => true, "s" => 1, "method" => "post"]);
+        $request = new FakeRequest(["adm" => true, "edit" => true, "s" => 1]);
         $response = $sut($request, "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }

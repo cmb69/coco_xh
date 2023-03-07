@@ -31,4 +31,13 @@ class Posts
         }
         return ["content" => $_POST["coco_text_$name"]];
     }
+
+    /** @return array{names:list<string>}>|null */
+    public function deleteCocos(): ?array
+    {
+        if (!isset($_POST["coco_name"]) || !is_array($_POST["coco_name"])) {
+            return null;
+        }
+        return ["names" => array_values($_POST["coco_name"])];
+    }
 }

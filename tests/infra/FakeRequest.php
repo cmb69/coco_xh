@@ -69,9 +69,4 @@ class FakeRequest extends Request
     {
         return $this->options["query"] ?? "";
     }
-
-    public function method(): string
-    {
-        return $this->options["method"] ?? "";
-    }
 }

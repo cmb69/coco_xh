@@ -48,47 +48,49 @@ class MainAdminController
     public function __invoke(Request $request): Response
     {
         $action = $request->action();
-        if ($request->method() === "post") {
-            $action = "do_$action";
-        }
         switch ($action) {
             default:
-                return $this->show($request->sn());
+                return $this->show($request);
             case "delete":
-                return $this->confirmDelete();
+                return $this->confirmDelete($request);
             case "do_delete":
-                return $this->delete($request->sn());
+                return $this->delete($request);
         }
     }
 
-    private function show(string $sn): Response
+    private function show(Request $request): Response
     {
         return Response::create($this->view->render("admin", [
-            "sn" => $sn,
+            "action" => $request->sn(),
             "cocos" => $this->cocoService->findAllNames(),
         ]));
     }
 
-    private function confirmDelete(): Response
+    private function confirmDelete(Request $request): Response
     {
         return Response::create($this->view->render("confirm", [
+            "action" => $request->sn() . "?coco&admin=plugin_main&action=do_delete",
             "cocos" => array_keys($_GET["coco_name"]),
             "csrf_token" => $this->csrfProtector->token(),
         ]));
     }
 
-    private function delete(string $sn): Response
+    private function delete(Request $request): Response
     {
         $this->csrfProtector->check();
+        $post = $request->posts()->deleteCocos();
+        if ($post === null) {
+            return $this->show($request);
+        }
         $o = "";
-        foreach (array_keys($_GET["coco_name"]) as $name) {
+        foreach ($post["names"] as $name) {
             $result = $this->cocoService->delete((string) $name);
             foreach ($result as $filename) {
                 $o .= $this->view->message("fail", "error_delete", $filename);
             }
         }
         if ($o !== "") {
-            return Response::create($o)->merge($this->show($sn));
+            return Response::create($o)->merge($this->show($request));
         }
         return Response::redirect(CMSIMPLE_URL . "?coco&admin=plugin_main");
     }
