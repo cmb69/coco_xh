@@ -4,12 +4,16 @@ use Coco\Infra\View;
 
 /**
  * @var View $this
+ * @var list<array{key:string,arg:string}> $errors
  * @var string $action
  * @var list<string> $cocos
  */
 ?>
 <!-- coco administration -->
 <h1>Coco – <?=$this->text('menu_main')?></h1>
+<?foreach ($errors as $error):?>
+<p class="xh_fail"><?=$this->text($error['key'], $error['arg'])?></p>
+<?endforeach?>
 <form id="coco_admin_cocos" action="<?=$action?>" method="get">
   <input type="hidden" name="selected" value="coco"/>
   <input type="hidden" name="admin" value="plugin_main"/>

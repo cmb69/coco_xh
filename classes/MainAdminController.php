@@ -58,9 +58,11 @@ class MainAdminController
         }
     }
 
-    private function show(Request $request): Response
+    /** @param list<array{key:string,arg:string}> $errors */
+    private function show(Request $request, array $errors = []): Response
     {
         return Response::create($this->view->render("admin", [
+            "errors" => $errors,
             "action" => $request->sn(),
             "cocos" => $this->cocoService->findAllNames(),
         ]))->withTitle("Coco – " . $this->view->text("menu_main"));
@@ -82,15 +84,15 @@ class MainAdminController
         if ($post === null) {
             return $this->show($request);
         }
-        $o = "";
+        $errors = [];
         foreach ($post["names"] as $name) {
             $result = $this->cocoService->delete((string) $name);
             foreach ($result as $filename) {
-                $o .= $this->view->message("fail", "error_delete", $filename);
+                $errors[] = ["key" => "error_delete", "arg" => $filename];
             }
         }
-        if ($o !== "") {
-            return Response::create($o)->merge($this->show($request));
+        if ($errors) {
+            return $this->show($request, $errors);
         }
         return Response::redirect(CMSIMPLE_URL . "?coco&admin=plugin_main");
     }

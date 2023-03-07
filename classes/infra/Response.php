@@ -53,13 +53,6 @@ class Response
         return $that;
     }
 
-    public function merge(Response $other): self
-    {
-        $that = clone $this;
-        $that->output .= $other->output;
-        return $that;
-    }
-
     public function output(): string
     {
         return $this->output;
