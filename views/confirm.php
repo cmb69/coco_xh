@@ -16,7 +16,7 @@ use Coco\Infra\View;
 <?endforeach?>
 <form method="post">
   <input type="hidden" name="xh_csrf_token" value="<?=$csrf_token?>">
-  <p><?=$this->text('confirm_delete')?></p>
+  <p class="xh_warning"><?=$this->text('confirm_delete')?></p>
   <ul>
 <?foreach ($cocos as $coco):?>
     <li><?=$coco?></li>
