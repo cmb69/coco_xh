@@ -56,19 +56,19 @@ class MainAdminController
         return $this->delete($request);
     }
 
-    /** @param list<array{key:string,arg:string}> $errors */
-    private function show(Request $request, array $errors = []): Response
+    private function show(Request $request): Response
     {
         return Response::create($this->view->render("admin", [
-            "errors" => $errors,
             "action" => $request->sn(),
             "cocos" => $this->cocoService->findAllNames(),
         ]))->withTitle("Coco – " . $this->view->text("menu_main"));
     }
 
-    private function confirmDelete(Request $request): Response
+    /** @param list<array{key:string,arg:string}> $errors */
+    private function confirmDelete(Request $request, array $errors = []): Response
     {
         return Response::create($this->view->render("confirm", [
+            "errors" => $errors,
             "cocos" => $_GET["coco_name"],
             "csrf_token" => $this->csrfProtector->token(),
         ]))->withTitle("Coco – " . $this->view->text("menu_main"));
@@ -89,7 +89,7 @@ class MainAdminController
             }
         }
         if ($errors) {
-            return $this->show($request, $errors);
+            return $this->confirmDelete($request, $errors);
         }
         return Response::redirect(CMSIMPLE_URL . "?coco&admin=plugin_main");
     }
