@@ -23,6 +23,13 @@ namespace Coco\Infra;
 
 class FakeXhStuff extends XhStuff
 {
+    private $options;
+
+    public function __construct($options = [])
+    {
+        $this->options = $options;
+    }
+
     public function evaluateScripting(string $text): string
     {
         return preg_replace_callback(
@@ -41,6 +48,6 @@ class FakeXhStuff extends XhStuff
 
     public function replaceEditor(string $id, string $init)
     {
-        return "tinymce.init('$id');";
+        return $this->options["editor"] ?? false;
     }
 }

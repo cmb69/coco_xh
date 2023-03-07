@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2012-2021 Christoph M. Becker
+ * Copyright 2012-2023 Christoph M. Becker
  *
  * This file is part of Coco_XH.
  *
@@ -22,6 +22,7 @@
 namespace Coco;
 
 use Coco\Infra\CocoService;
+use Coco\Infra\Response;
 use Coco\Infra\SystemChecker;
 use Coco\Infra\View;
 
@@ -51,12 +52,12 @@ class PluginInfo
         $this->view = $view;
     }
 
-    public function __invoke(): string
+    public function __invoke(): Response
     {
-        return $this->view->render("info", [
+        return Response::create($this->view->render("info", [
             "version" => COCO_VERSION,
             "checks" => $this->getChecks(),
-        ]);
+        ]))->withTitle("Coco " . COCO_VERSION);
     }
 
     /**

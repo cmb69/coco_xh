@@ -2,6 +2,8 @@
 
 use Coco\Infra\View;
 
+if (!defined("CMSIMPLE_XH_VERSION")) {header("HTTP/1.0 403 Forbidden"); exit;}
+
 /**
  * @var View $this
  * @var string $logo

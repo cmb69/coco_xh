@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2012-2021 Christoph M. Becker
+ * Copyright 2012-2023 Christoph M. Becker
  *
  * This file is part of Coco_XH.
  *
@@ -39,7 +39,7 @@ if (XH_wantsPluginAdministration("coco")) {
     $o .= print_plugin_admin("on");
     switch ($admin) {
         case "":
-            $o .= Dic::makePluginInfo()();
+            $o .= Dic::makePluginInfo()()->respond();
             break;
         case "plugin_main":
             $o .= Dic::makeMainAdminController()(Request::current())->respond();

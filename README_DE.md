@@ -166,7 +166,7 @@ bestimmten Zweck*. Details finden Sie in der GNU General Public License.
 Sie sollten ein Exemplar der GNU General Public License zusammen mit
 Coco_XH erhalten haben. Falls nicht, siehe <https://www.gnu.org/licenses/>.
 
-Copyright © 2012-2021 Christoph M. Becker
+Copyright © 2012-2023 Christoph M. Becker
 
 Slovakische Übersetzung © 2012 Dr. Martin Sereday  
 Tschechische Übersetzung © 2012 Josef Němec  

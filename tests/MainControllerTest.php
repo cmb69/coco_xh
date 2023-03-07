@@ -41,6 +41,13 @@ class MainControllerTest extends TestCase
 
     public function testRendersCocoEditor(): void
     {
+        $sut = $this->sut(["stuff" => ["editor" => "tinymce.init('coco_text_foo');"]]);
+        $response = $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), "foo", false, "100%");
+        Approvals::verifyHtml($response->output());
+    }
+
+    public function testRendersSaveButtonIfNoEditorIsConfigured(): void
+    {
         $sut = $this->sut();
         $response = $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), "foo", false, "100%");
         Approvals::verifyHtml($response->output());
@@ -66,7 +73,10 @@ class MainControllerTest extends TestCase
     public function testReportsErrorOnFailureToSaveContent(): void
     {
         $_POST = ["coco_text_foo" => "some content"];
-        $sut = $this->sut(["cocoService" => ["save" => false]]);
+        $sut = $this->sut([
+            "cocoService" => ["save" => false],
+            "stuff" => ["editor" => "tinymce.init('coco_text_foo');"]
+        ]);
         $request = new FakeRequest(["adm" => true, "edit" => true, "s" => 1]);
         $response = $sut($request, "foo", false, "100%");
         Approvals::verifyHtml($response->output());
@@ -92,7 +102,7 @@ class MainControllerTest extends TestCase
             new FakeCocoService($options["cocoService"] ?? []),
             new FakeCsrfProtector($options["csrf"] ?? []),
             new FakePages(["count" => 10]),
-            new FakeXhStuff,
+            new FakeXhStuff($options["stuff"] ?? []),
             new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["coco"])
         );
     }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2021 Christoph M. Becker
+ * Copyright 2021-2023 Christoph M. Becker
  *
  * This file is part of Coco_XH.
  *
@@ -28,7 +28,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 
-final class CocoServiceTest extends TestCase
+class CocoServiceTest extends TestCase
 {
     /** @var vfsStreamDirectory */
     private $root;

@@ -41,6 +41,7 @@ class PluginInfoTest extends TestCase
             new View("./views/", $text)
         );
         $response = $sut();
-        Approvals::verifyHtml($response);
+        $this->assertEquals("Coco 2.0-dev", $response->title());
+        Approvals::verifyHtml($response->output());
     }
 }

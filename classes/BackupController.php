@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2012-2021 Christoph M. Becker
+ * Copyright 2012-2023 Christoph M. Becker
  *
  * This file is part of Coco_XH.
  *
@@ -26,7 +26,7 @@ use Coco\Infra\CocoService;
 use Coco\Infra\Request;
 use Coco\Infra\View;
 
-final class BackupController
+class BackupController
 {
     /** @var int */
     private $maxBackups;
