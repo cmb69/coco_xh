@@ -19,11 +19,8 @@
  * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Coco;
+namespace Coco\Infra;
 
-use Coco\Infra\CocoService;
-use Coco\Infra\FakePages;
-use Coco\Infra\IdGenerator;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
@@ -33,34 +30,33 @@ class CocoServiceTest extends TestCase
     /** @var vfsStreamDirectory */
     private $root;
 
-    /** @var IdGenerator */
-    private $idGenerator;
-
     public function setup(): void
     {
         $this->root = vfsStream::setup("test");
-        $this->idGenerator = $this->createMock(IdGenerator::class);
     }
 
     public function testDataDirIsCreated()
     {
-        $this->assertEquals(vfsStream::url("test/coco"), $this->sut()->dataDir());
+        $sut = new CocoService(vfsStream::url("test/coco"), "", $this->pages(), $this->idGenerator());;
+        $this->assertEquals(vfsStream::url("test/coco"), $sut->dataDir());
         $this->assertTrue($this->root->hasChild("coco"));
     }
 
     public function testDataDir()
     {
-        $this->assertSame(vfsStream::url("test/coco"), $this->sut()->dataDir());
+        $sut = new CocoService(vfsStream::url("test/coco"), "", $this->pages(), $this->idGenerator());;
+        $this->assertSame(vfsStream::url("test/coco"), $sut->dataDir());
     }
 
     public function testFilename()
     {
-        $this->assertSame(vfsStream::url("test/coco") . "/foo.htm", $this->sut()->filename("foo"));
+        $sut = new CocoService(vfsStream::url("test/coco"), "", $this->pages(), $this->idGenerator());;
+        $this->assertSame(vfsStream::url("test/coco") . "/foo.htm", $sut->filename("foo"));
     }
 
     public function testFindAllNames()
     {
-        $sut = $this->sut();
+        $sut = new CocoService(vfsStream::url("test/coco"), "", $this->pages(), $this->idGenerator());;
         $this->assertTrue($sut->save("foo", 0, "hello world"));
         $this->assertTrue($sut->save("bar", 0, "hello world"));
         $this->assertSame(["foo", "bar"], $sut->findAllNames());
@@ -68,37 +64,37 @@ class CocoServiceTest extends TestCase
 
     public function testFindAllNothing()
     {
-        $this->assertEmpty(iterator_to_array($this->sut()->findAll("foo", 0)));
+        $sut = new CocoService(vfsStream::url("test/coco"), "", $this->pages(), $this->idGenerator());;
+        $this->assertEmpty(iterator_to_array($sut->findAll("foo", 0)));
     }
 
     public function testFindAll()
     {
-        $this->idGenerator->method("newId")->willReturnOnConsecutiveCalls("12345", "23456");
-        $sut = $this->sut(["pages" => ["data" => [[], [], ["coco_id" => "12345"], ["coco_id" => "23456"]]]]);
+        $sut = new CocoService(vfsStream::url("test/coco"), "", $this->pages(), $this->idGenerator());;
         $this->assertTrue($sut->save("foo", 0, "hello world"));
         $this->assertSame(["hello world", ""], iterator_to_array($sut->findAll("foo", 0)));
     }
 
     public function testFindNothing()
     {
-        $this->assertEmpty($this->sut()->find("foo", 0));
+        $sut = new CocoService(vfsStream::url("test/coco"), "", $this->pages(), $this->idGenerator());;
+        $this->assertEmpty($sut->find("foo", 0));
     }
 
     public function testFind()
     {
-        $this->idGenerator->method("newId")->willReturnOnConsecutiveCalls("12345", "23456");
-        $sut = $this->sut(["pages" => ["data" => [[], [], ["coco_id" => "12345"]]]]);
+        $sut = new CocoService(vfsStream::url("test/coco"), "", $this->pages(), $this->idGenerator());;
         $this->assertTrue($sut->save("foo", 0, "hello world"));
         $this->assertSame("hello world", $sut->find("foo", 0));
     }
 
     public function testDelete()
     {
-        $sut = $this->sut();
+        $sut = new CocoService(vfsStream::url("test/coco"), "", $this->pages(), $this->idGenerator());;
         $this->assertTrue($sut->save("foo", 0, "hello world"));
         $this->assertTrue($sut->save("bar", 0, "hello world"));
         $this->assertSame([], $sut->delete("foo"));
-        $this->assertSame(["bar"], $this->sut()->findAllNames());
+        $this->assertSame(["bar"], $sut->findAllNames());
     }
 
     public function testFailureToDeleteIsReported(): void
@@ -107,7 +103,7 @@ class CocoServiceTest extends TestCase
         mkdir(dirname($filename), 0777, true);
         touch($filename);
         chmod(dirname($filename), 0444);
-        $sut = $this->sut();
+        $sut = new CocoService(vfsStream::url("test/coco"), "", $this->pages(), $this->idGenerator());;
         $result = $sut->delete("foo");
         $this->assertEquals([$filename], $result);
     }
@@ -117,19 +113,25 @@ class CocoServiceTest extends TestCase
         $filename = vfsStream::url("test/coco/20230307_120000_foo.htm");
         mkdir(dirname($filename), 0777, true);
         mkdir($filename);
-        $sut = $this->sut();
+        $sut = new CocoService(vfsStream::url("test/coco"), "", $this->pages(), $this->idGenerator());;
         $result = $sut->delete("foo");
         $this->assertEquals(["vfs://test/coco/20230307_120000_foo.htm", "vfs://test/coco/foo.htm"], $result);
     }
 
-    private function sut($options = []): CocoService
+    private function pages(): Pages
     {
-        $pageOptions = ($options["pages"] ?? []) + ["count" => 2, "levels" => [1, 2], "headings" => ["Start", "Sub"]];
-        return new CocoService(
-            vfsStream::url("test/coco"),
-            "",
-            new FakePages($pageOptions),
-            $this->idGenerator
-        );
+        $pages = $this->createMock(Pages::class);
+        $pages->method("count")->willReturn(2);
+        $pages->method("level")->willReturnMap([[0, 1], [1, 2]]);
+        $pages->method("heading")->willReturnMap([[0, "Start"], [1, "Sub"]]);
+        $pages->method("data")->willReturnOnConsecutiveCalls([], [], ["coco_id" => "12345"], ["coco_id" => "23456"]);
+        return $pages;
+    }
+
+    private function idGenerator(): IdGenerator
+    {
+        $idGenerator = $this->createMock(IdGenerator::class);
+        $idGenerator->method("newId")->willReturnOnConsecutiveCalls("12345", "23456");
+        return $idGenerator;
     }
 }

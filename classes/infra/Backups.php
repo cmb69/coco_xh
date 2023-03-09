@@ -36,7 +36,17 @@ class Backups
     /** @return list<string> */
     public function all(string $foldername, string $coconame): array
     {
-        return glob($foldername . "????????_??????_" . $coconame . ".htm") ?: [];
+        $pattern = sprintf('/^\d{8}_\d{6}_%s\.htm$/', preg_quote($coconame, "/"));
+        $result = [];
+        if (($dir = opendir($foldername)) !== false) {
+            while (($entry = readdir($dir)) !== false) {
+                if (preg_match($pattern, $entry)) {
+                    $result[] = $foldername . $entry;
+                }
+            }
+            closedir($dir);
+        }
+        return $result;
     }
 
     public function delete(string $filename): bool

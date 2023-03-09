@@ -21,34 +21,19 @@
 
 namespace Coco\Infra;
 
-use Exception;
+use PHPUnit\Framework\TestCase;
+use XH\Pages as XhPages;
 
-class FakeCsrfProtector extends CsrfProtector
+
+class PagesTest extends TestCase
 {
-    public function __construct($options = [])
+    public function testContents(): void
     {
-        $this->xhCsrfProtection = new FakeCSRFProtection($options);
-    }
-}
-
-class FakeCSRFProtection
-{
-    private $options;
-
-    public function __construct(array $options)
-    {
-        $this->options = $options;
-    }
-
-    public function tokenInput()
-    {
-        return "<input type=\"hidden\" name=\"xh_csrf_token\" value=\"eee5e668b3bcc9b71a9e4cc1aa76393f\">";
-    }
-
-    public function check()
-    {
-        if (($this->options["check"] ?? false) === true) {
-            throw new Exception("CSRF check failed!");
-        }
+        $xhPages = $this->createMock(XhPages::class);
+        $xhPages->method("getCount")->willReturn(3);
+        $xhPages->method("content")->willReturnMap([[0, "foo"], [1, "bar"], [2, "baz"]]);
+        $sut = new Pages($xhPages);
+        $actual = $sut->contents();
+        $this->assertEquals(["foo", "bar", "baz"], $actual);
     }
 }

@@ -30,32 +30,63 @@ class BackupControllerTest extends TestCase
 {
     public function testReportsBackupSuccess(): void
     {
-        $sut = $this->sut();
-        $response = $sut(new FakeRequest(["server" => ["REQUEST_TIME" => strtotime("2023-03-06T12:00:00")]]));
+        $sut = new BackupController(2, $this->cocoService(), $this->backups(), $this->view());
+        $response = $sut($this->request());
         Approvals::verifyHtml($response);
     }
 
     public function testReportsFailureToCreateBackup(): void
     {
-        $sut = $this->sut(["backups" => ["create" => false]]);
-        $response = $sut(new FakeRequest(["server" => ["REQUEST_TIME" => strtotime("2023-03-06T12:00:00")]]));
+        $sut = new BackupController(2, $this->cocoService(), $this->backups(false), $this->view());
+        $response = $sut($this->request());
         Approvals::verifyHtml($response);
     }
 
     public function testReportsFailureToDeleteSurplusBackups(): void
     {
-        $sut = $this->sut(["backups" => ["delete" => false]]);
-        $response = $sut(new FakeRequest(["server" => ["REQUEST_TIME" => strtotime("2023-03-06T12:00:00")]]));
+        $sut = new BackupController(2, $this->cocoService(), $this->backups(true, false), $this->view());
+        $response = $sut($this->request());
         Approvals::verifyHtml($response);
     }
 
-    private function sut($options = []): BackupController
+    private function request(): Request
     {
-        return new BackupController(
-            2,
-            new FakeCocoService,
-            new FakeBackups($options["backups"] ?? []),
-            new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["coco"])
+        $request = $this->createStub(Request::class);
+        $request->method("server")->with("REQUEST_TIME")->willReturn((string) strtotime("2023-03-06T12:00:00"));
+        return $request;
+    }
+
+    private function cocoService(): CocoService
+    {
+        $cocoService = $this->createStub(CocoService::class);
+        $cocoService->method("dataDir")->willReturn("./content/coco");
+        $cocoService->method("findAllNames")->willReturn(["foo", "bar"]);
+        return $cocoService;
+    }
+
+    private function backups(bool $create = true, bool $delete = true): Backups
+    {
+        $backups = $this->createStub(Backups::class);
+        $backups->method("all")->willReturnOnConsecutiveCalls([
+            "./content/coco/20230304_120000_foo.htm",
+            "./content/coco/20230305_120000_foo.htm",
+            "./content/coco/20230306_120000_foo.htm",
+        ], [
+            "./content/coco/20230304_120000_bar.htm",
+            "./content/coco/20230305_120000_bar.htm",
+            "./content/coco/20230306_120000_bar.htm",
+        ]);
+        $backups->method("create")->willReturn($create);
+        $backups->method("delete")->willReturn($delete);
+        $backups->method("filename")->willReturnOnConsecutiveCalls(
+            "./content/coco/20230306_120000_foo.htm",
+            "./content/coco/20230306_120000_bar.htm",
         );
+        return $backups;
+    }
+
+    private function view(): View
+    {
+        return new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["coco"]);
     }
 }

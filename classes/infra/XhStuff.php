@@ -21,6 +21,7 @@
 
 namespace Coco\Infra;
 
+/** @codeCoverageIgnore */
 class XhStuff
 {
     public function evaluateScripting(string $text): string

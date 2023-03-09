@@ -32,14 +32,17 @@ class Pages
     /** @var PageDataRouter */
     protected $pageDataRouter;
 
-    public function __construct()
+    public function __construct(?XhPages $xhPages = null)
     {
         global $pd_router;
-        $this->xhPages = new XhPages;
+        $this->xhPages = $xhPages ?? new XhPages;
         $this->pageDataRouter = $pd_router;
     }
 
-    /** @return array<string,string> */
+    /**
+     * @return array<string,string>
+     * @codeCoverageIgnore
+     */
     public function data(int $pageIndex): array
     {
         return $this->pageDataRouter->find_page($pageIndex);
@@ -48,32 +51,38 @@ class Pages
     /**
      * @param array<string,string> $pageData
      * @return void
+     * @codeCoverageIgnore
      */
     public function updateData(int $pageIndex, array $pageData)
     {
         $this->pageDataRouter->update($pageIndex, $pageData);
     }
 
+    /** @codeCoverageIgnore */
     public function count(): int
     {
         return $this->xhPages->getCount();
     }
 
+    /** @codeCoverageIgnore */
     public function isHidden(int $pageIndex): bool
     {
         return $this->xhPages->isHidden($pageIndex);
     }
 
+    /** @codeCoverageIgnore */
     public function level(int $pageIndex): int
     {
         return $this->xhPages->level($pageIndex);
     }
 
+    /** @codeCoverageIgnore */
     public function heading(int $pageIndex): string
     {
         return $this->xhPages->heading($pageIndex);
     }
 
+    /** @codeCoverageIgnore */
     public function url(int $pageIndex): string
     {
         return $this->xhPages->url($pageIndex);

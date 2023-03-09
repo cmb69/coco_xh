@@ -22,88 +22,157 @@
 namespace Coco;
 
 use ApprovalTests\Approvals;
-use Coco\Infra\FakeCocoService;
-use Coco\Infra\FakeCsrfProtector;
-use Coco\Infra\FakePages;
-use Coco\Infra\FakeRequest;
-use Coco\Infra\FakeXhStuff;
+use Coco\Infra\CocoService;
+use Coco\Infra\CsrfProtector;
+use Coco\Infra\Forms;
+use Coco\Infra\Pages;
+use Coco\Infra\Request;
 use Coco\Infra\View;
+use Coco\Infra\XhStuff;
 use PHPUnit\Framework\TestCase;
 
 class MainControllerTest extends TestCase
 {
     public function testRendersCoco(): void
     {
-        $sut = $this->sut();
-        $response = $sut(new FakeRequest(["s" => 1, "search" => "with"]), "foo", false, "100%");
+        $sut = new MainController(
+            $this->cocoService(),
+            $this->csrfProtector(),
+            $this->pages(),
+            $this->xhStuff(),
+            $this->view()
+        );
+        $response = $sut($this->request(), "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRendersCocoEditor(): void
     {
-        $sut = $this->sut(["stuff" => ["editor" => "tinymce.init('coco_text_foo');"]]);
-        $response = $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), "foo", false, "100%");
+        $sut = new MainController(
+            $this->cocoService(),
+            $this->csrfProtector(),
+            $this->pages(),
+            $this->xhStuff(),
+            $this->view()
+        );
+        $response = $sut($this->request(true), "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRendersSaveButtonIfNoEditorIsConfigured(): void
     {
-        $sut = $this->sut();
-        $response = $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), "foo", false, "100%");
+        $sut = new MainController(
+            $this->cocoService(),
+            $this->csrfProtector(),
+            $this->pages(),
+            $this->xhStuff(false),
+            $this->view()
+        );
+        $response = $sut($this->request(true), "foo", false, "100%");
         Approvals::verifyHtml($response->output());
-    }
-
-    public function testSaveIsCsrfProtected(): void
-    {
-        $_POST = ["coco_text_foo" => "some content"];
-        $sut = $this->sut(["csrf" => ["check" => true]]);
-        $this->expectExceptionMessage("CSRF check failed!");
-        $sut(new FakeRequest(["adm" => true, "edit" => true, "s" => 1]), "foo", false, "100%");
     }
 
     public function testRedirectsAfterSavingContent(): void
     {
         $_POST = ["coco_text_foo" => "some content"];
-        $sut = $this->sut();
-        $request = new FakeRequest(["adm" => true, "edit" => true, "s" => 1]);
-        $response = $sut($request, "foo", false, "100%");
+        $sut = new MainController(
+            $this->cocoService(true),
+            $this->csrfProtector(true),
+            $this->pages(),
+            $this->xhStuff(),
+            $this->view()
+        );
+        $response = $sut($this->request(true), "foo", false, "100%");
         $this->assertEquals("http://example.com/?", $response->location());
     }
 
     public function testReportsErrorOnFailureToSaveContent(): void
     {
         $_POST = ["coco_text_foo" => "some content"];
-        $sut = $this->sut([
-            "cocoService" => ["save" => false],
-            "stuff" => ["editor" => "tinymce.init('coco_text_foo');"]
-        ]);
-        $request = new FakeRequest(["adm" => true, "edit" => true, "s" => 1]);
-        $response = $sut($request, "foo", false, "100%");
+        $sut = new MainController(
+            $this->cocoService(false),
+            $this->csrfProtector(true),
+            $this->pages(),
+            $this->xhStuff(),
+            $this->view()
+        );
+        $response = $sut($this->request(true), "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testReportsIllegalCocoName(): void
     {
-        $sut = $this->sut();
-        $response = $sut(new FakeRequest(["s" => 1]), "foo bar", false, "100%");
+        $sut = new MainController(
+            $this->cocoService(),
+            $this->csrfProtector(),
+            $this->pages(),
+            $this->xhStuff(),
+            $this->view()
+        );
+        $response = $sut($this->request(), "foo bar", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testIgnoresSearching(): void
     {
-        $sut = $this->sut();
-        $response = $sut(new FakeRequest(["s" => -1]), "foo", false, "100%");
+        $sut = new MainController(
+            $this->cocoService(),
+            $this->csrfProtector(),
+            $this->pages(),
+            $this->xhStuff(),
+            $this->view()
+        );
+        $response = $sut($this->request(false, -1), "foo", false, "100%");
         $this->assertEquals("", $response->output());
     }
 
-    private function sut(array $options = []): MainController
+    private function request(bool $edit = false, int $page = 1): Request
     {
-        return new MainController(
-            new FakeCocoService($options["cocoService"] ?? []),
-            new FakeCsrfProtector($options["csrf"] ?? []),
-            new FakePages(["count" => 10]),
-            new FakeXhStuff($options["stuff"] ?? []),
-            new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["coco"])
+        $request = $this->createMock(Request::class);
+        $request->method("search")->willReturn("with");
+        $request->method("forms")->willReturn(new Forms);
+        $request->method("adm")->willReturn($edit);
+        $request->method("edit")->willReturn($edit);
+        $request->method("s")->willReturn($page);
+        return $request;
+    }
+
+    private function cocoService(?bool $save = null): CocoService
+    {
+        $cocoService = $this->createMock(CocoService::class);
+        $cocoService->method("find")->willReturn("<p>some HTML with {{{trim('scripting')}}}</p>");
+        $cocoService->method("filename")->willReturn("./content/coco/foo.htm");
+        $cocoService->expects($save !== null ? $this->once() : $this->never())->method("save")->willReturn((bool) $save);
+        return $cocoService;
+    }
+
+    private function csrfProtector(bool $check = false)
+    {
+        $csrfProtector = $this->createMock(CsrfProtector::class);
+        $csrfProtector->method("token")->willReturn("eee5e668b3bcc9b71a9e4cc1aa76393f");
+        $csrfProtector->expects($check ? $this->once() : $this->never())->method("check");
+        return $csrfProtector;
+    }
+
+    private function pages(): Pages
+    {
+        $pages = $this->createMock(Pages::class);
+        $pages->method("count")->willReturn(10);
+        return $pages;
+    }
+
+    private function xhStuff($editor = "tinymce.init('coco_text_foo');"): XhStuff
+    {
+        $xhStuff = $this->createMock(XhStuff::class);
+        $xhStuff->method("highlightSearchWords")->willReturn(
+            "<p>some HTML <span class=\"highlight\">with</span> scripting</p>"
         );
+        $xhStuff->method("replaceEditor")->willReturn($editor);
+        return $xhStuff;
+    }
+
+    private function view(): View
+    {
+        return new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["coco"]);
     }
 }

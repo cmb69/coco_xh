@@ -21,6 +21,7 @@
 
 namespace Coco\Infra;
 
+/** @codeCoverageIgnore */
 class IdGenerator
 {
     public function newId(): string

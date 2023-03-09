@@ -29,10 +29,10 @@ class CsrfProtector
     /** @var CSRFProtection|null */
     protected $xhCsrfProtection;
 
-    public function __construct()
+    public function __construct(?CSRFProtection $xhCsrfProtection = null)
     {
         global $_XH_csrfProtection;
-        $this->xhCsrfProtection = $_XH_csrfProtection;
+        $this->xhCsrfProtection = $xhCsrfProtection ?? $_XH_csrfProtection;
     }
 
     public function token(): string
@@ -44,13 +44,17 @@ class CsrfProtector
         return $matches[1];
     }
 
+    /** @codeCoverageIgnore */
     public function tokenInput(): string
     {
         assert($this->xhCsrfProtection !== null);
         return $this->xhCsrfProtection->tokenInput();
     }
 
-    /** @return void|never */
+    /**
+     * @return void|never
+     * @codeCoverageIgnore
+     */
     public function check()
     {
         assert($this->xhCsrfProtection !== null);

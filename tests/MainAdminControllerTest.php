@@ -22,9 +22,10 @@
 namespace Coco;
 
 use ApprovalTests\Approvals;
-use Coco\Infra\FakeCocoService;
-use Coco\Infra\FakeCsrfProtector;
-use Coco\Infra\FakeRequest;
+use Coco\Infra\CocoService;
+use Coco\Infra\CsrfProtector;
+use Coco\Infra\Forms;
+use Coco\Infra\Request;
 use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
 
@@ -32,8 +33,8 @@ class MainAdminControllerTest extends TestCase
 {
     public function testRendersCocoOverview(): void
     {
-        $sut = $this->sut();
-        $response = $sut(new FakeRequest(["action" => ""]));
+        $sut = new MainAdminController($this->cocoService(), $this->csrfProtector(), $this->view());
+        $response = $sut($this->request());
         $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
     }
@@ -41,27 +42,18 @@ class MainAdminControllerTest extends TestCase
     public function testRendersDeleteConfirmation(): void
     {
         $_GET = ["coco_name" => ["foo"]];
-        $sut = $this->sut();
-        $response = $sut(new FakeRequest(["action" => "delete"]));
+        $sut = new MainAdminController($this->cocoService(), $this->csrfProtector(), $this->view());
+        $response = $sut($this->request("delete"));
         $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
-    }
-
-    public function testDeletionIsCsrfProtected(): void
-    {
-        $_GET = ["coco_name" => ["foo"]];
-        $_POST = ["coco_do" => "delete"];
-        $sut = $this->sut(["csrf" => ["check" => true]]);
-        $this->expectExceptionMessage("CSRF check failed!");
-        $sut(new FakeRequest(["action" => "delete"]));
     }
 
     public function testSuccessfulDeletionRedirects(): void
     {
         $_GET = ["coco_name" => ["foo"]];
         $_POST = ["coco_do" => "delete"];
-        $sut = $this->sut();
-        $response = $sut(new FakeRequest(["action" => "delete"]));
+        $sut = new MainAdminController($this->cocoService(), $this->csrfProtector(true), $this->view());
+        $response = $sut($this->request("delete"));
         $this->assertEquals("http://example.com/?coco&admin=plugin_main", $response->location());
     }
 
@@ -69,21 +61,43 @@ class MainAdminControllerTest extends TestCase
     {
         $_GET = ["coco_name" => ["foo"]];
         $_POST = ["coco_do" => "delete"];
-        $sut = $this->sut(["service" => ["delete" => [
+        $cocoService = $this->cocoService([
             "./content/coco/20230306_120000_foo.htm",
             "./content/coco/foo.htm",
-        ]]]);
-        $response = $sut(new FakeRequest(["action" => "delete"]));
+        ]);
+        $sut = new MainAdminController($cocoService, $this->csrfProtector(true), $this->view());
+        $response = $sut($this->request("delete"));
         $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
     }
 
-    private function sut($options = []): MainAdminController
+    private function request(string $action = ""): Request
     {
-        return new MainAdminController(
-            new FakeCocoService($options["service"] ?? []),
-            new FakeCsrfProtector($options["csrf"] ?? []),
-            new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["coco"])
-        );
+        $request = $this->createMock(Request::class);
+        $request->method("sn")->willReturn("/");
+        $request->method("action")->willReturn($action);
+        $request->method("forms")->willReturn(new Forms);
+        return $request;
+    }
+
+    private function cocoService(array $delete = []): CocoService
+    {
+        $cocoService = $this->createMock(CocoService::class);
+        $cocoService->method("findAllNames")->willReturn(["foo", "bar"]);
+        $cocoService->method("delete")->willReturn($delete);
+        return $cocoService;
+    }
+
+    private function csrfProtector(bool $check = false): CsrfProtector
+    {
+        $csrfProtector = $this->createMock(CsrfProtector::class);
+        $csrfProtector->method("token")->willReturn("eee5e668b3bcc9b71a9e4cc1aa76393f");
+        $csrfProtector->expects($check ? $this->once() : $this->never())->method("check");
+        return $csrfProtector;
+    }
+
+    private function view(): View
+    {
+        return new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["coco"]);
     }
 }
