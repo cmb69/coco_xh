@@ -101,6 +101,27 @@ class CocoServiceTest extends TestCase
         $this->assertSame(["bar"], $this->sut()->findAllNames());
     }
 
+    public function testFailureToDeleteIsReported(): void
+    {
+        $filename = vfsStream::url("test/coco/foo.htm");
+        mkdir(dirname($filename), 0777, true);
+        touch($filename);
+        chmod(dirname($filename), 0444);
+        $sut = $this->sut();
+        $result = $sut->delete("foo");
+        $this->assertEquals([$filename], $result);
+    }
+
+    public function testTryingToDeleteNonExistingFileDoesNotRaiseWarning(): void
+    {
+        $filename = vfsStream::url("test/coco/20230307_120000_foo.htm");
+        mkdir(dirname($filename), 0777, true);
+        mkdir($filename);
+        $sut = $this->sut();
+        $result = $sut->delete("foo");
+        $this->assertEquals(["vfs://test/coco/20230307_120000_foo.htm", "vfs://test/coco/foo.htm"], $result);
+    }
+
     private function sut($options = []): CocoService
     {
         $pageOptions = ($options["pages"] ?? []) + ["count" => 2, "levels" => [1, 2], "headings" => ["Start", "Sub"]];

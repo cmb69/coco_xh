@@ -74,12 +74,13 @@ class CocoService
     public function findAllNames()
     {
         $cocos = [];
-        if ($dir = opendir($this->dataDir())) {
+        if (($dir = opendir($this->dataDir()))) {
             while (($filename = readdir($dir)) !== false) {
                 if (preg_match('/\.htm$/', $filename) && !preg_match('/^\d{8}_\d{6}_/', $filename)) {
                     $cocos[] = basename($filename, '.htm');
                 }
             }
+            closedir($dir);
         }
         return $cocos;
     }
@@ -185,16 +186,18 @@ class CocoService
         $result = [];
         if (($dir = opendir($this->dataDir()))) {
             $pattern = sprintf('/^\d{8}_\d{6}_%s\.htm$/', $name);
-            if (($filename = readdir($dir)) !== false) {
+            while (($filename = readdir($dir)) !== false) {
                 if (preg_match($pattern, $filename)) {
-                    if (!unlink($filename)) {
+                    $filename = $this->dataDir() . "/" . $filename;
+                    if (!(is_file($filename) && unlink($filename))) {
                         $result[] = $filename;
                     }
                 }
             }
+            closedir($dir);
         }
         $filename = $this->filename($name);
-        if (!unlink($filename)) {
+        if (!(is_file($filename) && unlink($filename))) {
             $result[] = $filename;
         }
         return $result;
