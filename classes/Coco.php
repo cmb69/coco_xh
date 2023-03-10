@@ -39,9 +39,6 @@ class Coco
     /** @var CsrfProtector */
     private $csrfProtector;
 
-    /** @var Pages */
-    private $pages;
-
     /** @var XhStuff */
     private $xhStuff;
 
@@ -51,13 +48,11 @@ class Coco
     public function __construct(
         CocoService $cocoService,
         CsrfProtector $csrfProtector,
-        Pages $pages,
         XhStuff $xhStuff,
         View $view
     ) {
         $this->cocoService = $cocoService;
         $this->csrfProtector = $csrfProtector;
-        $this->pages = $pages;
         $this->xhStuff = $xhStuff;
         $this->view = $view;
     }
@@ -67,7 +62,7 @@ class Coco
         if (!Util::isValidCocoName($name)) {
             return Response::create($this->view->message("fail", "error_invalid_name") . "\n");
         }
-        if ($request->s() < 0 || $request->s() >= $this->pages->count()) {
+        if ($request->s() < 0) {
             return Response::create("");
         }
         if (!$request->adm() || !$request->edit()) {

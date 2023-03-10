@@ -34,52 +34,28 @@ class CocoTest extends TestCase
 {
     public function testRendersCoco(): void
     {
-        $sut = new Coco(
-            $this->cocoService(),
-            $this->csrfProtector(),
-            $this->pages(),
-            $this->xhStuff(),
-            $this->view()
-        );
+        $sut = new Coco($this->cocoService(), $this->csrfProtector(), $this->xhStuff(), $this->view());
         $response = $sut($this->request(), "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRendersCocoEditor(): void
     {
-        $sut = new Coco(
-            $this->cocoService(),
-            $this->csrfProtector(),
-            $this->pages(),
-            $this->xhStuff(),
-            $this->view()
-        );
+        $sut = new Coco($this->cocoService(), $this->csrfProtector(), $this->xhStuff(), $this->view());
         $response = $sut($this->request(true), "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRendersSaveButtonIfNoEditorIsConfigured(): void
     {
-        $sut = new Coco(
-            $this->cocoService(),
-            $this->csrfProtector(),
-            $this->pages(),
-            $this->xhStuff(false),
-            $this->view()
-        );
+        $sut = new Coco($this->cocoService(), $this->csrfProtector(), $this->xhStuff(false), $this->view());
         $response = $sut($this->request(true), "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRedirectsAfterSavingContent(): void
     {
-        $sut = new Coco(
-            $this->cocoService(true),
-            $this->csrfProtector(true),
-            $this->pages(),
-            $this->xhStuff(),
-            $this->view()
-        );
+        $sut = new Coco($this->cocoService(true), $this->csrfProtector(true), $this->xhStuff(), $this->view());
         $request = $this->request(true);
         $request->method("cocoText")->willReturn("some content");
         $response = $sut($request, "foo", false, "100%");
@@ -89,13 +65,7 @@ class CocoTest extends TestCase
     public function testReportsErrorOnFailureToSaveContent(): void
     {
         $_POST = ["coco_text_foo" => "some content"];
-        $sut = new Coco(
-            $this->cocoService(false),
-            $this->csrfProtector(true),
-            $this->pages(),
-            $this->xhStuff(),
-            $this->view()
-        );
+        $sut = new Coco($this->cocoService(false), $this->csrfProtector(true), $this->xhStuff(), $this->view());
         $request = $this->request(true);
         $request->method("cocoText")->willReturn("some content");
         $response = $sut($request, "foo", false, "100%");
@@ -104,26 +74,14 @@ class CocoTest extends TestCase
 
     public function testReportsIllegalCocoName(): void
     {
-        $sut = new Coco(
-            $this->cocoService(),
-            $this->csrfProtector(),
-            $this->pages(),
-            $this->xhStuff(),
-            $this->view()
-        );
+        $sut = new Coco($this->cocoService(), $this->csrfProtector(), $this->xhStuff(), $this->view());
         $response = $sut($this->request(), "foo bar", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testIgnoresSearching(): void
     {
-        $sut = new Coco(
-            $this->cocoService(),
-            $this->csrfProtector(),
-            $this->pages(),
-            $this->xhStuff(),
-            $this->view()
-        );
+        $sut = new Coco($this->cocoService(), $this->csrfProtector(), $this->xhStuff(), $this->view());
         $response = $sut($this->request(false, -1), "foo", false, "100%");
         $this->assertEquals("", $response->output());
     }

@@ -47,7 +47,6 @@ class Dic
         return new Coco(
             self::makeCocoService(),
             new CsrfProtector,
-            new Pages,
             new XhStuff,
             self::makeView()
         );
