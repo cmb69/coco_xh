@@ -77,12 +77,14 @@ class Coco
 
     private function show(Request $request, string $name): Response
     {
-        $text = $this->xhStuff->evaluateScripting((string) $this->cocoService->find($name, $request->s()));
-        if ($request->search() !== "") {
-            $words = Util::parseSearchTerm($request->search());
-            $text = $this->xhStuff->highlightSearchWords($words, $text);
+        $content = $this->cocoService->find($name, $request->s());
+        $content = $this->xhStuff->evaluateScripting($content);
+        $search = $request->search();
+        if ($search !== "") {
+            $words = Util::parseSearchTerm($search);
+            $content = $this->xhStuff->highlightSearchWords($words, $content);
         }
-        return Response::create($text);
+        return Response::create($content);
     }
 
     private function edit(Request $request, string $name, string $config, string $height): Response
@@ -95,7 +97,6 @@ class Coco
     {
         $this->csrfProtector->check();
         $text = $request->cocoText($name);
-        assert($text !== null);
         if ($this->cocoService->save($name, $request->s(), $text)) {
             return Response::redirect(CMSIMPLE_URL . "?" . $request->queryString());
         }
@@ -107,12 +108,12 @@ class Coco
 
     private function renderEditor(string $name, string $config, string $height, string $content): string
     {
-        $id = 'coco_text_' . $name;
+        $id = "coco_text_$name";
         $editor = $this->xhStuff->replaceEditor($id, $config);
         return $this->view->render("edit_form", [
             "id" => $id,
             "name" => $name,
-            "style" => 'width:100%; height:' . $height,
+            "style" => "width:100%; height:$height",
             "content" => $content,
             "editor" => $editor !== false ? new Html($editor) : false,
             "csrf_token" => $this->csrfProtector->token(),
