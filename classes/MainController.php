@@ -72,7 +72,7 @@ class MainController
         if (!$request->adm() || !$request->edit()) {
             return $this->show($request, $name);
         }
-        if ($request->forms()->updateCoco($name) === null) {
+        if ($request->cocoText($name) === null) {
             return $this->edit($request, $name, $config, $height);
         }
         return $this->update($request, $name, $config, $height);
@@ -98,14 +98,14 @@ class MainController
     private function update(Request $request, string $name, string $config, string $height): Response
     {
         $this->csrfProtector->check();
-        $post = $request->forms()->updateCoco($name);
-        assert($post !== null);
-        if ($this->cocoService->save($name, $request->s(), $post["content"])) {
+        $text = $request->cocoText($name);
+        assert($text !== null);
+        if ($this->cocoService->save($name, $request->s(), $text)) {
             return Response::redirect(CMSIMPLE_URL . "?" . $request->queryString());
         }
         return Response::create(
             $this->view->message("fail", "error_save", $this->cocoService->filename($name))
-            . $this->renderEditor($name, $config, $height, $post["content"])
+            . $this->renderEditor($name, $config, $height, $text)
         );
     }
 

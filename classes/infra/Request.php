@@ -21,61 +21,102 @@
 
 namespace Coco\Infra;
 
-/** @codeCoverageIgnore */
 class Request
 {
+    /** @codeCoverageIgnore */
     public static function current(): self
     {
         return new Request;
     }
 
+    /** @codeCoverageIgnore */
     public function sn(): string
     {
         global $sn;
         return $sn;
     }
 
+    /** @codeCoverageIgnore */
     public function search(): string
     {
         global $search;
         return $search;
     }
 
+    /** @codeCoverageIgnore */
     public function adm(): bool
     {
         return defined("XH_ADM") && XH_ADM;
     }
 
+    /** @codeCoverageIgnore */
     public function edit(): bool
     {
         global $edit;
         return $edit;
     }
 
+    /** @codeCoverageIgnore */
     public function s(): int
     {
         global $s;
         return $s;
     }
 
+    /** @codeCoverageIgnore */
     public function action(): string
     {
         global $action;
         return $action;
     }
 
+    /** @codeCoverageIgnore */
     public function server(string $key): ?string
     {
         return $_SERVER[$key] ?? null;
     }
 
+    /** @codeCoverageIgnore */
     public function queryString(): string
     {
         return $_SERVER["QUERY_STRING"];
     }
 
-    public function forms(): Forms
+    /** @return list<string>|null */
+    public function cocoNames(): ?array
     {
-        return new Forms;
+        $get = $this->get();
+        if (!isset($get["coco_name"]) || !is_array($get["coco_name"])) {
+            return null;
+        }
+        return array_values($get["coco_name"]);
+    }
+
+    /**
+     * @return array<string,string|array<string>>
+     * @codeCoverageIgnore
+     */
+    protected function get(): array
+    {
+        return $_GET;
+    }
+
+    /** @return string|null */
+    public function cocoText(string $name): ?string
+    {
+        $post = $this->post();
+        if (!isset($post["coco_text_$name"]) || !is_string($post["coco_text_$name"])) {
+            return null;
+        }
+        return $post["coco_text_$name"];
+    }
+
+    /**
+     * @return array<string,string|array<string>>
+     * @codeCoverageIgnore
+     */
+    protected function post(): array
+    {
+        return $_POST;
     }
 }

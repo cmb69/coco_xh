@@ -41,32 +41,35 @@ class MainAdminControllerTest extends TestCase
 
     public function testRendersDeleteConfirmation(): void
     {
-        $_GET = ["coco_name" => ["foo"]];
         $sut = new MainAdminController($this->cocoService(), $this->csrfProtector(), $this->view());
-        $response = $sut($this->request("delete"));
+        $request = $this->request("delete");
+        $request->method("cocoNames")->willReturn(["foo"]);
+        $response = $sut($request);
         $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
     }
 
     public function testSuccessfulDeletionRedirects(): void
     {
-        $_GET = ["coco_name" => ["foo"]];
         $_POST = ["coco_do" => "delete"];
         $sut = new MainAdminController($this->cocoService(), $this->csrfProtector(true), $this->view());
-        $response = $sut($this->request("delete"));
+        $request = $this->request("delete");
+        $request->method("cocoNames")->willReturn(["foo"]);
+        $response = $sut($request);
         $this->assertEquals("http://example.com/?coco&admin=plugin_main", $response->location());
     }
 
     public function testFailureToDeleteIsReported(): void
     {
-        $_GET = ["coco_name" => ["foo"]];
         $_POST = ["coco_do" => "delete"];
         $cocoService = $this->cocoService([
             "./content/coco/20230306_120000_foo.htm",
             "./content/coco/foo.htm",
         ]);
         $sut = new MainAdminController($cocoService, $this->csrfProtector(true), $this->view());
-        $response = $sut($this->request("delete"));
+        $request = $this->request("delete");
+        $request->method("cocoNames")->willReturn(["foo"]);
+        $response = $sut($request);
         $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
     }
@@ -76,7 +79,6 @@ class MainAdminControllerTest extends TestCase
         $request = $this->createMock(Request::class);
         $request->method("sn")->willReturn("/");
         $request->method("action")->willReturn($action);
-        $request->method("forms")->willReturn(new Forms);
         return $request;
     }
 

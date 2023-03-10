@@ -47,10 +47,10 @@ class MainAdminController
 
     public function __invoke(Request $request): Response
     {
-        if (($_POST["coco_do"] ?? null) === $request->action() && $request->forms()->deleteCocos() !== null) {
+        if (($_POST["coco_do"] ?? null) === $request->action() && $request->cocoNames() !== null) {
             return $this->delete($request);
         }
-        if ($request->action() === "delete" && $request->forms()->deleteCocos() !== null) {
+        if ($request->action() === "delete" && $request->cocoNames() !== null) {
             return $this->confirmDelete($request);
         }
         return $this->show($request);
@@ -67,11 +67,11 @@ class MainAdminController
     /** @param list<array{key:string,arg:string}> $errors */
     private function confirmDelete(Request $request, array $errors = []): Response
     {
-        $form = $request->forms()->deleteCocos();
-        assert($form !== null);
+        $names = $request->cocoNames();
+        assert($names !== null);
         return Response::create($this->view->render("confirm", [
             "errors" => $errors,
-            "cocos" => $form["names"],
+            "cocos" => $names,
             "csrf_token" => $this->csrfProtector->token(),
         ]))->withTitle("Coco – " . $this->view->text("menu_main"));
     }
@@ -79,10 +79,10 @@ class MainAdminController
     private function delete(Request $request): Response
     {
         $this->csrfProtector->check();
-        $form = $request->forms()->deleteCocos();
-        assert($form !== null);
+        $names = $request->cocoNames();
+        assert($names !== null);
         $errors = [];
-        foreach ($form["names"] as $name) {
+        foreach ($names as $name) {
             $result = $this->cocoService->delete((string) $name);
             foreach ($result as $filename) {
                 $errors[] = ["key" => "error_delete", "arg" => $filename];

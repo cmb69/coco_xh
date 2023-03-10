@@ -74,7 +74,6 @@ class MainControllerTest extends TestCase
 
     public function testRedirectsAfterSavingContent(): void
     {
-        $_POST = ["coco_text_foo" => "some content"];
         $sut = new MainController(
             $this->cocoService(true),
             $this->csrfProtector(true),
@@ -82,7 +81,9 @@ class MainControllerTest extends TestCase
             $this->xhStuff(),
             $this->view()
         );
-        $response = $sut($this->request(true), "foo", false, "100%");
+        $request = $this->request(true);
+        $request->method("cocoText")->willReturn("some content");
+        $response = $sut($request, "foo", false, "100%");
         $this->assertEquals("http://example.com/?", $response->location());
     }
 
@@ -96,7 +97,9 @@ class MainControllerTest extends TestCase
             $this->xhStuff(),
             $this->view()
         );
-        $response = $sut($this->request(true), "foo", false, "100%");
+        $request = $this->request(true);
+        $request->method("cocoText")->willReturn("some content");
+        $response = $sut($request, "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
@@ -130,7 +133,6 @@ class MainControllerTest extends TestCase
     {
         $request = $this->createMock(Request::class);
         $request->method("search")->willReturn("with");
-        $request->method("forms")->willReturn(new Forms);
         $request->method("adm")->willReturn($edit);
         $request->method("edit")->willReturn($edit);
         $request->method("s")->willReturn($page);
