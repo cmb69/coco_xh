@@ -29,6 +29,7 @@ use Coco\Infra\Request;
 use Coco\Infra\Response;
 use Coco\Infra\XhStuff;
 use Coco\Infra\View;
+use Coco\Logic\Util;
 
 class MainController
 {
@@ -63,7 +64,7 @@ class MainController
 
     public function __invoke(Request $request, string $name, string $config, string $height): Response
     {
-        if (!preg_match('/^[a-z_0-9]+$/su', $name)) {
+        if (!Util::isValidCocoName($name)) {
             return Response::create($this->view->message("fail", "error_invalid_name") . "\n");
         }
         if ($request->s() < 0 || $request->s() >= $this->pages->count()) {
@@ -82,8 +83,7 @@ class MainController
     {
         $text = $this->xhStuff->evaluateScripting((string) $this->cocoService->find($name, $request->s()));
         if ($request->search() !== "") {
-            $search = XH_hsc(trim((string) preg_replace('/\s+/u', ' ', $request->search())));
-            $words = explode(' ', $search);
+            $words = Util::parseSearchTerm($request->search());
             $text = $this->xhStuff->highlightSearchWords($words, $text);
         }
         return Response::create($text);

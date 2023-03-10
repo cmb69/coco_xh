@@ -27,6 +27,7 @@ use Coco\Infra\Request;
 use Coco\Infra\Response;
 use Coco\Infra\View;
 use Coco\Infra\XhStuff;
+use Coco\Logic\Util;
 
 class Search
 {
@@ -52,7 +53,7 @@ class Search
 
     public function __invoke(Request $request): Response
     {
-        $words = preg_split('/\s+/isu', $request->search(), 0, PREG_SPLIT_NO_EMPTY) ?: [];
+        $words = Util::parseSearchTerm($request->search());
         $ta = $this->searchContent(null, $words);
         foreach ($this->cocoService->findAllNames() as $name) {
             $ta = array_merge($ta, $this->searchContent($name, $words));

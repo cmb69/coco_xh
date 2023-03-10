@@ -21,6 +21,8 @@
 
 namespace Coco\Infra;
 
+use Coco\Logic\Util;
+
 class Backups
 {
     public function filename(string $foldername, string $coconame, string $date): string
@@ -36,11 +38,10 @@ class Backups
     /** @return list<string> */
     public function all(string $foldername, string $coconame): array
     {
-        $pattern = sprintf('/^\d{8}_\d{6}_%s\.htm$/', preg_quote($coconame, "/"));
         $result = [];
         if (($dir = opendir($foldername)) !== false) {
             while (($entry = readdir($dir)) !== false) {
-                if (preg_match($pattern, $entry)) {
+                if (Util::isBackup($entry, $coconame)) {
                     $result[] = $foldername . $entry;
                 }
             }

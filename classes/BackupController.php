@@ -25,6 +25,7 @@ use Coco\Infra\Backups;
 use Coco\Infra\CocoService;
 use Coco\Infra\Request;
 use Coco\Infra\View;
+use Coco\Logic\Util;
 
 class BackupController
 {
@@ -55,7 +56,7 @@ class BackupController
     {
         $o = "";
         foreach ($this->cocoService->findAllNames() as $coco) {
-            $o .= $this->backup($coco, date("Ymd_His", (int) $request->server("REQUEST_TIME")));
+            $o .= $this->backup($coco, Util::backupPrefix((int) $request->server("REQUEST_TIME")));
         }
         return $o;
     }
