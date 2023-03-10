@@ -125,43 +125,54 @@ class CocoService
         return Util::cocoContent($text, $pd['coco_id']);
     }
 
-    /**
-     * @param string $name
-     * @param int $i
-     * @param string $text
-     * @return bool
-     */
-    public function save($name, $i, $text)
+    public function save(string $name, int $index, string $text): bool
     {
-        $fn = $this->filename($name);
-        $old = is_readable($fn) ? (string) XH_readFile($fn) : '';
-        $cnt = '<html>' . PHP_EOL . '<body>' . PHP_EOL;
-        for ($j = 0; $j < $this->pages->count(); $j++) {
-            $pd = $this->pages->data($j);
-            if (empty($pd['coco_id'])) {
-                if ($j !== $i) {
-                    continue;
-                }
-                $pd['coco_id'] = $this->idGenerator->newId();
-                $this->pages->updateData($j, $pd);
+        $filename = $this->filename($name);
+        $oldContent = is_readable($filename) ? (string) XH_readFile($filename) : '';
+        $content = "<html>\n<body>\n";
+        for ($i = 0; $i < $this->pages->count(); $i++) {
+            if (($id = $this->cocoId($i, $i === $index)) === null) {
+                continue;
             }
-            $cnt .= '<h' . $this->pages->level($j) . ' id="' . $pd['coco_id'] . '">' . $this->pages->heading($j)
-                . '</h' . $this->pages->level($j) . '>' . PHP_EOL;
-            if ($j == $i) {
-                $text = trim($text);
-                if (!empty($text)) {
-                    $cnt .= $text . PHP_EOL;
-                }
-            } else {
-                $cnt .= Util::cocoContent($old, $pd["coco_id"]);
-            }
+            $content .= $this->headingLine($this->pages->level($i), $id, $this->pages->heading($i)) . "\n"
+                . $this->content($i === $index, $id, $text, $oldContent);
         }
-        $cnt .= '</body>' . PHP_EOL . '</html>' . PHP_EOL;
-        if (XH_writeFile($fn, $cnt) === false) {
+        $content .= "</body>\n</html>\n";
+        if (XH_writeFile($filename, $content) === false) {
             return false;
         }
         touch($this->contentFile);
         return true;
+    }
+
+    private function cocoId(int $index, bool $current): ?string
+    {
+        $pd = $this->pages->data($index);
+        if (empty($pd["coco_id"])) {
+            if (!$current) {
+                return null;
+            }
+            $pd["coco_id"] = $this->idGenerator->newId();
+            $this->pages->updateData($index, $pd);
+        }
+        return $pd["coco_id"];
+    }
+
+    private function headingLine(int $level, string $id, string $heading): string
+    {
+        return "<h$level id=\"$id\">$heading</h$level>";
+    }
+
+    private function content(bool $current, string $id, string $text, string $oldContent): string
+    {
+        if (!$current) {
+            return Util::cocoContent($oldContent, $id);
+        }
+        $text = trim($text);
+        if ($text !== "") {
+            return $text . "\n";
+        }
+        return "";
     }
 
     /**
