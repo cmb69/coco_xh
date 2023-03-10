@@ -54,74 +54,65 @@ class Search
     public function __invoke(Request $request): Response
     {
         $words = Util::parseSearchTerm($request->search());
-        $ta = $this->searchContent(null, $words);
+        $indexes = $this->searchContent(null, $words);
         foreach ($this->cocoService->findAllNames() as $name) {
-            $ta = array_merge($ta, $this->searchContent($name, $words));
+            $indexes = array_merge($indexes, $this->searchContent($name, $words));
         }
-        $ta = array_unique($ta);
-        sort($ta);
-        $words = implode(",", $words);
-        $pages = [];
-        foreach ($ta as $i) {
-            $pages[] = [
-                "heading" => $this->pages->heading($i),
-                "url" => $request->sn() . "?" . $this->pages->url($i) . "&search=" . urlencode($words),
-            ];
-        }
-        return Response::create($this->view->render("search_results", [
-            "search_term" => $request->search(),
-            "pages" => $pages,
-        ]))->withTitle($this->view->text("search_title"));
+        $indexes = array_unique($indexes);
+        sort($indexes);
+        return Response::create($this->renderSearchResults($indexes, $request->sn(), $words))
+            ->withTitle($this->view->text("search_title"));
     }
 
     /**
-     * Returns a list of all pages that contain all words in a co-content.
-     * If $name === NULL the main content will be searched.
-     *
-     * @param string|null $name  A co-content name.
-     * @param string[]  $words An array of words.
-     *
-     * @return int[]
-     *
-     * @global array The content of the pages.
-     * @global array The configuration of the core.
+     * @param list<string> $words
+     * @return list<int>
      */
-    private function searchContent($name, array $words)
+    private function searchContent(?string $name, array $words): array
     {
-        if ($name === null) {
-            $cocos = $this->pages->contents();
-        } else {
-            $cocos = $this->cocoService->findAll($name);
-        }
-        $ta = array();
-        foreach ($cocos as $i => $coco) {
-            if (!$this->pages->isHidden((int) $i)) {
-                if ($this->doSearch($words, $coco)) {
-                    $ta[] = $i;
-                }
+        $contents = $name === null ? $this->pages->contents() : $this->cocoService->findAll($name);
+        $indexes = [];
+        foreach ($contents as $index => $content) {
+            if (!$this->pages->isHidden($index) && $this->findAllIn($words, $content)) {
+                $indexes[] = $index;
             }
         }
-        return $ta;
+        return $indexes;
     }
 
-    /**
-     * Returns whether all words are contained in a text.
-     *
-     * @param string[] $words An array of words.
-     * @param string $text  A text to search in.
-     *
-     * @return bool
-     */
-    private function doSearch(array $words, $text)
+    /** @param list<string> $words */
+    private function findAllIn(array $words, string $text): bool
     {
         $text = strip_tags($this->xhStuff->evaluateScripting($text));
-        $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
-        $text = utf8_strtolower($text);
-        foreach ($words as $word) {
-            if (strpos($text, utf8_strtolower($word)) === false) {
-                return false;
-            }
+        $text = html_entity_decode($text, ENT_QUOTES, "UTF-8");
+        return Util::textContainsAllWords($text, $words);
+    }
+
+    /**
+     * @param list<int> $pageIndexes
+     * @param list<string> $searchWords
+     */
+    private function renderSearchResults(array $pageIndexes, string $sn, array $searchWords): string
+    {
+        return $this->view->render("search_results", [
+            "search_term" => implode(" ", $searchWords),
+            "pages" => $this->pageRecords($pageIndexes, $sn, implode(",", $searchWords)),
+        ]);
+    }
+
+    /**
+     * @param list<int> $pageIndexes
+     * @return list<array{heading:string,url:string}>
+     */
+    private function pageRecords(array $pageIndexes, string $sn, string $searchWords): array
+    {
+        $records = [];
+        foreach ($pageIndexes as $pageIndex) {
+            $records[] = [
+                "heading" => $this->pages->heading($pageIndex),
+                "url" => $sn . "?" . $this->pages->url($pageIndex) . "&search=" . urlencode($searchWords),
+            ];
         }
-        return true;
+        return $records;
     }
 }

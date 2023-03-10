@@ -130,5 +130,21 @@ class UtilTest extends TestCase
             [$content, "345678", ""],
         ];
     }
+
+    /** @dataProvider textWords */
+    public function testTextContainsAllWords(string $text, array $words, bool $expected): void
+    {
+        $result = Util::textContainsAllWords($text, $words);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function textWords(): array
+    {
+        return [
+            ["some Text which contains all words", ["text", "Words"], true],
+            ["some text which doesn't contain all", ["text", "words"], false],
+            ["some text", [], true],
+        ];
+    }
 }
 

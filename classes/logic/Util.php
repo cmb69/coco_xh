@@ -62,4 +62,16 @@ class Util
         }
         return trim($matches[1]);
     }
+
+    /** @param list<string> $words */
+    public static function textContainsAllWords(string $text, array $words): bool
+    {
+        $text = utf8_strtolower($text);
+        foreach ($words as $word) {
+            if (strpos($text, utf8_strtolower($word)) === false) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
