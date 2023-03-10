@@ -27,7 +27,7 @@ use Coco\Infra\Request;
 use Coco\Infra\Response;
 use Coco\Infra\View;
 
-class MainAdminController
+class CocoAdmin
 {
     /** @var CocoService */
     private $cocoService;

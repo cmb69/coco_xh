@@ -24,16 +24,15 @@ namespace Coco;
 use ApprovalTests\Approvals;
 use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
-use Coco\Infra\Forms;
 use Coco\Infra\Request;
 use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
 
-class MainAdminControllerTest extends TestCase
+class CocoAdminTest extends TestCase
 {
     public function testRendersCocoOverview(): void
     {
-        $sut = new MainAdminController($this->cocoService(), $this->csrfProtector(), $this->view());
+        $sut = new CocoAdmin($this->cocoService(), $this->csrfProtector(), $this->view());
         $response = $sut($this->request());
         $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
@@ -41,7 +40,7 @@ class MainAdminControllerTest extends TestCase
 
     public function testRendersDeleteConfirmation(): void
     {
-        $sut = new MainAdminController($this->cocoService(), $this->csrfProtector(), $this->view());
+        $sut = new CocoAdmin($this->cocoService(), $this->csrfProtector(), $this->view());
         $request = $this->request("delete");
         $request->method("cocoNames")->willReturn(["foo"]);
         $response = $sut($request);
@@ -52,7 +51,7 @@ class MainAdminControllerTest extends TestCase
     public function testSuccessfulDeletionRedirects(): void
     {
         $_POST = ["coco_do" => "delete"];
-        $sut = new MainAdminController($this->cocoService(), $this->csrfProtector(true), $this->view());
+        $sut = new CocoAdmin($this->cocoService(), $this->csrfProtector(true), $this->view());
         $request = $this->request("delete");
         $request->method("cocoNames")->willReturn(["foo"]);
         $response = $sut($request);
@@ -66,7 +65,7 @@ class MainAdminControllerTest extends TestCase
             "./content/coco/20230306_120000_foo.htm",
             "./content/coco/foo.htm",
         ]);
-        $sut = new MainAdminController($cocoService, $this->csrfProtector(true), $this->view());
+        $sut = new CocoAdmin($cocoService, $this->csrfProtector(true), $this->view());
         $request = $this->request("delete");
         $request->method("cocoNames")->willReturn(["foo"]);
         $response = $sut($request);

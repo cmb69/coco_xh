@@ -37,7 +37,7 @@ const COCO_VERSION = "2.0-dev";
  */
 function coco($name, $config = false, $height = "100%")
 {
-    return Dic::makeMainController()(Request::current(), $name, (string) $config, $height)->respond();
+    return Dic::makeCoco()(Request::current(), $name, (string) $config, $height)->respond();
 }
 
 /**
@@ -48,6 +48,4 @@ function coco($name, $config = false, $height = "100%")
 
 $pd_router->add_interest("coco_id");
 
-if ($f == "xh_loggedout") {
-    $o .= Dic::makeBackupController()(Request::current());
-}
+$o .= Dic::makeMain()(Request::current())->respond();

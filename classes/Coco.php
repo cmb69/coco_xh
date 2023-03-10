@@ -31,7 +31,7 @@ use Coco\Infra\XhStuff;
 use Coco\Infra\View;
 use Coco\Logic\Util;
 
-class MainController
+class Coco
 {
     /** @var CocoService */
     private $cocoService;

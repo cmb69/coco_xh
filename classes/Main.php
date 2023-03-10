@@ -24,13 +24,14 @@ namespace Coco;
 use Coco\Infra\Backups;
 use Coco\Infra\CocoService;
 use Coco\Infra\Request;
+use Coco\Infra\Response;
 use Coco\Infra\View;
 use Coco\Logic\Util;
 
-class BackupController
+class Main
 {
-    /** @var int */
-    private $maxBackups;
+    /** @var array<string,string> */
+    private $conf;
 
     /** @var CocoService */
     private $cocoService;
@@ -41,24 +42,25 @@ class BackupController
     /** @var View */
     private $view;
 
-    /**
-     * @param int $maxBackups
-     */
-    public function __construct($maxBackups, CocoService $cocoService, Backups $backups, View $view)
+    /** @param array<string,string> $conf */
+    public function __construct(array $conf, CocoService $cocoService, Backups $backups, View $view)
     {
-        $this->maxBackups = $maxBackups;
+        $this->conf = $conf;
         $this->cocoService = $cocoService;
         $this->backups = $backups;
         $this->view = $view;
     }
 
-    public function __invoke(Request $request): string
+    public function __invoke(Request $request): Response
     {
+        if (!$request->logOut()) {
+            return Response::create("");
+        }
         $o = "";
         foreach ($this->cocoService->findAllNames() as $coco) {
             $o .= $this->backup($coco, Util::backupPrefix((int) $request->server("REQUEST_TIME")));
         }
-        return $o;
+        return Response::create($o);
     }
 
     private function backup(string $coconame, string $backupDate): string
@@ -69,7 +71,7 @@ class BackupController
         }
         $o = $this->view->message("info", "info_created", $this->backups->filename($dir, $coconame, $backupDate));
         $backups = $this->backups->all($dir, $coconame);
-        for ($i = 0; $i < count($backups) - $this->maxBackups; $i++) {
+        for ($i = 0; $i < count($backups) - (int) $this->conf['backup_numberoffiles']; $i++) {
             if ($this->backups->delete($backups[$i])) {
                 $o .= $this->view->message("info", "info_deleted", $backups[$i]);
             } else {

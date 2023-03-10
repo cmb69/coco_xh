@@ -32,20 +32,19 @@ use Coco\Infra\XhStuff;
 
 class Dic
 {
-    public static function makeBackupController(): BackupController
+    public static function makeMain(): Main
     {
-        global $cf;
-        return new BackupController(
-            (int) $cf['backup']['numberoffiles'],
+        return new Main(
+            self::makeConf(),
             self::makeCocoService(),
             new Backups,
             self::makeView()
         );
     }
 
-    public static function makeMainController(): MainController
+    public static function makeCoco(): Coco
     {
-        return new MainController(
+        return new Coco(
             self::makeCocoService(),
             new CsrfProtector,
             new Pages,
@@ -64,9 +63,9 @@ class Dic
         );
     }
 
-    public static function makeMainAdminController(): MainAdminController
+    public static function makeCocoAdmin(): CocoAdmin
     {
-        return new MainAdminController(
+        return new CocoAdmin(
             self::makeCocoService(),
             new CsrfProtector,
             self::makeView()
@@ -101,5 +100,12 @@ class Dic
         global $pth, $plugin_tx;
 
         return new View($pth["folder"]["plugins"] . "coco/views/", $plugin_tx["coco"]);
+    }
+
+    /** @return array<string,string> */
+    private static function makeConf(): array
+    {
+        global $cf;
+        return ["backup_numberoffiles" => $cf['backup']['numberoffiles']];
     }
 }

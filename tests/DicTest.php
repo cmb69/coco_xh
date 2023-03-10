@@ -35,14 +35,14 @@ class DicTest extends TestCase
         $plugin_tx = ["coco" => []];
     }
 
-    public function testMakesBackupController(): void
+    public function testMakesMain(): void
     {
-        $this->assertInstanceOf(BackupController::class, Dic::makeBackupController());
+        $this->assertInstanceOf(Main::class, Dic::makeMain());
     }
 
-    public function testMakesMainController(): void
+    public function testMakesCoco(): void
     {
-        $this->assertInstanceOf(MainController::class, Dic::makeMainController());
+        $this->assertInstanceOf(Coco::class, Dic::makeCoco());
     }
 
     public function testMakesSearch(): void
@@ -50,9 +50,9 @@ class DicTest extends TestCase
         $this->assertInstanceOf(Search::class, Dic::makeSearch());
     }
 
-    public function testMakesMainAdminController(): void
+    public function testMakesCocoAdmin(): void
     {
-        $this->assertInstanceOf(MainAdminController::class, Dic::makeMainAdminController());
+        $this->assertInstanceOf(CocoAdmin::class, Dic::makeCocoAdmin());
     }
 
     public function testMakesPluginInfo(): void

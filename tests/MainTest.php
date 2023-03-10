@@ -19,40 +19,43 @@
  * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Coco\Infra;
+namespace Coco;
 
 use ApprovalTests\Approvals;
-use Coco\BackupController;
+use Coco\Infra\Backups;
+use Coco\Infra\CocoService;
+use Coco\Infra\Request;
 use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
 
-class BackupControllerTest extends TestCase
+class MainTest extends TestCase
 {
     public function testReportsBackupSuccess(): void
     {
-        $sut = new BackupController(2, $this->cocoService(), $this->backups(), $this->view());
+        $sut = new Main($this->conf(), $this->cocoService(), $this->backups(), $this->view());
         $response = $sut($this->request());
-        Approvals::verifyHtml($response);
+        Approvals::verifyHtml($response->output());
     }
 
     public function testReportsFailureToCreateBackup(): void
     {
-        $sut = new BackupController(2, $this->cocoService(), $this->backups(false), $this->view());
+        $sut = new Main($this->conf(), $this->cocoService(), $this->backups(false), $this->view());
         $response = $sut($this->request());
-        Approvals::verifyHtml($response);
+        Approvals::verifyHtml($response->output());
     }
 
     public function testReportsFailureToDeleteSurplusBackups(): void
     {
-        $sut = new BackupController(2, $this->cocoService(), $this->backups(true, false), $this->view());
+        $sut = new Main($this->conf(), $this->cocoService(), $this->backups(true, false), $this->view());
         $response = $sut($this->request());
-        Approvals::verifyHtml($response);
+        Approvals::verifyHtml($response->output());
     }
 
     private function request(): Request
     {
         $request = $this->createStub(Request::class);
         $request->method("server")->with("REQUEST_TIME")->willReturn((string) strtotime("2023-03-06T12:00:00"));
+        $request->method("logOut")->willReturn(true);
         return $request;
     }
 
@@ -88,5 +91,10 @@ class BackupControllerTest extends TestCase
     private function view(): View
     {
         return new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["coco"]);
+    }
+
+    private function conf(): array
+    {
+        return ["backup_numberoffiles" => 2];
     }
 }

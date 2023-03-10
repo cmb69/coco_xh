@@ -119,4 +119,11 @@ class Request
     {
         return $_POST;
     }
+
+    /** @codeCoverageIgnore */
+    public function logOut(): bool
+    {
+        global $f;
+        return $f === "xh_loggedout";
+    }
 }

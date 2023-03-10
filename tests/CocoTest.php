@@ -24,18 +24,17 @@ namespace Coco;
 use ApprovalTests\Approvals;
 use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
-use Coco\Infra\Forms;
 use Coco\Infra\Pages;
 use Coco\Infra\Request;
 use Coco\Infra\View;
 use Coco\Infra\XhStuff;
 use PHPUnit\Framework\TestCase;
 
-class MainControllerTest extends TestCase
+class CocoTest extends TestCase
 {
     public function testRendersCoco(): void
     {
-        $sut = new MainController(
+        $sut = new Coco(
             $this->cocoService(),
             $this->csrfProtector(),
             $this->pages(),
@@ -48,7 +47,7 @@ class MainControllerTest extends TestCase
 
     public function testRendersCocoEditor(): void
     {
-        $sut = new MainController(
+        $sut = new Coco(
             $this->cocoService(),
             $this->csrfProtector(),
             $this->pages(),
@@ -61,7 +60,7 @@ class MainControllerTest extends TestCase
 
     public function testRendersSaveButtonIfNoEditorIsConfigured(): void
     {
-        $sut = new MainController(
+        $sut = new Coco(
             $this->cocoService(),
             $this->csrfProtector(),
             $this->pages(),
@@ -74,7 +73,7 @@ class MainControllerTest extends TestCase
 
     public function testRedirectsAfterSavingContent(): void
     {
-        $sut = new MainController(
+        $sut = new Coco(
             $this->cocoService(true),
             $this->csrfProtector(true),
             $this->pages(),
@@ -90,7 +89,7 @@ class MainControllerTest extends TestCase
     public function testReportsErrorOnFailureToSaveContent(): void
     {
         $_POST = ["coco_text_foo" => "some content"];
-        $sut = new MainController(
+        $sut = new Coco(
             $this->cocoService(false),
             $this->csrfProtector(true),
             $this->pages(),
@@ -105,7 +104,7 @@ class MainControllerTest extends TestCase
 
     public function testReportsIllegalCocoName(): void
     {
-        $sut = new MainController(
+        $sut = new Coco(
             $this->cocoService(),
             $this->csrfProtector(),
             $this->pages(),
@@ -118,7 +117,7 @@ class MainControllerTest extends TestCase
 
     public function testIgnoresSearching(): void
     {
-        $sut = new MainController(
+        $sut = new Coco(
             $this->cocoService(),
             $this->csrfProtector(),
             $this->pages(),

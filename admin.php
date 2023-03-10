@@ -42,7 +42,7 @@ if (XH_wantsPluginAdministration("coco")) {
             $o .= Dic::makePluginInfo()()->respond();
             break;
         case "plugin_main":
-            $o .= Dic::makeMainAdminController()(Request::current())->respond();
+            $o .= Dic::makeCocoAdmin()(Request::current())->respond();
             break;
         default:
             $o .= plugin_admin_common();
