@@ -29,6 +29,13 @@ use PHPUnit\Framework\TestCase;
 
 class MainTest extends TestCase
 {
+    public function testDoesNothingWhenNotLoggingOut(): void
+    {
+        $sut = new Main($this->conf(), $this->repository(), $this->view());
+        $response = $sut($this->request(false));
+        $this->assertEquals("", $response->output());
+    }
+
     public function testReportsBackupSuccess(): void
     {
         $sut = new Main($this->conf(), $this->repository(), $this->view());
@@ -50,11 +57,11 @@ class MainTest extends TestCase
         Approvals::verifyHtml($response->output());
     }
 
-    private function request(): Request
+    private function request(bool $logout = true): Request
     {
         $request = $this->createStub(Request::class);
         $request->method("requestTime")->willReturn(strtotime("2023-03-06T12:00:00"));
-        $request->method("logOut")->willReturn(true);
+        $request->method("logOut")->willReturn($logout);
         return $request;
     }
 
