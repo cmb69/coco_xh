@@ -93,6 +93,12 @@ class UtilTest extends TestCase
         ];
     }
 
+    public function testBackupName(): void
+    {
+        $backupName = Util::backupName("20230310_221700_test.htm");
+        $this->assertEquals(["test", "20230310_221700"], $backupName);
+    }
+
     /** @dataProvider backupPrefixes */
     public function testBackupPrefix(int $timestamp, string $expected): void
     {

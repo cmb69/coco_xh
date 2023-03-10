@@ -21,16 +21,16 @@
 
 namespace Coco;
 
-use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
+use Coco\Infra\Repository;
 use Coco\Infra\Request;
 use Coco\Infra\Response;
 use Coco\Infra\View;
 
 class CocoAdmin
 {
-    /** @var CocoService */
-    private $cocoService;
+    /** @var Repository */
+    private $repository;
 
     /** @var CsrfProtector */
     private $csrfProtector;
@@ -38,9 +38,9 @@ class CocoAdmin
     /** @var View */
     private $view;
 
-    public function __construct(CocoService $cocoService, CsrfProtector $csrfProtector, View $view)
+    public function __construct(Repository $repository, CsrfProtector $csrfProtector, View $view)
     {
-        $this->cocoService = $cocoService;
+        $this->repository = $repository;
         $this->csrfProtector = $csrfProtector;
         $this->view = $view;
     }
@@ -61,7 +61,7 @@ class CocoAdmin
     {
         return Response::create($this->view->render("admin", [
             "action" => $request->sn(),
-            "cocos" => $this->cocoService->findAllNames(),
+            "cocos" => $this->repository->findAllNames(),
         ]))->withTitle("Coco – " . $this->view->text("menu_main"));
     }
 
@@ -80,9 +80,13 @@ class CocoAdmin
         $this->csrfProtector->check();
         $errors = [];
         foreach ($request->cocoNames() as $name) {
-            $result = $this->cocoService->delete((string) $name);
-            foreach ($result as $filename) {
-                $errors[] = ["key" => "error_delete", "arg" => $filename];
+            foreach ($this->repository->findAllBackups($name) as $backup) {
+                if (!$this->repository->delete(...$backup)) {
+                    $errors[] = ["key" => "error_delete", "arg" => $this->repository->filename(...$backup)];
+                }
+            }
+            if (!$this->repository->delete($name)) {
+                $errors[] = ["key" => "error_delete", "arg" => $this->repository->filename($name)];
             }
         }
         if ($errors) {

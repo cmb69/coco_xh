@@ -22,8 +22,8 @@
 namespace Coco;
 
 use ApprovalTests\Approvals;
-use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
+use Coco\Infra\Repository;
 use Coco\Infra\Request;
 use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
@@ -32,7 +32,7 @@ class CocoAdminTest extends TestCase
 {
     public function testRendersCocoOverview(): void
     {
-        $sut = new CocoAdmin($this->cocoService(), $this->csrfProtector(), $this->view());
+        $sut = new CocoAdmin($this->repository(), $this->csrfProtector(), $this->view());
         $response = $sut($this->request());
         $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
@@ -40,7 +40,7 @@ class CocoAdminTest extends TestCase
 
     public function testRendersDeleteConfirmation(): void
     {
-        $sut = new CocoAdmin($this->cocoService(), $this->csrfProtector(), $this->view());
+        $sut = new CocoAdmin($this->repository(), $this->csrfProtector(), $this->view());
         $request = $this->request();
         $request->method("cocoAdminAction")->willReturn("delete");
         $request->method("cocoNames")->willReturn(["foo"]);
@@ -51,7 +51,7 @@ class CocoAdminTest extends TestCase
 
     public function testSuccessfulDeletionRedirects(): void
     {
-        $sut = new CocoAdmin($this->cocoService(), $this->csrfProtector(true), $this->view());
+        $sut = new CocoAdmin($this->repository(), $this->csrfProtector(true), $this->view());
         $request = $this->request();
         $request->method("cocoAdminAction")->willReturn("do_delete");
         $request->method("cocoNames")->willReturn(["foo"]);
@@ -61,11 +61,8 @@ class CocoAdminTest extends TestCase
 
     public function testFailureToDeleteIsReported(): void
     {
-        $cocoService = $this->cocoService([
-            "./content/coco/20230306_120000_foo.htm",
-            "./content/coco/foo.htm",
-        ]);
-        $sut = new CocoAdmin($cocoService, $this->csrfProtector(true), $this->view());
+        $repository = $this->repository(false);
+        $sut = new CocoAdmin($repository, $this->csrfProtector(true), $this->view());
         $request = $this->request();
         $request->method("cocoAdminAction")->willReturn("do_delete");
         $request->method("cocoNames")->willReturn(["foo"]);
@@ -81,12 +78,17 @@ class CocoAdminTest extends TestCase
         return $request;
     }
 
-    private function cocoService(array $delete = []): CocoService
+    private function repository(bool $deleted = true): Repository
     {
-        $cocoService = $this->createMock(CocoService::class);
-        $cocoService->method("findAllNames")->willReturn(["foo", "bar"]);
-        $cocoService->method("delete")->willReturn($delete);
-        return $cocoService;
+        $repository = $this->createMock(Repository::class);
+        $repository->method("findAllNames")->willReturn(["foo", "bar"]);
+        $repository->method("findAllBackups")->willReturn([["foo", "20230306_120000"]]);
+        $repository->method("delete")->willReturn($deleted);
+        $repository->method("filename")->willReturnOnConsecutiveCalls(
+            "./content/coco/20230306_120000_foo.htm",
+            "./content/coco/foo.htm"
+        );
+        return $repository;
     }
 
     private function csrfProtector(bool $check = false): CsrfProtector

@@ -21,8 +21,7 @@
 
 namespace Coco;
 
-use Coco\Infra\Backups;
-use Coco\Infra\CocoService;
+use Coco\Infra\Repository;
 use Coco\Infra\Request;
 use Coco\Infra\Response;
 use Coco\Infra\View;
@@ -33,21 +32,17 @@ class Main
     /** @var array<string,string> */
     private $conf;
 
-    /** @var CocoService */
-    private $cocoService;
-
-    /** @var Backups */
-    private $backups;
+    /** @var Repository */
+    private $repository;
 
     /** @var View */
     private $view;
 
     /** @param array<string,string> $conf */
-    public function __construct(array $conf, CocoService $cocoService, Backups $backups, View $view)
+    public function __construct(array $conf, Repository $repository, View $view)
     {
         $this->conf = $conf;
-        $this->cocoService = $cocoService;
-        $this->backups = $backups;
+        $this->repository = $repository;
         $this->view = $view;
     }
 
@@ -57,7 +52,7 @@ class Main
             return Response::create("");
         }
         $o = "";
-        foreach ($this->cocoService->findAllNames() as $coco) {
+        foreach ($this->repository->findAllNames() as $coco) {
             $o .= $this->backup($coco, Util::backupPrefix($request->requestTime()));
         }
         return Response::create($o);
@@ -65,17 +60,17 @@ class Main
 
     private function backup(string $coconame, string $backupDate): string
     {
-        $dir = $this->cocoService->dataDir() . "/";
-        if (!$this->backups->create($dir, $coconame, $backupDate)) {
-            return $this->view->message("fail", "error_save", $this->backups->filename($dir, $coconame, $backupDate));
+        if (!$this->repository->backup($coconame, $backupDate)) {
+            return $this->view->message("fail", "error_save", $this->repository->filename($coconame, $backupDate));
         }
-        $o = $this->view->message("info", "info_created", $this->backups->filename($dir, $coconame, $backupDate));
-        $backups = $this->backups->all($dir, $coconame);
-        for ($i = 0; $i < count($backups) - (int) $this->conf['backup_numberoffiles']; $i++) {
-            if ($this->backups->delete($backups[$i])) {
-                $o .= $this->view->message("info", "info_deleted", $backups[$i]);
+        $o = $this->view->message("info", "info_created", $this->repository->filename($coconame, $backupDate));
+        $backups = $this->repository->findAllBackups($coconame);
+        $backups = array_slice($backups, 0, count($backups) - (int) $this->conf['backup_numberoffiles']);
+        foreach ($backups as $backup) {
+            if ($this->repository->delete(...$backup)) {
+                $o .= $this->view->message("info", "info_deleted", $this->repository->filename(...$backup));
             } else {
-                $o .= $this->view->message("fail", "error_delete", $backups[$i]);
+                $o .= $this->view->message("fail", "error_delete", $this->repository->filename(...$backup));
             }
         }
         return $o;

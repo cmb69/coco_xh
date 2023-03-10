@@ -22,7 +22,7 @@
 namespace Coco;
 
 use ApprovalTests\Approvals;
-use Coco\Infra\CocoService;
+use Coco\Infra\Repository;
 use Coco\Infra\SystemChecker;
 use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
@@ -31,15 +31,15 @@ class PluginInfoTest extends TestCase
 {
     public function testRendersPluginInfo(): void
     {
-        $cocoService = $this->createStub(CocoService::class);
-        $cocoService->method("dataDir")->willReturn("./content/coco/");
+        $repository = $this->createStub(Repository::class);
+        $repository->method("dataFolder")->willReturn("./content/coco/");
         $systemChecker = $this->createStub(SystemChecker::class);
         $systemChecker->method("checkVersion")->willReturn(false);
         $systemChecker->method("checkWritability")->willReturn(false);
         $text = XH_includeVar("./languages/en.php", "plugin_tx")["coco"];
         $sut = new PluginInfo(
             "./plugins/coco/",
-            $cocoService,
+            $repository,
             $systemChecker,
             new View("./views/", $text)
         );

@@ -21,10 +21,9 @@
 
 namespace Coco;
 
-use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\Html;
-use Coco\Infra\Pages;
+use Coco\Infra\Repository;
 use Coco\Infra\Request;
 use Coco\Infra\Response;
 use Coco\Infra\XhStuff;
@@ -33,8 +32,8 @@ use Coco\Logic\Util;
 
 class Coco
 {
-    /** @var CocoService */
-    private $cocoService;
+    /** @var Repository */
+    private $repository;
 
     /** @var CsrfProtector */
     private $csrfProtector;
@@ -46,12 +45,12 @@ class Coco
     private $view;
 
     public function __construct(
-        CocoService $cocoService,
+        Repository $repository,
         CsrfProtector $csrfProtector,
         XhStuff $xhStuff,
         View $view
     ) {
-        $this->cocoService = $cocoService;
+        $this->repository = $repository;
         $this->csrfProtector = $csrfProtector;
         $this->xhStuff = $xhStuff;
         $this->view = $view;
@@ -77,7 +76,7 @@ class Coco
 
     private function show(Request $request, string $name): Response
     {
-        $content = $this->cocoService->find($name, $request->s());
+        $content = $this->repository->find($name, $request->s());
         $content = $this->xhStuff->evaluateScripting($content);
         $search = $request->search();
         if ($search !== "") {
@@ -89,7 +88,7 @@ class Coco
 
     private function edit(Request $request, string $name, string $config, string $height): Response
     {
-        $content = $this->cocoService->find($name, $request->s());
+        $content = $this->repository->find($name, $request->s());
         return Response::create($this->renderEditor($name, $config, $height, $content));
     }
 
@@ -97,11 +96,11 @@ class Coco
     {
         $this->csrfProtector->check();
         $text = $request->cocoText($name);
-        if ($this->cocoService->save($name, $request->s(), $text)) {
+        if ($this->repository->save($name, $request->s(), $text)) {
             return Response::redirect(CMSIMPLE_URL . "?" . $request->queryString());
         }
         return Response::create(
-            $this->view->message("fail", "error_save", $this->cocoService->filename($name))
+            $this->view->message("fail", "error_save", $this->repository->filename($name))
             . $this->renderEditor($name, $config, $height, $text)
         );
     }

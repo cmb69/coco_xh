@@ -21,7 +21,7 @@
 
 namespace Coco;
 
-use Coco\Infra\CocoService;
+use Coco\Infra\Repository;
 use Coco\Infra\Response;
 use Coco\Infra\SystemChecker;
 use Coco\Infra\View;
@@ -31,8 +31,8 @@ class PluginInfo
     /** @var string */
     private $pluginFolder;
 
-    /** @var CocoService */
-    private $cocoService;
+    /** @var Repository */
+    private $repository;
 
     /** @var SystemChecker */
     private $systemChecker;
@@ -42,12 +42,12 @@ class PluginInfo
 
     public function __construct(
         string $pluginFolder,
-        CocoService $cocoService,
+        Repository $repository,
         SystemChecker $systemChecker,
         View $view
     ) {
         $this->pluginFolder = $pluginFolder;
-        $this->cocoService = $cocoService;
+        $this->repository = $repository;
         $this->systemChecker = $systemChecker;
         $this->view = $view;
     }
@@ -70,7 +70,7 @@ class PluginInfo
             $this->checkXhVersion('1.7.0'),
             $this->checkWritability($this->pluginFolder . "css/"),
             $this->checkWritability($this->pluginFolder . "languages/"),
-            $this->checkWritability($this->cocoService->dataDir())
+            $this->checkWritability($this->repository->dataFolder())
         );
     }
 

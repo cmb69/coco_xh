@@ -21,11 +21,10 @@
 
 namespace Coco;
 
-use Coco\Infra\Backups;
-use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\IdGenerator;
 use Coco\Infra\Pages;
+use Coco\Infra\Repository;
 use Coco\Infra\SystemChecker;
 use Coco\Infra\View;
 use Coco\Infra\XhStuff;
@@ -36,8 +35,7 @@ class Dic
     {
         return new Main(
             self::makeConf(),
-            self::makeCocoService(),
-            new Backups,
+            self::makeRepository(),
             self::makeView()
         );
     }
@@ -45,7 +43,7 @@ class Dic
     public static function makeCoco(): Coco
     {
         return new Coco(
-            self::makeCocoService(),
+            self::makeRepository(),
             new CsrfProtector,
             new XhStuff,
             self::makeView()
@@ -55,7 +53,7 @@ class Dic
     public static function makeSearch(): Search
     {
         return new Search(
-            self::makeCocoService(),
+            self::makeRepository(),
             new Pages,
             new XhStuff,
             self::makeView()
@@ -65,7 +63,7 @@ class Dic
     public static function makeCocoAdmin(): CocoAdmin
     {
         return new CocoAdmin(
-            self::makeCocoService(),
+            self::makeRepository(),
             new CsrfProtector,
             self::makeView()
         );
@@ -76,18 +74,18 @@ class Dic
         global $pth;
         return new PluginInfo(
             $pth["folder"]["plugins"] . "coco/",
-            self::makeCocoService(),
+            self::makeRepository(),
             new SystemChecker,
             self::makeView()
         );
     }
 
-    private static function makeCocoService(): CocoService
+    private static function makeRepository(): Repository
     {
         global $pth;
 
-        return new CocoService(
-            "{$pth['folder']['content']}coco",
+        return new Repository(
+            $pth['folder']['content'] . "coco/",
             $pth['file']['content'],
             new Pages,
             new IdGenerator()

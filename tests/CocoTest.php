@@ -22,9 +22,9 @@
 namespace Coco;
 
 use ApprovalTests\Approvals;
-use Coco\Infra\CocoService;
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\Pages;
+use Coco\Infra\Repository;
 use Coco\Infra\Request;
 use Coco\Infra\View;
 use Coco\Infra\XhStuff;
@@ -34,28 +34,28 @@ class CocoTest extends TestCase
 {
     public function testRendersCoco(): void
     {
-        $sut = new Coco($this->cocoService(), $this->csrfProtector(), $this->xhStuff(), $this->view());
+        $sut = new Coco($this->repository(), $this->csrfProtector(), $this->xhStuff(), $this->view());
         $response = $sut($this->request(), "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRendersCocoEditor(): void
     {
-        $sut = new Coco($this->cocoService(), $this->csrfProtector(), $this->xhStuff(), $this->view());
+        $sut = new Coco($this->repository(), $this->csrfProtector(), $this->xhStuff(), $this->view());
         $response = $sut($this->request("edit"), "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRendersSaveButtonIfNoEditorIsConfigured(): void
     {
-        $sut = new Coco($this->cocoService(), $this->csrfProtector(), $this->xhStuff(false), $this->view());
+        $sut = new Coco($this->repository(), $this->csrfProtector(), $this->xhStuff(false), $this->view());
         $response = $sut($this->request("edit"), "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRedirectsAfterSavingContent(): void
     {
-        $sut = new Coco($this->cocoService(true), $this->csrfProtector(true), $this->xhStuff(), $this->view());
+        $sut = new Coco($this->repository(true), $this->csrfProtector(true), $this->xhStuff(), $this->view());
         $request = $this->request("do_edit");
         $request->method("cocoText")->willReturn("some content");
         $response = $sut($request, "foo", false, "100%");
@@ -65,7 +65,7 @@ class CocoTest extends TestCase
     public function testReportsErrorOnFailureToSaveContent(): void
     {
         $_POST = ["coco_text_foo" => "some content"];
-        $sut = new Coco($this->cocoService(false), $this->csrfProtector(true), $this->xhStuff(), $this->view());
+        $sut = new Coco($this->repository(false), $this->csrfProtector(true), $this->xhStuff(), $this->view());
         $request = $this->request("do_edit");
         $request->method("cocoText")->willReturn("some content");
         $response = $sut($request, "foo", false, "100%");
@@ -74,14 +74,14 @@ class CocoTest extends TestCase
 
     public function testReportsIllegalCocoName(): void
     {
-        $sut = new Coco($this->cocoService(), $this->csrfProtector(), $this->xhStuff(), $this->view());
+        $sut = new Coco($this->repository(), $this->csrfProtector(), $this->xhStuff(), $this->view());
         $response = $sut($this->request(), "foo bar", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testIgnoresSearching(): void
     {
-        $sut = new Coco($this->cocoService(), $this->csrfProtector(), $this->xhStuff(), $this->view());
+        $sut = new Coco($this->repository(), $this->csrfProtector(), $this->xhStuff(), $this->view());
         $response = $sut($this->request("", -1), "foo", false, "100%");
         $this->assertEquals("", $response->output());
     }
@@ -95,13 +95,13 @@ class CocoTest extends TestCase
         return $request;
     }
 
-    private function cocoService(?bool $save = null): CocoService
+    private function repository(?bool $save = null): Repository
     {
-        $cocoService = $this->createMock(CocoService::class);
-        $cocoService->method("find")->willReturn("<p>some HTML with {{{trim('scripting')}}}</p>");
-        $cocoService->method("filename")->willReturn("./content/coco/foo.htm");
-        $cocoService->expects($save !== null ? $this->once() : $this->never())->method("save")->willReturn((bool) $save);
-        return $cocoService;
+        $repository = $this->createMock(Repository::class);
+        $repository->method("find")->willReturn("<p>some HTML with {{{trim('scripting')}}}</p>");
+        $repository->method("filename")->willReturn("./content/coco/foo.htm");
+        $repository->expects($save !== null ? $this->once() : $this->never())->method("save")->willReturn((bool) $save);
+        return $repository;
     }
 
     private function csrfProtector(bool $check = false)

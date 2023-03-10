@@ -22,8 +22,7 @@
 namespace Coco;
 
 use ApprovalTests\Approvals;
-use Coco\Infra\Backups;
-use Coco\Infra\CocoService;
+use Coco\Infra\Repository;
 use Coco\Infra\Request;
 use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
@@ -32,21 +31,21 @@ class MainTest extends TestCase
 {
     public function testReportsBackupSuccess(): void
     {
-        $sut = new Main($this->conf(), $this->cocoService(), $this->backups(), $this->view());
+        $sut = new Main($this->conf(), $this->repository(), $this->view());
         $response = $sut($this->request());
         Approvals::verifyHtml($response->output());
     }
 
     public function testReportsFailureToCreateBackup(): void
     {
-        $sut = new Main($this->conf(), $this->cocoService(), $this->backups(false), $this->view());
+        $sut = new Main($this->conf(), $this->repository(false), $this->view());
         $response = $sut($this->request());
         Approvals::verifyHtml($response->output());
     }
 
     public function testReportsFailureToDeleteSurplusBackups(): void
     {
-        $sut = new Main($this->conf(), $this->cocoService(), $this->backups(true, false), $this->view());
+        $sut = new Main($this->conf(), $this->repository(true, false), $this->view());
         $response = $sut($this->request());
         Approvals::verifyHtml($response->output());
     }
@@ -59,33 +58,26 @@ class MainTest extends TestCase
         return $request;
     }
 
-    private function cocoService(): CocoService
+    private function repository(bool $create = true, bool $delete = true): Repository
     {
-        $cocoService = $this->createStub(CocoService::class);
-        $cocoService->method("dataDir")->willReturn("./content/coco");
-        $cocoService->method("findAllNames")->willReturn(["foo", "bar"]);
-        return $cocoService;
-    }
-
-    private function backups(bool $create = true, bool $delete = true): Backups
-    {
-        $backups = $this->createStub(Backups::class);
-        $backups->method("all")->willReturnOnConsecutiveCalls([
-            "./content/coco/20230304_120000_foo.htm",
-            "./content/coco/20230305_120000_foo.htm",
-            "./content/coco/20230306_120000_foo.htm",
+        $repository = $this->createStub(Repository::class);
+        $repository->method("dataFolder")->willReturn("./content/coco/");
+        $repository->method("findAllNames")->willReturn(["foo", "bar"]);
+        $repository->method("filename")->willReturnCallback(function ($coconame, $date = null) {
+            return "./content/coco/" . ($date !== null ? "{$date}_" : "") . "$coconame.htm";
+        });
+        $repository->method("backup")->willReturn($create);
+        $repository->method("delete")->willReturn($delete);
+        $repository->method("findAllBackups")->willReturnOnConsecutiveCalls([
+            ["foo", "20230304_120000"],
+            ["foo", "20230305_120000"],
+            ["foo", "20230306_120000"],
         ], [
-            "./content/coco/20230304_120000_bar.htm",
-            "./content/coco/20230305_120000_bar.htm",
-            "./content/coco/20230306_120000_bar.htm",
+            ["bar", "20230304_120000"],
+            ["bar", "20230305_120000"],
+            ["bar", "20230306_120000"],
         ]);
-        $backups->method("create")->willReturn($create);
-        $backups->method("delete")->willReturn($delete);
-        $backups->method("filename")->willReturnOnConsecutiveCalls(
-            "./content/coco/20230306_120000_foo.htm",
-            "./content/coco/20230306_120000_bar.htm",
-        );
-        return $backups;
+        return $repository;
     }
 
     private function view(): View

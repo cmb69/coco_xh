@@ -21,8 +21,8 @@
 
 namespace Coco;
 
-use Coco\Infra\CocoService;
 use Coco\Infra\Pages;
+use Coco\Infra\Repository;
 use Coco\Infra\Request;
 use Coco\Infra\Response;
 use Coco\Infra\View;
@@ -31,8 +31,8 @@ use Coco\Logic\Util;
 
 class Search
 {
-    /** @var CocoService */
-    private $cocoService;
+    /** @var Repository */
+    private $repository;
 
     /** @var Pages */
     private $pages;
@@ -43,9 +43,9 @@ class Search
     /** @var View */
     private $view;
 
-    public function __construct(CocoService $cocoService, Pages $pages, XhStuff $xhStuff, View $view)
+    public function __construct(Repository $repository, Pages $pages, XhStuff $xhStuff, View $view)
     {
-        $this->cocoService = $cocoService;
+        $this->repository = $repository;
         $this->pages = $pages;
         $this->xhStuff = $xhStuff;
         $this->view = $view;
@@ -55,7 +55,7 @@ class Search
     {
         $words = Util::parseSearchTerm($request->search());
         $indexes = $this->searchContent(null, $words);
-        foreach ($this->cocoService->findAllNames() as $name) {
+        foreach ($this->repository->findAllNames() as $name) {
             $indexes = array_merge($indexes, $this->searchContent($name, $words));
         }
         $indexes = array_unique($indexes);
@@ -70,7 +70,7 @@ class Search
      */
     private function searchContent(?string $name, array $words): array
     {
-        $contents = $name === null ? $this->pages->contents() : $this->cocoService->findAll($name);
+        $contents = $name === null ? $this->pages->contents() : $this->repository->findAll($name);
         $indexes = [];
         foreach ($contents as $index => $content) {
             if (!$this->pages->isHidden($index) && $this->findAllIn($words, $content)) {

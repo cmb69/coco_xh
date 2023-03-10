@@ -22,8 +22,8 @@
 namespace Coco;
 
 use ApprovalTests\Approvals;
-use Coco\Infra\CocoService;
 use Coco\Infra\Pages;
+use Coco\Infra\Repository;
 use Coco\Infra\Request;
 use Coco\Infra\View;
 use Coco\Infra\XhStuff;
@@ -33,7 +33,7 @@ class SearchTest extends TestCase
 {
     public function testRendersSearchResultsWithTwoHits(): void
     {
-        $sut = new Search($this->cocoService(), $this->pages(), $this->xhStuff(), $this->view());
+        $sut = new Search($this->repository(), $this->pages(), $this->xhStuff(), $this->view());
         $response = $sut($this->request("some"));
         $this->assertEquals("Search Results", $response->title());
         Approvals::verifyHtml($response->output());
@@ -41,7 +41,7 @@ class SearchTest extends TestCase
 
     public function testRendersSearchResultsWithOneHit(): void
     {
-        $sut = new Search($this->cocoService(), $this->pages(), $this->xhStuff(), $this->view());
+        $sut = new Search($this->repository(), $this->pages(), $this->xhStuff(), $this->view());
         $response = $sut($this->request("regular"));
         $this->assertEquals("Search Results", $response->title());
         Approvals::verifyHtml($response->output());
@@ -49,7 +49,7 @@ class SearchTest extends TestCase
 
     public function testRendersSearchResultsWithoutHit(): void
     {
-        $sut = new Search($this->cocoService(), $this->pages(), $this->xhStuff(), $this->view());
+        $sut = new Search($this->repository(), $this->pages(), $this->xhStuff(), $this->view());
         $response = $sut($this->request("doesnotexist"));
         $this->assertEquals("Search Results", $response->title());
         Approvals::verifyHtml($response->output());
@@ -63,12 +63,12 @@ class SearchTest extends TestCase
         return $request;
     }
 
-    private function cocoService(): CocoService
+    private function repository(): Repository
     {
-        $cocoService = $this->createStub(CocoService::class);
-        $cocoService->method("findAllNames")->willReturn(["foo", "bar"]);
-        $cocoService->method("findAll")->willReturn(["<p>some other co-content</p>", "<p>some regular co-content</p>"]);
-        return $cocoService;
+        $repository = $this->createStub(Repository::class);
+        $repository->method("findAllNames")->willReturn(["foo", "bar"]);
+        $repository->method("findAll")->willReturn(["<p>some other co-content</p>", "<p>some regular co-content</p>"]);
+        return $repository;
     }
 
     private function pages(): Pages
