@@ -23,9 +23,9 @@ namespace Coco;
 
 use Coco\Infra\Repository;
 use Coco\Infra\Request;
-use Coco\Infra\Response;
 use Coco\Infra\View;
 use Coco\Logic\Util;
+use Coco\Value\Response;
 
 class Main
 {

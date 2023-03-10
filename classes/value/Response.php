@@ -19,7 +19,7 @@
  * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Coco\Infra;
+namespace Coco\Value;
 
 class Response
 {
@@ -66,26 +66,5 @@ class Response
     public function location(): ?string
     {
         return $this->location;
-    }
-
-    /**
-     * @return string|never
-     * @codeCoverageIgnore
-     */
-    public function respond()
-    {
-        global $title;
-
-        if ($this->location !== null) {
-            while (ob_get_level()) {
-                ob_end_clean();
-            }
-            header("Location: " . $this->location, true, 303);
-            exit;
-        }
-        if ($this->title !== null) {
-            $title = $this->title;
-        }
-        return $this->output;
     }
 }

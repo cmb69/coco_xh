@@ -25,10 +25,10 @@ use Coco\Infra\CsrfProtector;
 use Coco\Infra\Html;
 use Coco\Infra\Repository;
 use Coco\Infra\Request;
-use Coco\Infra\Response;
 use Coco\Infra\XhStuff;
 use Coco\Infra\View;
 use Coco\Logic\Util;
+use Coco\Value\Response;
 
 class Coco
 {

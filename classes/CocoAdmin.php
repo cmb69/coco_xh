@@ -24,8 +24,8 @@ namespace Coco;
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
 use Coco\Infra\Request;
-use Coco\Infra\Response;
 use Coco\Infra\View;
+use Coco\Value\Response;
 
 class CocoAdmin
 {

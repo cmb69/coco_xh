@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2012-2023 Christoph M. Becker
+ * Copyright 2023 Christoph M. Becker
  *
  * This file is part of Coco_XH.
  *
@@ -19,15 +19,28 @@
  * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined("CMSIMPLE_XH_VERSION")) {
-    header("HTTP/1.0 403 Forbidden");
-    exit;
+namespace Coco\Infra;
+
+use Coco\Value\Response;
+
+/** @codeCoverageIgnore */
+class Responder
+{
+    /** @return string|never */
+    public static function respond(Response $response)
+    {
+        global $title;
+
+        if ($response->location() !== null) {
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+            header("Location: " . $response->location(), true, 303);
+            exit;
+        }
+        if ($response->title() !== null) {
+            $title = $response->title();
+        }
+        return $response->output();
+    }
 }
-
-use Coco\Dic;
-use Coco\Infra\Request;
-use Coco\Infra\Responder;
-
-/** @var string $o */
-
-$o .= Responder::respond(Dic::makeSearch()(Request::current()));

@@ -19,14 +19,14 @@
  * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Coco;
-
 if (!defined("CMSIMPLE_XH_VERSION")) {
     header("HTTP/1.0 403 Forbidden");
     exit;
 }
 
+use Coco\Dic;
 use Coco\Infra\Request;
+use Coco\Infra\Responder;
 
 /**
  * @var string $admin
@@ -39,10 +39,10 @@ if (XH_wantsPluginAdministration("coco")) {
     $o .= print_plugin_admin("on");
     switch ($admin) {
         case "":
-            $o .= Dic::makePluginInfo()()->respond();
+            $o .= Responder::respond(Dic::makePluginInfo()());
             break;
         case "plugin_main":
-            $o .= Dic::makeCocoAdmin()(Request::current())->respond();
+            $o .= Responder::respond(Dic::makeCocoAdmin()(Request::current()));
             break;
         default:
             $o .= plugin_admin_common();
