@@ -42,21 +42,21 @@ class CocoTest extends TestCase
     public function testRendersCocoEditor(): void
     {
         $sut = new Coco($this->cocoService(), $this->csrfProtector(), $this->xhStuff(), $this->view());
-        $response = $sut($this->request(true), "foo", false, "100%");
+        $response = $sut($this->request("edit"), "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRendersSaveButtonIfNoEditorIsConfigured(): void
     {
         $sut = new Coco($this->cocoService(), $this->csrfProtector(), $this->xhStuff(false), $this->view());
-        $response = $sut($this->request(true), "foo", false, "100%");
+        $response = $sut($this->request("edit"), "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRedirectsAfterSavingContent(): void
     {
         $sut = new Coco($this->cocoService(true), $this->csrfProtector(true), $this->xhStuff(), $this->view());
-        $request = $this->request(true);
+        $request = $this->request("do_edit");
         $request->method("cocoText")->willReturn("some content");
         $response = $sut($request, "foo", false, "100%");
         $this->assertEquals("http://example.com/?", $response->location());
@@ -66,7 +66,7 @@ class CocoTest extends TestCase
     {
         $_POST = ["coco_text_foo" => "some content"];
         $sut = new Coco($this->cocoService(false), $this->csrfProtector(true), $this->xhStuff(), $this->view());
-        $request = $this->request(true);
+        $request = $this->request("do_edit");
         $request->method("cocoText")->willReturn("some content");
         $response = $sut($request, "foo", false, "100%");
         Approvals::verifyHtml($response->output());
@@ -82,16 +82,15 @@ class CocoTest extends TestCase
     public function testIgnoresSearching(): void
     {
         $sut = new Coco($this->cocoService(), $this->csrfProtector(), $this->xhStuff(), $this->view());
-        $response = $sut($this->request(false, -1), "foo", false, "100%");
+        $response = $sut($this->request("", -1), "foo", false, "100%");
         $this->assertEquals("", $response->output());
     }
 
-    private function request(bool $edit = false, int $page = 1): Request
+    private function request(string $action = "", int $page = 1): Request
     {
         $request = $this->createMock(Request::class);
+        $request->method("cocoAction")->willReturn($action);
         $request->method("search")->willReturn("with");
-        $request->method("adm")->willReturn($edit);
-        $request->method("edit")->willReturn($edit);
         $request->method("s")->willReturn($page);
         return $request;
     }

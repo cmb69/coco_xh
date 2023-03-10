@@ -65,13 +65,14 @@ class Coco
         if ($request->s() < 0) {
             return Response::create("");
         }
-        if (!$request->adm() || !$request->edit()) {
-            return $this->show($request, $name);
+        switch ($request->cocoAction($name)) {
+            default:
+                return $this->show($request, $name);
+            case "edit":
+                return $this->edit($request, $name, $config, $height);
+            case "do_edit":
+                return $this->update($request, $name, $config, $height);
         }
-        if ($request->cocoText($name) === null) {
-            return $this->edit($request, $name, $config, $height);
-        }
-        return $this->update($request, $name, $config, $height);
     }
 
     private function show(Request $request, string $name): Response

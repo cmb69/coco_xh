@@ -54,7 +54,7 @@ class MainTest extends TestCase
     private function request(): Request
     {
         $request = $this->createStub(Request::class);
-        $request->method("server")->with("REQUEST_TIME")->willReturn((string) strtotime("2023-03-06T12:00:00"));
+        $request->method("requestTime")->willReturn(strtotime("2023-03-06T12:00:00"));
         $request->method("logOut")->willReturn(true);
         return $request;
     }

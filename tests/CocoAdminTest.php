@@ -41,7 +41,8 @@ class CocoAdminTest extends TestCase
     public function testRendersDeleteConfirmation(): void
     {
         $sut = new CocoAdmin($this->cocoService(), $this->csrfProtector(), $this->view());
-        $request = $this->request("delete");
+        $request = $this->request();
+        $request->method("cocoAdminAction")->willReturn("delete");
         $request->method("cocoNames")->willReturn(["foo"]);
         $response = $sut($request);
         $this->assertEquals("Coco – Co-Contents", $response->title());
@@ -50,9 +51,9 @@ class CocoAdminTest extends TestCase
 
     public function testSuccessfulDeletionRedirects(): void
     {
-        $_POST = ["coco_do" => "delete"];
         $sut = new CocoAdmin($this->cocoService(), $this->csrfProtector(true), $this->view());
-        $request = $this->request("delete");
+        $request = $this->request();
+        $request->method("cocoAdminAction")->willReturn("do_delete");
         $request->method("cocoNames")->willReturn(["foo"]);
         $response = $sut($request);
         $this->assertEquals("http://example.com/?coco&admin=plugin_main", $response->location());
@@ -60,24 +61,23 @@ class CocoAdminTest extends TestCase
 
     public function testFailureToDeleteIsReported(): void
     {
-        $_POST = ["coco_do" => "delete"];
         $cocoService = $this->cocoService([
             "./content/coco/20230306_120000_foo.htm",
             "./content/coco/foo.htm",
         ]);
         $sut = new CocoAdmin($cocoService, $this->csrfProtector(true), $this->view());
-        $request = $this->request("delete");
+        $request = $this->request();
+        $request->method("cocoAdminAction")->willReturn("do_delete");
         $request->method("cocoNames")->willReturn(["foo"]);
         $response = $sut($request);
         $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
     }
 
-    private function request(string $action = ""): Request
+    private function request(): Request
     {
         $request = $this->createMock(Request::class);
         $request->method("sn")->willReturn("/");
-        $request->method("action")->willReturn($action);
         return $request;
     }
 

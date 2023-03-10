@@ -58,7 +58,7 @@ class Main
         }
         $o = "";
         foreach ($this->cocoService->findAllNames() as $coco) {
-            $o .= $this->backup($coco, Util::backupPrefix((int) $request->server("REQUEST_TIME")));
+            $o .= $this->backup($coco, Util::backupPrefix($request->requestTime()));
         }
         return Response::create($o);
     }

@@ -25,51 +25,72 @@ use PHPUnit\Framework\TestCase;
 
 class RequestTest extends TestCase
 {
-    /** @dataProvider cocoNamesData */
-    public function testCocoNames(array $get, ?array $expected): void
+    /** @dataProvider cocoActions */
+    public function testCocoAction(string $coconame, bool $editMode, array $post, string $expected): void
     {
         $sut = $this->sut();
-        $sut->method("get")->willReturn($get);
-        $names = $sut->cocoNames();
-        $this->assertSame($expected, $names);
-    }
-
-    public function cocoNamesData(): array
-    {
-        return [
-            [[], null],
-            [["coco_name" => "foo"], null],
-            [["coco_name" => ["foo", "bar"]], ["foo", "bar"]],
-        ];
-    }
-
-    /** @dataProvider cocoTexts */
-    public function testCocoText(array $post, ?string $expected): void
-    {
-        $sut = $this->sut();
+        $sut->method("editMode")->willReturn($editMode);
         $sut->method("post")->willReturn($post);
-        $text = $sut->cocoText("foo");
-        $this->assertSame($expected, $text);
+        $action = $sut->cocoAction($coconame);
+        $this->assertEquals($expected, $action);
     }
 
-    public function cocoTexts(): array
+    public function cocoActions(): array
     {
         return [
-            [[], null],
-            [["coco_text_foo" => []], null],
-            [["coco_text_foo" => "some text"], "some text"],
-            [["coco_text_bar" => "some text"], null],
+            ["test", false, [], ""],
+            ["test", true, [], "edit"],
+            ["test", true, ["coco_text_test" => ""], "do_edit"],
         ];
+    }
+
+    /** @dataProvider cocoAdminActions */
+    public function testCocoAdminAction(string $action, array $get, array $post, string $expected): void
+    {
+        $sut = $this->sut();
+        $sut->method("action")->willReturn($action);
+        $sut->method("get")->willReturn($get);
+        $sut->method("post")->willReturn($post);
+        $action = $sut->cocoAdminAction();
+        $this->assertEquals($expected, $action);
+    }
+
+    public function cocoAdminActions(): array
+    {
+        return [
+            ["", [], [], ""],
+            ["delete", ["coco_name" => ["foo"]], [], "delete"],
+            ["delete", [], [], ""],
+            ["do_delete", ["coco_name" => ["foo"]], ["coco_do" => "do_delete"], "do_delete"],
+            ["do_delete", [], ["coco_do" => "do_delete"], ""],
+            ["do_delete", ["coco_name" => ["foo"]], [], ""],
+        ];
+    }
+
+    public function testCocoNames(): void
+    {
+        $sut = $this->sut();
+        $sut->method("get")->willReturn(["coco_name" => ["foo", "bar"]]);
+        $names = $sut->cocoNames();
+        $this->assertSame(["foo", "bar"], $names);
+    }
+
+    public function testCocoText(): void
+    {
+        $sut = $this->sut();
+        $sut->method("post")->willReturn(["coco_text_foo" => "some text"]);
+        $text = $sut->cocoText("foo");
+        $this->assertSame("some text", $text);
     }
 
     private function sut(): Request
     {
         return $this->getMockBuilder(Request::class)
-        ->disableOriginalConstructor()
-        ->disableOriginalClone()
-        ->disableArgumentCloning()
-        ->disallowMockingUnknownTypes()
-        ->onlyMethods(["get", "post"])
-        ->getMock();
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->disableArgumentCloning()
+            ->disallowMockingUnknownTypes()
+            ->onlyMethods(["action", "editMode", "get", "post"])
+            ->getMock();
     }
 }
