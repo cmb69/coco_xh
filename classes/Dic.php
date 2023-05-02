@@ -44,8 +44,8 @@ class Dic
     {
         return new Coco(
             self::makeRepository(),
-            new CsrfProtector,
-            new XhStuff,
+            new CsrfProtector(),
+            new XhStuff(),
             self::makeView()
         );
     }
@@ -54,8 +54,8 @@ class Dic
     {
         return new Search(
             self::makeRepository(),
-            new Pages,
-            new XhStuff,
+            new Pages(),
+            new XhStuff(),
             self::makeView()
         );
     }
@@ -64,7 +64,7 @@ class Dic
     {
         return new CocoAdmin(
             self::makeRepository(),
-            new CsrfProtector,
+            new CsrfProtector(),
             self::makeView()
         );
     }
@@ -75,7 +75,7 @@ class Dic
         return new PluginInfo(
             $pth["folder"]["plugins"] . "coco/",
             self::makeRepository(),
-            new SystemChecker,
+            new SystemChecker(),
             self::makeView()
         );
     }
@@ -87,7 +87,7 @@ class Dic
         return new Repository(
             $pth['folder']['content'] . "coco/",
             $pth['file']['content'],
-            new Pages,
+            new Pages(),
             new IdGenerator()
         );
     }

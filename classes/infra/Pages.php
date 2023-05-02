@@ -35,7 +35,7 @@ class Pages
     public function __construct(?XhPages $xhPages = null)
     {
         global $pd_router;
-        $this->xhPages = $xhPages ?? new XhPages;
+        $this->xhPages = $xhPages ?? new XhPages();
         $this->pageDataRouter = $pd_router;
     }
 

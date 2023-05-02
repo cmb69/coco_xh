@@ -11,7 +11,7 @@
 
   <target name="sniff" description="checks adherence to coding standards">
     <exec executable="phpcs" passthru="true" checkreturn="true">
-      <arg line="--standard=PSR2 --runtime-set ignore_warnings_on_exit true classes admin.php index.php search.php"/>
+      <arg line="--standard=PSR12 classes admin.php index.php search.php"/>
     </exec>
   </target>
 
@@ -29,7 +29,7 @@
     </exec>
   </target>
 
-  <target name="sat" description="runs all checks" depends="sniff,stan,test"/>
+  <target name="check" description="runs all checks" depends="sniff,stan,test"/>
 
   <target name="gen-help" description="builds help.htm from README.md">
     <exec executable="pandoc" passthru="true" checkreturn="true">
@@ -66,7 +66,6 @@
         <exclude name="build.xml"/>
         <exclude name="phpstan.*"/>
         <exclude name="phpunit.xml"/>
-        <exclude name="README*.md"/>
         <exclude name="teplad.xml"/>
       </fileset>
     </move>

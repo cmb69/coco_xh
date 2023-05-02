@@ -19,10 +19,7 @@
  * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined("CMSIMPLE_XH_VERSION")) {
-    header("HTTP/1.0 403 Forbidden");
-    exit;
-}
+// phpcs:disable PSR1.Files.SideEffects
 
 use Coco\Dic;
 use Coco\Infra\Request;
@@ -39,6 +36,11 @@ const COCO_VERSION = "2.0-dev";
 function coco($name, $config = false, $height = "100%")
 {
     return Responder::respond(Dic::makeCoco()(Request::current(), $name, (string) $config, $height));
+}
+
+if (!defined("CMSIMPLE_XH_VERSION")) {
+    header("HTTP/1.0 403 Forbidden");
+    exit;
 }
 
 /**
