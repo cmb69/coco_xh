@@ -26,11 +26,9 @@ use PHPUnit\Framework\TestCase;
 class RequestTest extends TestCase
 {
     /** @dataProvider cocoActions */
-    public function testCocoAction(string $coconame, bool $editMode, array $post, string $expected): void
+    public function testCocoAction(string $coconame, bool $edit, array $post, string $expected): void
     {
-        $sut = $this->sut();
-        $sut->method("editMode")->willReturn($editMode);
-        $sut->method("post")->willReturn($post);
+        $sut = new RequestStub(["edit" => $edit, "post" => $post]);
         $action = $sut->cocoAction($coconame);
         $this->assertEquals($expected, $action);
     }
@@ -45,12 +43,9 @@ class RequestTest extends TestCase
     }
 
     /** @dataProvider cocoAdminActions */
-    public function testCocoAdminAction(string $action, array $get, array $post, string $expected): void
+    public function testCocoAdminAction(string $query, array $post, string $expected): void
     {
-        $sut = $this->sut();
-        $sut->method("action")->willReturn($action);
-        $sut->method("get")->willReturn($get);
-        $sut->method("post")->willReturn($post);
+        $sut = new RequestStub(["query" => $query, "post" => $post]);
         $action = $sut->cocoAdminAction();
         $this->assertEquals($expected, $action);
     }
@@ -58,39 +53,26 @@ class RequestTest extends TestCase
     public function cocoAdminActions(): array
     {
         return [
-            ["", [], [], ""],
-            ["delete", ["coco_name" => ["foo"]], [], "delete"],
-            ["delete", [], [], ""],
-            ["do_delete", ["coco_name" => ["foo"]], ["coco_do" => "do_delete"], "do_delete"],
-            ["do_delete", [], ["coco_do" => "do_delete"], ""],
-            ["do_delete", ["coco_name" => ["foo"]], [], ""],
+            ["", [], ""],
+            ["coco_name[]=foo&action=delete", [], "delete"],
+            ["action=delete", [], ""],
+            ["coco_name[]=foo&action=delete", ["coco_do" => "delete"], "do_delete"],
+            ["action=delete", ["coco_do" => "delete"], ""],
+            ["coco_name[]=foo", [], ""],
         ];
     }
 
     public function testCocoNames(): void
     {
-        $sut = $this->sut();
-        $sut->method("get")->willReturn(["coco_name" => ["foo", "bar"]]);
+        $sut = new RequestStub(["query" => "coco_name[]=foo&coco_name[]=bar"]);
         $names = $sut->cocoNames();
         $this->assertSame(["foo", "bar"], $names);
     }
 
     public function testCocoText(): void
     {
-        $sut = $this->sut();
-        $sut->method("post")->willReturn(["coco_text_foo" => "some text"]);
+        $sut = new RequestStub(["post" => ["coco_text_foo" => "some text"]]);
         $text = $sut->cocoText("foo");
         $this->assertSame("some text", $text);
-    }
-
-    private function sut(): Request
-    {
-        return $this->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
-            ->onlyMethods(["action", "editMode", "get", "post"])
-            ->getMock();
     }
 }

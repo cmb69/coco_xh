@@ -24,7 +24,7 @@ namespace Coco;
 use ApprovalTests\Approvals;
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
-use Coco\Infra\Request;
+use Coco\Infra\RequestStub;
 use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
 
@@ -33,7 +33,7 @@ class CocoAdminTest extends TestCase
     public function testRendersCocoOverview(): void
     {
         $sut = new CocoAdmin($this->repository(), $this->csrfProtector(), $this->view());
-        $response = $sut($this->request());
+        $response = $sut(new RequestStub());
         $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
     }
@@ -41,9 +41,7 @@ class CocoAdminTest extends TestCase
     public function testRendersDeleteConfirmation(): void
     {
         $sut = new CocoAdmin($this->repository(), $this->csrfProtector(), $this->view());
-        $request = $this->request();
-        $request->method("cocoAdminAction")->willReturn("delete");
-        $request->method("cocoNames")->willReturn(["foo"]);
+        $request = new RequestStub(["query" => "action=delete&coco_name[]=foo"]);
         $response = $sut($request);
         $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
@@ -52,9 +50,10 @@ class CocoAdminTest extends TestCase
     public function testSuccessfulDeletionRedirects(): void
     {
         $sut = new CocoAdmin($this->repository(), $this->csrfProtector(true), $this->view());
-        $request = $this->request();
-        $request->method("cocoAdminAction")->willReturn("do_delete");
-        $request->method("cocoNames")->willReturn(["foo"]);
+        $request = new RequestStub([
+            "query" => "action=delete&coco_name[]=foo",
+            "post" => ["coco_do" => "delete"],
+        ]);
         $response = $sut($request);
         $this->assertEquals("http://example.com/?coco&admin=plugin_main", $response->location());
     }
@@ -63,19 +62,13 @@ class CocoAdminTest extends TestCase
     {
         $repository = $this->repository(false);
         $sut = new CocoAdmin($repository, $this->csrfProtector(true), $this->view());
-        $request = $this->request();
-        $request->method("cocoAdminAction")->willReturn("do_delete");
-        $request->method("cocoNames")->willReturn(["foo"]);
+        $request = new RequestStub([
+            "query" => "action=delete&coco_name[]=foo",
+            "post" => ["coco_do" => "delete"],
+        ]);
         $response = $sut($request);
         $this->assertEquals("Coco – Co-Contents", $response->title());
         $this->assertStringContainsString("./content/coco/foo.htm could not be deleted!", $response->output());
-    }
-
-    private function request(): Request
-    {
-        $request = $this->createMock(Request::class);
-        $request->method("sn")->willReturn("/");
-        return $request;
     }
 
     private function repository(bool $deleted = true): Repository

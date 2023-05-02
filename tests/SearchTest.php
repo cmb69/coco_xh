@@ -24,7 +24,7 @@ namespace Coco;
 use ApprovalTests\Approvals;
 use Coco\Infra\Pages;
 use Coco\Infra\Repository;
-use Coco\Infra\Request;
+use Coco\Infra\RequestStub;
 use Coco\Infra\View;
 use Coco\Infra\XhStuff;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +34,8 @@ class SearchTest extends TestCase
     public function testRendersSearchResultsWithTwoHits(): void
     {
         $sut = new Search($this->repository(), $this->pages(), $this->xhStuff(), $this->view());
-        $response = $sut($this->request("some"));
+        $request = new RequestStub(["query" => "search=some"]);
+        $response = $sut($request);
         $this->assertEquals("Search Results", $response->title());
         Approvals::verifyHtml($response->output());
     }
@@ -42,7 +43,8 @@ class SearchTest extends TestCase
     public function testRendersSearchResultsWithOneHit(): void
     {
         $sut = new Search($this->repository(), $this->pages(), $this->xhStuff(), $this->view());
-        $response = $sut($this->request("regular"));
+        $request = new RequestStub(["query" => "search=regular"]);
+        $response = $sut($request);
         $this->assertEquals("Search Results", $response->title());
         Approvals::verifyHtml($response->output());
     }
@@ -50,17 +52,10 @@ class SearchTest extends TestCase
     public function testRendersSearchResultsWithoutHit(): void
     {
         $sut = new Search($this->repository(), $this->pages(), $this->xhStuff(), $this->view());
-        $response = $sut($this->request("doesnotexist"));
+        $request = new RequestStub(["query" => "search=doesnotexist"]);
+        $response = $sut($request);
         $this->assertEquals("Search Results", $response->title());
         Approvals::verifyHtml($response->output());
-    }
-
-    private function request(string $search): Request
-    {
-        $request = $this->createStub(Request::class);
-        $request->method("sn")->willReturn("/");
-        $request->method("search")->willReturn($search);
-        return $request;
     }
 
     private function repository(): Repository

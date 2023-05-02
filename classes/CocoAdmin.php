@@ -49,7 +49,7 @@ class CocoAdmin
     {
         switch ($request->cocoAdminAction()) {
             default:
-                return $this->show($request);
+                return $this->show();
             case "delete":
                 return $this->confirmDelete($request);
             case "do_delete":
@@ -57,10 +57,9 @@ class CocoAdmin
         }
     }
 
-    private function show(Request $request): Response
+    private function show(): Response
     {
         return Response::create($this->view->render("admin", [
-            "action" => $request->sn(),
             "cocos" => $this->repository->findAllNames(),
         ]))->withTitle("Coco – " . $this->view->text("menu_main"));
     }
@@ -92,6 +91,6 @@ class CocoAdmin
         if ($errors) {
             return $this->confirmDelete($request, $errors);
         }
-        return Response::redirect(CMSIMPLE_URL . "?coco&admin=plugin_main");
+        return Response::redirect($request->url()->withPage("coco")->withParam("admin", "plugin_main")->absolute());
     }
 }

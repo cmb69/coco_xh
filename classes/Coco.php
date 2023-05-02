@@ -97,7 +97,7 @@ class Coco
         $this->csrfProtector->check();
         $text = $request->cocoText($name);
         if ($this->repository->save($name, $request->s(), $text)) {
-            return Response::redirect(CMSIMPLE_URL . "?" . $request->queryString());
+            return Response::redirect($request->url()->absolute());
         }
         return Response::create(
             $this->view->message("fail", "error_save", $this->repository->filename($name))

@@ -53,7 +53,7 @@ class Main
         }
         $o = "";
         foreach ($this->repository->findAllNames() as $coco) {
-            $o .= $this->backup($coco, Util::backupPrefix($request->requestTime()));
+            $o .= $this->backup($coco, Util::backupPrefix($request->time()));
         }
         return Response::create($o);
     }

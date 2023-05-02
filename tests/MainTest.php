@@ -23,7 +23,7 @@ namespace Coco;
 
 use ApprovalTests\Approvals;
 use Coco\Infra\Repository;
-use Coco\Infra\Request;
+use Coco\Infra\RequestStub;
 use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
 
@@ -32,37 +32,32 @@ class MainTest extends TestCase
     public function testDoesNothingWhenNotLoggingOut(): void
     {
         $sut = new Main($this->conf(), $this->repository(), $this->view());
-        $response = $sut($this->request(false));
+        $response = $sut(new RequestStub());
         $this->assertEquals("", $response->output());
     }
 
     public function testReportsBackupSuccess(): void
     {
         $sut = new Main($this->conf(), $this->repository(), $this->view());
-        $response = $sut($this->request());
+        $request = new RequestStub(["time" => strtotime("2023-03-06T12:00:00"), "logOut" => true]);
+        $response = $sut($request);
         Approvals::verifyHtml($response->output());
     }
 
     public function testReportsFailureToCreateBackup(): void
     {
         $sut = new Main($this->conf(), $this->repository(false), $this->view());
-        $response = $sut($this->request());
+        $request = new RequestStub(["time" => strtotime("2023-03-06T12:00:00"), "logOut" => true]);
+        $response = $sut($request);
         Approvals::verifyHtml($response->output());
     }
 
     public function testReportsFailureToDeleteSurplusBackups(): void
     {
         $sut = new Main($this->conf(), $this->repository(true, false), $this->view());
-        $response = $sut($this->request());
+        $request = new RequestStub(["time" => strtotime("2023-03-06T12:00:00"), "logOut" => true]);
+        $response = $sut($request);
         Approvals::verifyHtml($response->output());
-    }
-
-    private function request(bool $logout = true): Request
-    {
-        $request = $this->createStub(Request::class);
-        $request->method("requestTime")->willReturn(strtotime("2023-03-06T12:00:00"));
-        $request->method("logOut")->willReturn($logout);
-        return $request;
     }
 
     private function repository(bool $create = true, bool $delete = true): Repository

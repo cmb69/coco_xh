@@ -21,6 +21,8 @@
 
 namespace Coco\Infra;
 
+use Coco\Value\Url;
+
 class Request
 {
     /** @codeCoverageIgnore */
@@ -29,22 +31,26 @@ class Request
         return new self();
     }
 
-    /** @codeCoverageIgnore */
-    public function sn(): string
+    public function url(): Url
     {
-        global $sn;
-        return $sn;
+        $rest = $this->query();
+        if ($rest !== "") {
+            $rest = "?" . $rest;
+        }
+        return Url::from(CMSIMPLE_URL . $rest);
     }
 
-    /** @codeCoverageIgnore */
     public function search(): string
     {
-        global $search;
+        $search = $this->url()->param("search");
+        if (!is_string($search)) {
+            return "";
+        }
         return $search;
     }
 
     /** @codeCoverageIgnore */
-    protected function editMode(): bool
+    protected function edit(): bool
     {
         global $edit;
         return defined("XH_ADM") && XH_ADM && $edit;
@@ -58,20 +64,20 @@ class Request
     }
 
     /** @codeCoverageIgnore */
-    public function requestTime(): int
+    public function time(): int
     {
         return (int) $_SERVER["REQUEST_TIME"];
     }
 
     /** @codeCoverageIgnore */
-    public function queryString(): string
+    protected function query(): string
     {
         return $_SERVER["QUERY_STRING"];
     }
 
     public function cocoAction(string $coconame): string
     {
-        if (!$this->editMode()) {
+        if (!$this->edit()) {
             return "";
         }
         if (!$this->hasCocoText($coconame)) {
@@ -82,48 +88,30 @@ class Request
 
     public function cocoAdminAction(): string
     {
+        $action = $this->url()->param("action");
         $post = $this->post();
-        if (($post["coco_do"] ?? null) === $this->action() && $this->hasCocoNames()) {
+        if ($action && isset($post["coco_do"]) && $action === $post["coco_do"] && $this->hasCocoNames()) {
             return "do_delete";
         }
-        if ($this->action() === "delete" && $this->hasCocoNames()) {
+        if ($action === "delete" && $this->hasCocoNames()) {
             return "delete";
         }
         return "";
-    }
-
-    /** @codeCoverageIgnore */
-    protected function action(): string
-    {
-        global $action;
-        return $action;
     }
 
     /** @return list<string> */
     public function cocoNames(): array
     {
         assert($this->hasCocoNames());
-        $get = $this->get();
-        assert(isset($get["coco_name"]) && is_array($get["coco_name"]));
-        return array_values($get["coco_name"]);
+        $names = $this->url()->param("coco_name");
+        assert(is_array($names));
+        return array_values($names);
     }
 
     private function hasCocoNames(): bool
     {
-        $get = $this->get();
-        if (!isset($get["coco_name"]) || !is_array($get["coco_name"]) || empty($get["coco_name"])) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @return array<string,string|array<string>>
-     * @codeCoverageIgnore
-     */
-    protected function get(): array
-    {
-        return $_GET;
+        $names = $this->url()->param("coco_name");
+        return is_array($names);
     }
 
     public function cocoText(string $name): string

@@ -28,6 +28,7 @@ use Coco\Infra\View;
 use Coco\Infra\XhStuff;
 use Coco\Logic\Util;
 use Coco\Value\Response;
+use Coco\Value\Url;
 
 class Search
 {
@@ -60,7 +61,7 @@ class Search
         }
         $indexes = array_unique($indexes);
         sort($indexes);
-        return Response::create($this->renderSearchResults($indexes, $request->sn(), $words))
+        return Response::create($this->renderSearchResults($indexes, $request->url(), $words))
             ->withTitle($this->view->text("search_title"));
     }
 
@@ -92,11 +93,11 @@ class Search
      * @param list<int> $pageIndexes
      * @param list<string> $searchWords
      */
-    private function renderSearchResults(array $pageIndexes, string $sn, array $searchWords): string
+    private function renderSearchResults(array $pageIndexes, Url $url, array $searchWords): string
     {
         return $this->view->render("search_results", [
             "search_term" => implode(" ", $searchWords),
-            "pages" => $this->pageRecords($pageIndexes, $sn, implode(",", $searchWords)),
+            "pages" => $this->pageRecords($pageIndexes, $url, implode(",", $searchWords)),
         ]);
     }
 
@@ -104,13 +105,13 @@ class Search
      * @param list<int> $pageIndexes
      * @return list<array{heading:string,url:string}>
      */
-    private function pageRecords(array $pageIndexes, string $sn, string $searchWords): array
+    private function pageRecords(array $pageIndexes, Url $url, string $searchWords): array
     {
         $records = [];
         foreach ($pageIndexes as $pageIndex) {
             $records[] = [
                 "heading" => $this->pages->heading($pageIndex),
-                "url" => $sn . "?" . $this->pages->url($pageIndex) . "&search=" . urlencode($searchWords),
+                "url" => $url->withPage($this->pages->url($pageIndex))->withParam("search", $searchWords)->relative(),
             ];
         }
         return $records;
