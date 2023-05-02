@@ -19,19 +19,21 @@
  * along with Coco_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Coco\Infra;
+namespace Coco\Value;
 
 class Html
 {
     /** @var string */
     private $string;
 
-    public function __construct(string $string)
+    public static function of(string $string): self
     {
-        $this->string = $string;
+        $that = new self();
+        $that->string = $string;
+        return $that;
     }
 
-    public function __toString(): string
+    public function string(): string
     {
         return $this->string;
     }

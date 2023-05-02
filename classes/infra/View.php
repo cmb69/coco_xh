@@ -21,6 +21,8 @@
 
 namespace Coco\Infra;
 
+use Coco\Value\Html;
+
 class View
 {
     /** @var string */
@@ -68,8 +70,11 @@ class View
     public function render(string $_template, array $_data): string
     {
         array_walk_recursive($_data, function (&$value) {
+            assert(is_null($value) || is_scalar($value) || $value instanceof Html);
             if (is_string($value)) {
                 $value = XH_hsc($value);
+            } elseif ($value instanceof Html) {
+                $value = $value->string();
             }
         });
         extract($_data);
