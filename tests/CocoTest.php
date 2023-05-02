@@ -36,7 +36,7 @@ class CocoTest extends TestCase
     {
         $sut = new Coco($this->repository(), $this->csrfProtector(), $this->xhStuff(), $this->view());
         $response = $sut($this->request(), "foo", false, "100%");
-        Approvals::verifyHtml($response->output());
+        $this->assertEquals("<p>some HTML <span class=\"highlight\">with</span> scripting</p>", $response->output());
     }
 
     public function testRendersCocoEditor(): void
@@ -69,14 +69,14 @@ class CocoTest extends TestCase
         $request = $this->request("do_edit");
         $request->method("cocoText")->willReturn("some content");
         $response = $sut($request, "foo", false, "100%");
-        Approvals::verifyHtml($response->output());
+        $this->assertStringContainsString("./content/coco/foo.htm could not be saved!", $response->output());
     }
 
     public function testReportsIllegalCocoName(): void
     {
         $sut = new Coco($this->repository(), $this->csrfProtector(), $this->xhStuff(), $this->view());
         $response = $sut($this->request(), "foo bar", false, "100%");
-        Approvals::verifyHtml($response->output());
+        $this->assertStringContainsString("Co-content names may contain a-z, 0-9 and _ only!", $response->output());
     }
 
     public function testIgnoresSearching(): void

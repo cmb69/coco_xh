@@ -68,7 +68,7 @@ class CocoAdminTest extends TestCase
         $request->method("cocoNames")->willReturn(["foo"]);
         $response = $sut($request);
         $this->assertEquals("Coco – Co-Contents", $response->title());
-        Approvals::verifyHtml($response->output());
+        $this->assertStringContainsString("./content/coco/foo.htm could not be deleted!", $response->output());
     }
 
     private function request(): Request
