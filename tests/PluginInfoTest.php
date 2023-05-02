@@ -33,9 +33,16 @@ class PluginInfoTest extends TestCase
     {
         $repository = $this->createStub(Repository::class);
         $repository->method("dataFolder")->willReturn("./content/coco/");
-        $systemChecker = $this->createStub(SystemChecker::class);
-        $systemChecker->method("checkVersion")->willReturn(false);
-        $systemChecker->method("checkWritability")->willReturn(false);
+        $systemChecker = new class() extends SystemChecker {
+            public function checkVersion(string $actual, string $minimum): bool
+            {
+                return false;
+            }
+            public function checkWritability(string $path): bool
+            {
+                return false;
+            }
+        };
         $text = XH_includeVar("./languages/en.php", "plugin_tx")["coco"];
         $sut = new PluginInfo(
             "./plugins/coco/",

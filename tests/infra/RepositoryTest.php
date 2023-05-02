@@ -212,8 +212,14 @@ class RepositoryTest extends TestCase
 
     private function idGenerator(): IdGenerator
     {
-        $idGenerator = $this->createMock(IdGenerator::class);
-        $idGenerator->method("newId")->willReturnOnConsecutiveCalls("12345", "23456");
-        return $idGenerator;
+        return new class() extends IdGenerator {
+            private $ids = ["12345", "23456"];
+            public function newId(): string
+            {
+                $id = current($this->ids);
+                next($this->ids);
+                return $id; 
+            }
+        };
     }
 }
