@@ -5,16 +5,23 @@
   <input type="hidden" name="admin" value="plugin_main"/>
   <table>
     <tr>
-      <th></th>
       <th>Coco</th>
     </tr>
     <tr>
-      <td><input type="checkbox" id="coco_name_foo" name="coco_name[]" value="foo"></td>
-      <td><label for="coco_name_foo">foo</label></td>
+      <td>
+        <label>
+          <input type="checkbox" name="coco_name[]" value="foo">
+          <span>foo</span>
+        </label>
+      </td>
     </tr>
     <tr>
-      <td><input type="checkbox" id="coco_name_bar" name="coco_name[]" value="bar"></td>
-      <td><label for="coco_name_bar">bar</label></td>
+      <td>
+        <label>
+          <input type="checkbox" name="coco_name[]" value="bar">
+          <span>bar</span>
+        </label>
+      </td>
     </tr>
   </table>
   <p><button name="action" value="delete">Delete</button></p>

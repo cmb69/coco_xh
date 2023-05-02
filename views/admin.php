@@ -17,13 +17,16 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("HTTP/1.0 403 Forbidden"); exit;}
   <input type="hidden" name="admin" value="plugin_main"/>
   <table>
     <tr>
-      <th></th>
       <th>Coco</th>
     </tr>
 <?foreach ($cocos as $coco):?>
     <tr>
-      <td><input type="checkbox" id="coco_name_<?=$coco?>" name="coco_name[]" value="<?=$coco?>"></td>
-      <td><label for="coco_name_<?=$coco?>"><?=$coco?></label></td>
+      <td>
+        <label>
+          <input type="checkbox" name="coco_name[]" value="<?=$coco?>">
+          <span><?=$coco?></span>
+        </label>
+      </td>
     </tr>
 <?endforeach?>
   </table>
