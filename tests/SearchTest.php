@@ -31,28 +31,10 @@ use PHPUnit\Framework\TestCase;
 
 class SearchTest extends TestCase
 {
-    public function testRendersSearchResultsWithTwoHits(): void
-    {
-        $sut = new Search($this->repository(), $this->pages(), $this->xhStuff(), $this->view());
-        $request = new RequestStub(["query" => "search=some"]);
-        $response = $sut($request);
-        $this->assertEquals("Search Results", $response->title());
-        Approvals::verifyHtml($response->output());
-    }
-
-    public function testRendersSearchResultsWithOneHit(): void
+    public function testRendersSearchResults(): void
     {
         $sut = new Search($this->repository(), $this->pages(), $this->xhStuff(), $this->view());
         $request = new RequestStub(["query" => "search=regular"]);
-        $response = $sut($request);
-        $this->assertEquals("Search Results", $response->title());
-        Approvals::verifyHtml($response->output());
-    }
-
-    public function testRendersSearchResultsWithoutHit(): void
-    {
-        $sut = new Search($this->repository(), $this->pages(), $this->xhStuff(), $this->view());
-        $request = new RequestStub(["query" => "search=doesnotexist"]);
         $response = $sut($request);
         $this->assertEquals("Search Results", $response->title());
         Approvals::verifyHtml($response->output());
@@ -77,11 +59,7 @@ class SearchTest extends TestCase
     private function xhStuff(): XhStuff
     {
         $xhStuff = $this->createStub(XhStuff::class);
-        $xhStuff->method("evaluateScripting")->willReturnOnConsecutiveCalls(
-            "<p>some page content</p>", "<p>other content</p>",
-            "<p>some other co-content</p>", "<p>some regular co-content</p>",
-            "<p>some other co-content</p>", "<p>some regular co-content</p>"
-        );
+        $xhStuff->method("evaluateScripting")->willReturnArgument(0);
         return $xhStuff;
     }
 

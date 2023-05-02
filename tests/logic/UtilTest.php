@@ -42,23 +42,6 @@ class UtilTest extends TestCase
         ];
     }
 
-    /** @dataProvider searchTerms */
-    public function testParseSearchTerm(string $searchTerm, array $expected): void
-    {
-        $words = Util::parseSearchTerm($searchTerm);
-        $this->assertEquals($expected, $words);
-    }
-
-    public function searchTerms(): array
-    {
-        return [
-            ["", []],
-            [" ", []],
-            ["one two", ["one", "two"]],
-            ["  one  two  ", ["one", "two"]],
-        ];
-    }
-
     /** @dataProvider cocoFilenames */
     public function testIsCocoFilename(string $filename, bool $expected): void
     {
@@ -134,22 +117,6 @@ class UtilTest extends TestCase
             [$content, "123456", "<p>some co-content</p>"],
             [$content, "234567", "<p>some other co-content</p>"],
             [$content, "345678", ""],
-        ];
-    }
-
-    /** @dataProvider textWords */
-    public function testTextContainsAllWords(string $text, array $words, bool $expected): void
-    {
-        $result = Util::textContainsAllWords($text, $words);
-        $this->assertEquals($expected, $result);
-    }
-
-    public function textWords(): array
-    {
-        return [
-            ["some Text which contains all words", ["text", "Words"], true],
-            ["some text which doesn't contain all", ["text", "words"], false],
-            ["some text", [], true],
         ];
     }
 }

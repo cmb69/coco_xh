@@ -31,12 +31,6 @@ class Util
         return (bool) preg_match('/^[a-z_0-9]+$/u', $name);
     }
 
-    /** @return list<string> */
-    public static function parseSearchTerm(string $searchTerm): array
-    {
-        return preg_split('/\s+/iu', $searchTerm, 0, PREG_SPLIT_NO_EMPTY) ?: [];
-    }
-
     public static function isCocoFilename(string $filename): bool
     {
         return (bool) preg_match('/^[a-z_0-9]+\.htm$/u', $filename);
@@ -72,17 +66,5 @@ class Util
             return "";
         }
         return trim($matches[1]);
-    }
-
-    /** @param list<string> $words */
-    public static function textContainsAllWords(string $text, array $words): bool
-    {
-        $text = utf8_strtolower($text);
-        foreach ($words as $word) {
-            if (strpos($text, utf8_strtolower($word)) === false) {
-                return false;
-            }
-        }
-        return true;
     }
 }

@@ -26,6 +26,7 @@ use Coco\Infra\Repository;
 use Coco\Infra\Request;
 use Coco\Infra\XhStuff;
 use Coco\Infra\View;
+use Coco\Logic\Searcher;
 use Coco\Logic\Util;
 use Coco\Value\Html;
 use Coco\Value\Response;
@@ -80,7 +81,7 @@ class Coco
         $content = $this->xhStuff->evaluateScripting($content);
         $search = $request->search();
         if ($search !== "") {
-            $words = Util::parseSearchTerm($search);
+            $words = Searcher::parseSearchTerm($search);
             $content = $this->xhStuff->highlightSearchWords($words, $content);
         }
         return Response::create($content);
