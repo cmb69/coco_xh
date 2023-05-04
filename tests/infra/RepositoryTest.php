@@ -21,27 +21,24 @@
 
 namespace Coco\Infra;
 
-use ApprovalTests\Approvals;
-use Exception;
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamFile;
 use PHPUnit\Framework\TestCase;
 
 class RepositoryTest extends TestCase
 {
     public function testCreatesDataDirOnAccess(): void
     {
-        vfsStream::setup("test");
+        vfsStream::setup("root");
         $sut = $this->sut();
-        $this->assertEquals("vfs://test/coco/", $sut->dataFolder());
-        $this->assertDirectoryExists("vfs://test/coco/");
+        $this->assertEquals("vfs://root/coco/", $sut->dataFolder());
+        $this->assertDirectoryExists("vfs://root/coco/");
     }
 
     public function testFilenameIsCorrect(): void
     {
-        vfsStream::setup("test");
+        vfsStream::setup("root");
         $sut = $this->sut();
-        $this->assertSame("vfs://test/coco/foo.htm", $sut->filename("foo"));
+        $this->assertSame("vfs://root/coco/foo.htm", $sut->filename("foo"));
     }
 
     public function testBackupFilenameIsCorrect(): void
@@ -49,31 +46,29 @@ class RepositoryTest extends TestCase
         vfsStream::setup("root");
         $sut = $this->sut();
         $filename = $sut->filename("test", "20230309_224602");
-        $this->assertEquals("vfs://test/coco/20230309_224602_test.htm", $filename);
+        $this->assertEquals("vfs://root/coco/20230309_224602_test.htm", $filename);
     }
 
     public function testSavesCoco(): void
     {
-        vfsStream::setup("test");
+        vfsStream::setup("root");
         $sut = $this->sut(["pages" => $this->pages(true)]);
         $sut->save("foo", 0, "<p>some content</p>");
         $sut->save("foo", 1, "<p>other content</p>");
-        Approvals::verifyHtml(file_get_contents("vfs://test/coco/foo.htm"));
+        $this->assertStringEqualsFile("vfs://root/coco/foo.htm", $this->coco());
     }
 
     public function testCanSaveEmptyContent(): void
     {
-        vfsStream::setup("test");
+        vfsStream::setup("root");
         $sut = $this->sut(["pages" => $this->pages(true)]);
         $sut->save("foo", 0, "");
-        Approvals::verifyHtml(file_get_contents("vfs://test/coco/foo.htm"));
+        $this->assertStringEqualsFile("vfs://root/coco/foo.htm", $this->emptyCoco());
     }
 
     public function testSavingFailsIfFileIsNotWritable(): void
     {
-        vfsStream::setup("test");
-        mkdir("vfs://test/coco/");
-        mkdir("vfs://test/coco/foo.htm");
+        vfsStream::setup("root", null, ["coco" => ["foo.htm" => []]]);
         $sut = $this->sut(["pages" => $this->pages(true)]);
         $this->expectException(RepositoryException::class);
         $sut->save("foo", 0, "<p>some content</p>");
@@ -81,20 +76,15 @@ class RepositoryTest extends TestCase
 
     public function testFindsAllNames(): void
     {
-        vfsStream::setup("test");
-        mkdir("vfs://test/coco/");
-        touch("vfs://test/coco/foo.htm");
-        touch("vfs://test/coco/bar.htm");
+        vfsStream::setup("root", null, ["coco" => ["foo.htm" => "", "bar.htm" => ""]]);
         $sut = $this->sut();
         $names = $sut->findAllNames();
         $this->assertSame(["bar", "foo"], $names);
     }
 
-    public function testFindsAllCocontents(): void
+    public function testFindsAllCoContents(): void
     {
-        vfsStream::setup("test");
-        mkdir("vfs://test/coco/");
-        copy(__DIR__ . "/approvals/RepositoryTest.testSavesCoco.approved.html", "vfs://test/coco/foo.htm");
+        vfsStream::setup("root", null, ["coco" => ["foo.htm" => $this->coco()]]);
         $sut = $this->sut();
         $result = $sut->findAll("foo");
         $this->assertSame(["<p>some content</p>", "<p>other content</p>"], iterator_to_array($result));
@@ -102,9 +92,7 @@ class RepositoryTest extends TestCase
 
     public function testFindsEmptyCoContensIfIdsAreMissing(): void
     {
-        vfsStream::setup("test");
-        mkdir("vfs://test/coco/");
-        copy(__DIR__ . "/approvals/RepositoryTest.testSavesCoco.approved.html", "vfs://test/coco/foo.htm");
+        vfsStream::setup("root", null, ["coco" => ["foo.htm" => $this->coco()]]);
         $sut = $this->sut(["pages" => $this->pages(true)]);
         $result = $sut->findAll("foo");
         $this->assertSame(["", ""], iterator_to_array($result));
@@ -112,7 +100,7 @@ class RepositoryTest extends TestCase
 
     public function testFindsEmptyArrayIfCocoFileDoesNotExist(): void
     {
-        vfsStream::setup("test");
+        vfsStream::setup("root");
         $sut = $this->sut();
         $result = $sut->findAll("foo");
         $this->assertEquals([], iterator_to_array($result));
@@ -120,13 +108,13 @@ class RepositoryTest extends TestCase
 
     public function testFindsAllBackups(): void
     {
-        vfsStream::setup("test");
-        mkdir("vfs://test/coco/");
-        touch("vfs://test/coco/20230309_120000_foo.htm");
-        touch("vfs://test/coco/20230306_120000_test.htm");
-        touch("vfs://test/coco/20230307_120000_test.htm");
-        touch("vfs://test/coco/20230309_120000_test.htm");
-        touch("vfs://test/coco/20230309-120000_test.htm");
+        vfsStream::setup("root", null, ["coco" => [
+            "20230309_120000_foo.htm" => "",
+            "20230306_120000_test.htm" => "",
+            "20230307_120000_test.htm" => "",
+            "20230309_120000_test.htm" => "",
+            "20230309-120000_test.htm" => "",
+        ]]);
         $expected = [
             ["test", "20230306_120000"],
             ["test", "20230307_120000"],
@@ -139,9 +127,7 @@ class RepositoryTest extends TestCase
 
     public function testFindsCoContent(): void
     {
-        vfsStream::setup("test");
-        mkdir("vfs://test/coco/");
-        copy(__DIR__ . "/approvals/RepositoryTest.testSavesCoco.approved.html", "vfs://test/coco/foo.htm");
+        vfsStream::setup("root", null, ["coco" => ["foo.htm" => $this->coco()]]);
         $sut = $this->sut();
         $result = $sut->find("foo", 0);
         $this->assertSame("<p>some content</p>", $result);
@@ -149,9 +135,7 @@ class RepositoryTest extends TestCase
 
     public function testFindsEmptyCoContentIfIdIsMissing(): void
     {
-        vfsStream::setup("test");
-        mkdir("vfs://test/coco/");
-        copy(__DIR__ . "/approvals/RepositoryTest.testSavesCoco.approved.html", "vfs://test/coco/foo.htm");
+        vfsStream::setup("root", null, ["coco" => ["foo.htm" => $this->coco()]]);
         $sut = $this->sut(["pages" => $this->pages(true)]);
         $result = $sut->find("foo", 0);
         $this->assertSame("", $result);
@@ -159,7 +143,7 @@ class RepositoryTest extends TestCase
 
     public function testFindsEmptyStringIfCocoFileDoesNotExist(): void
     {
-        vfsStream::setup("test");
+        vfsStream::setup("root");
         $sut = $this->sut();
         $result = $sut->find("foo", 0);
         $this->assertEquals("", $result);
@@ -167,38 +151,32 @@ class RepositoryTest extends TestCase
 
     public function testCreatesBackup(): void
     {
-        vfsStream::setup("test");
-        mkdir("vfs://test/coco/");
-        touch("vfs://test/coco/test.htm");
+        vfsStream::setup("root", null, ["coco" => ["test.htm" => ""]]);
         $sut = $this->sut();
         $sut->backup("test", "20230309_224602");
-        $this->assertFileExists("vfs://test/coco/20230309_224602_test.htm");
+        $this->assertFileExists("vfs://root/coco/20230309_224602_test.htm");
     }
 
     public function testDeletesCoContents(): void
     {
-        vfsStream::setup("test");
-        mkdir("vfs://test/coco/");
-        touch("vfs://test/coco/test.htm");
+        vfsStream::setup("root", null, ["coco" => ["test.htm" => ""]]);
         $sut = $this->sut();
         $sut->delete("test");
-        $this->assertFileDoesNotExist("vfs://test/coco/test.htm");
+        $this->assertFileDoesNotExist("vfs://root/coco/test.htm");
     }
 
     public function testDeletesBackup(): void
     {
-        vfsStream::setup("test");
-        mkdir("vfs://test/coco/");
-        touch("vfs://test/coco/20230306_120000_test.htm");
+        vfsStream::setup("root", "", ["coco" => ["20230306_120000_test.htm" => ""]]);
         $sut = $this->sut();
         $sut->delete("test", "20230306_120000");
-        $this->assertFileDoesNotExist("vfs://test/coco/20230306_120000_test.htm");
+        $this->assertFileDoesNotExist("vfs://root/coco/20230306_120000_test.htm");
     }
 
     private function sut(array $deps = []): Repository
     {
         return new Repository(
-            "vfs://test/coco/",
+            "vfs://root/coco/",
             "",
             $deps["pages"] ?? $this->pages(),
             $this->idGenerator()
@@ -230,5 +208,32 @@ class RepositoryTest extends TestCase
                 return $id; 
             }
         };
+    }
+
+    private function coco(): string
+    {
+        return <<<'HTML'
+        <html>
+        <body>
+        <h1 id="12345">Start</h1>
+        <p>some content</p>
+        <h2 id="23456">Sub</h2>
+        <p>other content</p>
+        </body>
+        </html>
+
+        HTML;
+    }
+
+    private function emptyCoco(): string
+    {
+        return <<<'HTML'
+        <html>
+        <body>
+        <h1 id="12345">Start</h1>
+        </body>
+        </html>
+
+        HTML;
     }
 }
