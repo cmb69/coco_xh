@@ -21,7 +21,7 @@ $plugin_tx['coco']['search_found_5']="\"%2\$s\" found in %1\$d pages:";
 $plugin_tx['coco']['search_result']="Result of your search";
 $plugin_tx['coco']['search_title']="Search Results";
 
-$plugin_tx['coco']['syscheck_phpversion']="PHP version is at least %s";
+$plugin_tx['coco']['syscheck_phpversion']="PHP version is at least & %s";
 $plugin_tx['coco']['syscheck_phpversion_no']="PHP version is not at least %s";
 $plugin_tx['coco']['syscheck_title']="System check";
 $plugin_tx['coco']['syscheck_writable']="Folder '%s' is writable";

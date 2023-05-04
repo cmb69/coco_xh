@@ -15,11 +15,11 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("HTTP/1.0 403 Forbidden"); exit;}
  */
 ?>
 <!-- coco edit -->
-<form action="" method="POST">
+<form method="post">
   <input type="hidden" name="xh_csrf_token" value="<?=$csrf_token?>">
   <textarea id="<?=$id?>" name="coco_text_<?=$name?>" style="<?=$style?>"><?=$content?></textarea>
 <?if ($editor):?>
-  <script type="text/javascript"><?=$editor?></script>
+  <script><?=$editor?></script>
 <?else:?>
   <input type="submit" class="submit" value="<?=$this->text("label_save")?>">
 <?endif?>
