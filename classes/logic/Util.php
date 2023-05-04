@@ -21,9 +21,6 @@
 
 namespace Coco\Logic;
 
-/**
- * @phpstan-type BackupName array{string,string}
- */
 class Util
 {
     public static function isValidCocoName(string $name): bool
@@ -43,7 +40,7 @@ class Util
         return (bool) preg_match(sprintf('/^\d{8}_\d{6}_%s\.htm$/u', $name), $filename);
     }
 
-    /** @return BackupName */
+    /** @return array{string,string} */
     public static function backupName(string $filename): array
     {
         assert(self::isBackup($filename));

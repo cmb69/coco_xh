@@ -23,9 +23,6 @@ namespace Coco\Infra;
 
 use Coco\Logic\Util;
 
-/**
- * @phpstan-import-type BackupName from Util
- */
 class Repository
 {
     /** @var string */
@@ -76,7 +73,7 @@ class Repository
         });
     }
 
-    /** @return list<BackupName> */
+    /** @return list<array{string,string}> */
     public function findAllBackups(string $coconame): array
     {
         $predicate = function ($filename) use ($coconame) {
