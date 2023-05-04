@@ -1,13 +1,5 @@
 <?php
 
-$plugin_tx['coco']['syscheck_fail']="Fehler";
-$plugin_tx['coco']['syscheck_phpversion']="Prüfe, dass PHP-Version ≥ %s:";
-$plugin_tx['coco']['syscheck_success']="OK";
-$plugin_tx['coco']['syscheck_title']="System-Prüfung";
-$plugin_tx['coco']['syscheck_warning']="Warnung";
-$plugin_tx['coco']['syscheck_writable']="Prüfe, dass '%s' schreibbar ist:";
-$plugin_tx['coco']['syscheck_xhversion']="Prüfe, dass CMSimple_XH-Version ≥ %s:";
-
 $plugin_tx['coco']['menu_main']="Co-Contents";
 
 $plugin_tx['coco']['label_delete']="Löschen";
@@ -28,5 +20,13 @@ $plugin_tx['coco']['search_found_2_4']="\"%2\$s\" wurde auf %1\$d Seiten gefunde
 $plugin_tx['coco']['search_found_5']="\"%2\$s\" wurde auf %1\$d Seiten gefunden:";
 $plugin_tx['coco']['search_result']="Suchergebnis";
 $plugin_tx['coco']['search_title']="Suchergebnis";
+
+$plugin_tx['coco']['syscheck_phpversion']="PHP Version ist wenigstens %s";
+$plugin_tx['coco']['syscheck_phpversion_no']="PHP Version ist nicht wenigstens %s";
+$plugin_tx['coco']['syscheck_title']="System-Prüfung";
+$plugin_tx['coco']['syscheck_writable']="Ordner '%s' ist schreibbar";
+$plugin_tx['coco']['syscheck_writable_no']="Ordner '%s' ist nicht schreibbar";
+$plugin_tx['coco']['syscheck_xhversion']="CMSimple_XH Version ist wenigstens %s";
+$plugin_tx['coco']['syscheck_xhversion_no']="CMSimple_XH Version ist nicht wenigstens %s";
 
 ?>

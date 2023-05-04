@@ -6,9 +6,8 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("HTTP/1.0 403 Forbidden"); exit;}
 
 /**
  * @var View $this
- * @var string $logo
  * @var string $version
- * @var array<array{state:string,key:string,arg:string,state_key:string}> $checks
+ * @var array<array{class:string,message:string}> $checks
  */
 ?>
 <!-- coco info -->
@@ -16,6 +15,6 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("HTTP/1.0 403 Forbidden"); exit;}
 <div class="coco_syscheck">
   <h2><?=$this->text('syscheck_title')?></h2>
 <?foreach ($checks as $check):?>
-  <p class="xh_<?=$check["state"]?>"><?=$this->text($check['key'], $check['arg'])?> <?=$this->text($check['state_key'])?></p>
+  <p class="<?=$check['class']?>"><?=$check['message']?></p>
 <?endforeach?>
 </div>

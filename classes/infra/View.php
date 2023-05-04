@@ -56,6 +56,12 @@ class View
     }
 
     /** @param scalar $args */
+    public function plain(string $key, ...$args): string
+    {
+        return sprintf($this->text[$key], ...$args);
+    }
+
+    /** @param scalar $args */
     public function message(string $type, string $key, ...$args): string
     {
         return XH_message($type, $this->text[$key], ...$args) . "\n";
