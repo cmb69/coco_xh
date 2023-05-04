@@ -31,14 +31,14 @@ class MainTest extends TestCase
 {
     public function testDoesNothingWhenNotLoggingOut(): void
     {
-        $sut = new Main($this->conf(), $this->repository(), $this->view());
+        $sut = $this->sut();
         $response = $sut(new RequestStub());
         $this->assertEquals("", $response->output());
     }
 
     public function testReportsBackupSuccess(): void
     {
-        $sut = new Main($this->conf(), $this->repository(), $this->view());
+        $sut = $this->sut();
         $request = new RequestStub(["time" => strtotime("2023-03-06T12:00:00"), "logOut" => true]);
         $response = $sut($request);
         Approvals::verifyHtml($response->output());
@@ -46,7 +46,7 @@ class MainTest extends TestCase
 
     public function testReportsFailureToCreateBackup(): void
     {
-        $sut = new Main($this->conf(), $this->repository(false), $this->view());
+        $sut = $this->sut(["repository" => $this->repository(false)]);
         $request = new RequestStub(["time" => strtotime("2023-03-06T12:00:00"), "logOut" => true]);
         $response = $sut($request);
         Approvals::verifyHtml($response->output());
@@ -54,10 +54,19 @@ class MainTest extends TestCase
 
     public function testReportsFailureToDeleteSurplusBackups(): void
     {
-        $sut = new Main($this->conf(), $this->repository(true, false), $this->view());
+        $sut = $this->sut(["repository" => $this->repository(true, false)]);
         $request = new RequestStub(["time" => strtotime("2023-03-06T12:00:00"), "logOut" => true]);
         $response = $sut($request);
         Approvals::verifyHtml($response->output());
+    }
+
+    private function sut(array $deps = []): Main
+    {
+        return new Main(
+            $this->conf(),
+            $deps["repository"] ?? $this->repository(),
+            $this->view()
+        );
     }
 
     private function repository(bool $create = true, bool $delete = true): Repository

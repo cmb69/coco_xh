@@ -33,11 +33,21 @@ class SearchTest extends TestCase
 {
     public function testRendersSearchResults(): void
     {
-        $sut = new Search($this->repository(), $this->pages(), $this->xhStuff(), $this->view());
+        $sut = $this->sut();
         $request = new RequestStub(["query" => "search=regular"]);
         $response = $sut($request);
         $this->assertEquals("Search Results", $response->title());
         Approvals::verifyHtml($response->output());
+    }
+
+    private function sut(): Search
+    {
+        return new Search(
+            $this->repository(),
+            $this->pages(),
+            $this->xhStuff(),
+            $this->view()
+        );
     }
 
     private function repository(): Repository

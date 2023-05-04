@@ -31,6 +31,14 @@ class PluginInfoTest extends TestCase
 {
     public function testRendersPluginInfo(): void
     {
+        $sut = $this->sut();
+        $response = $sut();
+        $this->assertEquals("Coco 2.0-dev", $response->title());
+        Approvals::verifyHtml($response->output());
+    }
+
+    private function sut(): PluginInfo
+    {
         $repository = $this->createStub(Repository::class);
         $repository->method("dataFolder")->willReturn("./content/coco/");
         $systemChecker = new class() extends SystemChecker {
@@ -44,14 +52,11 @@ class PluginInfoTest extends TestCase
             }
         };
         $text = XH_includeVar("./languages/en.php", "plugin_tx")["coco"];
-        $sut = new PluginInfo(
+        return new PluginInfo(
             "./plugins/coco/",
             $repository,
             $systemChecker,
             new View("./views/", $text)
         );
-        $response = $sut();
-        $this->assertEquals("Coco 2.0-dev", $response->title());
-        Approvals::verifyHtml($response->output());
     }
 }

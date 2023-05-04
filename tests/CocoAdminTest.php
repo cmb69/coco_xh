@@ -32,7 +32,7 @@ class CocoAdminTest extends TestCase
 {
     public function testRendersCocoOverview(): void
     {
-        $sut = new CocoAdmin($this->repository(), $this->csrfProtector(), $this->view());
+        $sut = $this->sut();
         $response = $sut(new RequestStub());
         $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
@@ -40,7 +40,7 @@ class CocoAdminTest extends TestCase
 
     public function testRendersDeleteConfirmation(): void
     {
-        $sut = new CocoAdmin($this->repository(), $this->csrfProtector(), $this->view());
+        $sut = $this->sut();
         $request = new RequestStub(["query" => "action=delete&coco_name[]=foo"]);
         $response = $sut($request);
         $this->assertEquals("Coco – Co-Contents", $response->title());
@@ -49,7 +49,7 @@ class CocoAdminTest extends TestCase
 
     public function testSuccessfulDeletionRedirects(): void
     {
-        $sut = new CocoAdmin($this->repository(), $this->csrfProtector(true), $this->view());
+        $sut = $this->sut(["csrfProtector" => $this->csrfProtector(true)]);
         $request = new RequestStub([
             "query" => "action=delete&coco_name[]=foo",
             "post" => ["coco_do" => "delete"],
@@ -60,8 +60,7 @@ class CocoAdminTest extends TestCase
 
     public function testFailureToDeleteIsReported(): void
     {
-        $repository = $this->repository(false);
-        $sut = new CocoAdmin($repository, $this->csrfProtector(true), $this->view());
+        $sut = $this->sut(["repository" => $this->repository(false), "csrfProtector" => $this->csrfProtector(true)]);
         $request = new RequestStub([
             "query" => "action=delete&coco_name[]=foo",
             "post" => ["coco_do" => "delete"],
@@ -69,6 +68,15 @@ class CocoAdminTest extends TestCase
         $response = $sut($request);
         $this->assertEquals("Coco – Co-Contents", $response->title());
         $this->assertStringContainsString("./content/coco/foo.htm could not be deleted!", $response->output());
+    }
+
+    private function sut(array $deps = []): CocoAdmin
+    {
+        return new CocoAdmin(
+            $deps["repository"] ?? $this->repository(),
+            $deps["csrfProtector"] ?? $this->csrfProtector(),
+            $this->view()
+        );
     }
 
     private function repository(bool $deleted = true): Repository

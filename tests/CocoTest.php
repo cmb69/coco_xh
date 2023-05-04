@@ -23,7 +23,6 @@ namespace Coco;
 
 use ApprovalTests\Approvals;
 use Coco\Infra\CsrfProtector;
-use Coco\Infra\Pages;
 use Coco\Infra\Repository;
 use Coco\Infra\RequestStub;
 use Coco\Infra\View;
@@ -34,7 +33,7 @@ class CocoTest extends TestCase
 {
     public function testRendersCoco(): void
     {
-        $sut = new Coco($this->repository(), $this->csrfProtector(), $this->xhStuff(), $this->view());
+        $sut = $this->sut();
         $request = new RequestStub(["query" => "search=with"]);
         $response = $sut($request, "foo", false, "100%");
         $this->assertEquals("<p>some HTML <span class=\"highlight\">with</span> scripting</p>", $response->output());
@@ -42,7 +41,7 @@ class CocoTest extends TestCase
 
     public function testRendersCocoEditor(): void
     {
-        $sut = new Coco($this->repository(), $this->csrfProtector(), $this->xhStuff(), $this->view());
+        $sut = $this->sut();
         $request = new RequestStub(["edit" => true]);
         $response = $sut($request, "foo", false, "100%");
         Approvals::verifyHtml($response->output());
@@ -50,7 +49,7 @@ class CocoTest extends TestCase
 
     public function testRendersSaveButtonIfNoEditorIsConfigured(): void
     {
-        $sut = new Coco($this->repository(), $this->csrfProtector(), $this->xhStuff(false), $this->view());
+        $sut = $this->sut(["xhStuff" => $this->xhStuff(false)]);
         $request = new RequestStub(["edit" => true]);
         $response = $sut($request, "foo", false, "100%");
         Approvals::verifyHtml($response->output());
@@ -58,7 +57,7 @@ class CocoTest extends TestCase
 
     public function testRedirectsAfterSavingContent(): void
     {
-        $sut = new Coco($this->repository(true), $this->csrfProtector(true), $this->xhStuff(), $this->view());
+        $sut = $this->sut(["repository" => $this->repository(true), "csrfProtector" => $this->csrfProtector(true)]);
         $request = new RequestStub(["edit" => true, "post" => ["coco_text_foo" => "some content"]]);
         $response = $sut($request, "foo", false, "100%");
         $this->assertEquals("http://example.com/", $response->location());
@@ -66,7 +65,7 @@ class CocoTest extends TestCase
 
     public function testReportsErrorOnFailureToSaveContent(): void
     {
-        $sut = new Coco($this->repository(false), $this->csrfProtector(true), $this->xhStuff(), $this->view());
+        $sut = $this->sut(["repository" => $this->repository(false), "csrfProtector" => $this->csrfProtector(true)]);
         $request = new RequestStub(["edit" => true, "post" => ["coco_text_foo" => "some content"]]);
         $response = $sut($request, "foo", false, "100%");
         $this->assertStringContainsString("./content/coco/foo.htm could not be saved!", $response->output());
@@ -74,7 +73,7 @@ class CocoTest extends TestCase
 
     public function testReportsIllegalCocoName(): void
     {
-        $sut = new Coco($this->repository(), $this->csrfProtector(), $this->xhStuff(), $this->view());
+        $sut = $this->sut();
         $request = new RequestStub(["query" => "search=with"]);
         $response = $sut($request, "foo bar", false, "100%");
         $this->assertStringContainsString("Co-content names may contain a-z, 0-9 and _ only!", $response->output());
@@ -82,10 +81,20 @@ class CocoTest extends TestCase
 
     public function testIgnoresSearching(): void
     {
-        $sut = new Coco($this->repository(), $this->csrfProtector(), $this->xhStuff(), $this->view());
+        $sut = $this->sut();
         $request = new RequestStub(["query" => "search=with", "s" => -1]);
         $response = $sut($request, "foo", false, "100%");
         $this->assertEquals("", $response->output());
+    }
+
+    private function sut(array $deps = []): Coco
+    {
+        return new Coco(
+            $deps["repository"] ?? $this->repository(),
+            $deps["csrfProtector"] ?? $this->csrfProtector(),
+            $deps["xhStuff"] ?? $this->xhStuff(),
+            $this->view()
+        );
     }
 
     private function repository(?bool $save = null): Repository
@@ -103,13 +112,6 @@ class CocoTest extends TestCase
         $csrfProtector->method("token")->willReturn("eee5e668b3bcc9b71a9e4cc1aa76393f");
         $csrfProtector->expects($check ? $this->once() : $this->never())->method("check");
         return $csrfProtector;
-    }
-
-    private function pages(): Pages
-    {
-        $pages = $this->createMock(Pages::class);
-        $pages->method("count")->willReturn(10);
-        return $pages;
     }
 
     private function xhStuff($editor = "tinymce.init('coco_text_foo');"): XhStuff

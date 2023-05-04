@@ -23,6 +23,7 @@ namespace Coco\Infra;
 
 use ApprovalTests\Approvals;
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamFile;
 use PHPUnit\Framework\TestCase;
 
 class RepositoryTest extends TestCase
@@ -30,7 +31,7 @@ class RepositoryTest extends TestCase
     public function testCreatesDataDirOnAccess(): void
     {
         vfsStream::setup("test");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(), $this->idGenerator());
+        $sut = $this->sut();
         $this->assertEquals("vfs://test/coco/", $sut->dataFolder());
         $this->assertDirectoryExists("vfs://test/coco/");
     }
@@ -38,14 +39,14 @@ class RepositoryTest extends TestCase
     public function testFilenameIsCorrect(): void
     {
         vfsStream::setup("test");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(), $this->idGenerator());
+        $sut = $this->sut();
         $this->assertSame("vfs://test/coco/foo.htm", $sut->filename("foo"));
     }
 
     public function testBackupFilenameIsCorrect(): void
     {
         vfsStream::setup("root");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(), $this->idGenerator());
+        $sut = $this->sut();
         $filename = $sut->filename("test", "20230309_224602");
         $this->assertEquals("vfs://test/coco/20230309_224602_test.htm", $filename);
     }
@@ -53,7 +54,7 @@ class RepositoryTest extends TestCase
     public function testSavesCoco(): void
     {
         vfsStream::setup("test");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(true), $this->idGenerator());
+        $sut = $this->sut(["pages" => $this->pages(true)]);
         $sut->save("foo", 0, "<p>some content</p>");
         $sut->save("foo", 1, "<p>other content</p>");
         Approvals::verifyHtml(file_get_contents("vfs://test/coco/foo.htm"));
@@ -62,7 +63,7 @@ class RepositoryTest extends TestCase
     public function testCanSaveEmptyContent(): void
     {
         vfsStream::setup("test");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(true), $this->idGenerator());
+        $sut = $this->sut(["pages" => $this->pages(true)]);
         $sut->save("foo", 0, "");
         Approvals::verifyHtml(file_get_contents("vfs://test/coco/foo.htm"));
     }
@@ -72,7 +73,7 @@ class RepositoryTest extends TestCase
         vfsStream::setup("test");
         mkdir("vfs://test/coco/");
         mkdir("vfs://test/coco/foo.htm");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(true), $this->idGenerator());
+        $sut = $this->sut(["pages" => $this->pages(true)]);
         $result = $sut->save("foo", 0, "<p>some content</p>");
         $this->assertFalse($result);
     }
@@ -83,7 +84,7 @@ class RepositoryTest extends TestCase
         mkdir("vfs://test/coco/");
         touch("vfs://test/coco/foo.htm");
         touch("vfs://test/coco/bar.htm");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(), $this->idGenerator());
+        $sut = $this->sut();
         $names = $sut->findAllNames();
         $this->assertSame(["bar", "foo"], $names);
     }
@@ -93,7 +94,7 @@ class RepositoryTest extends TestCase
         vfsStream::setup("test");
         mkdir("vfs://test/coco/");
         copy(__DIR__ . "/approvals/RepositoryTest.testSavesCoco.approved.html", "vfs://test/coco/foo.htm");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(), $this->idGenerator());
+        $sut = $this->sut();
         $result = $sut->findAll("foo");
         $this->assertSame(["<p>some content</p>", "<p>other content</p>"], iterator_to_array($result));
     }
@@ -103,7 +104,7 @@ class RepositoryTest extends TestCase
         vfsStream::setup("test");
         mkdir("vfs://test/coco/");
         copy(__DIR__ . "/approvals/RepositoryTest.testSavesCoco.approved.html", "vfs://test/coco/foo.htm");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(true), $this->idGenerator());
+        $sut = $this->sut(["pages" => $this->pages(true)]);
         $result = $sut->findAll("foo");
         $this->assertSame(["", ""], iterator_to_array($result));
     }
@@ -111,7 +112,7 @@ class RepositoryTest extends TestCase
     public function testFindsEmptyArrayIfCocoFileDoesNotExist(): void
     {
         vfsStream::setup("test");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(), $this->idGenerator());
+        $sut = $this->sut();
         $result = $sut->findAll("foo");
         $this->assertEquals([], iterator_to_array($result));
     }
@@ -130,7 +131,7 @@ class RepositoryTest extends TestCase
             ["test", "20230307_120000"],
             ["test", "20230309_120000"],
         ];
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(), $this->idGenerator());
+        $sut = $this->sut();
         $actual = $sut->findAllBackups("test");
         $this->assertEquals($expected, $actual);
     }
@@ -140,7 +141,7 @@ class RepositoryTest extends TestCase
         vfsStream::setup("test");
         mkdir("vfs://test/coco/");
         copy(__DIR__ . "/approvals/RepositoryTest.testSavesCoco.approved.html", "vfs://test/coco/foo.htm");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(), $this->idGenerator());
+        $sut = $this->sut();
         $result = $sut->find("foo", 0);
         $this->assertSame("<p>some content</p>", $result);
     }
@@ -150,7 +151,7 @@ class RepositoryTest extends TestCase
         vfsStream::setup("test");
         mkdir("vfs://test/coco/");
         copy(__DIR__ . "/approvals/RepositoryTest.testSavesCoco.approved.html", "vfs://test/coco/foo.htm");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(true), $this->idGenerator());
+        $sut = $this->sut(["pages" => $this->pages(true)]);
         $result = $sut->find("foo", 0);
         $this->assertSame("", $result);
     }
@@ -158,7 +159,7 @@ class RepositoryTest extends TestCase
     public function testFindsEmptyStringIfCocoFileDoesNotExist(): void
     {
         vfsStream::setup("test");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(), $this->idGenerator());
+        $sut = $this->sut();
         $result = $sut->find("foo", 0);
         $this->assertEquals("", $result);
     }
@@ -168,7 +169,7 @@ class RepositoryTest extends TestCase
         vfsStream::setup("test");
         mkdir("vfs://test/coco/");
         touch("vfs://test/coco/test.htm");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(), $this->idGenerator());
+        $sut = $this->sut();
         $result = $sut->backup("test", "20230309_224602");
         $this->assertTrue($result);
         $this->assertFileExists("vfs://test/coco/20230309_224602_test.htm");
@@ -179,7 +180,7 @@ class RepositoryTest extends TestCase
         vfsStream::setup("test");
         mkdir("vfs://test/coco/");
         touch("vfs://test/coco/test.htm");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(), $this->idGenerator());
+        $sut = $this->sut();
         $actual = $sut->delete("test");
         $this->assertTrue($actual);
         $this->assertFileDoesNotExist("vfs://test/coco/test.htm");
@@ -190,10 +191,20 @@ class RepositoryTest extends TestCase
         vfsStream::setup("test");
         mkdir("vfs://test/coco/");
         touch("vfs://test/coco/20230306_120000_test.htm");
-        $sut = new Repository("vfs://test/coco/", "", $this->pages(), $this->idGenerator());
+        $sut = $this->sut();
         $actual = $sut->delete("test", "20230306_120000");
         $this->assertTrue($actual);
         $this->assertFileDoesNotExist("vfs://test/coco/20230306_120000_test.htm");
+    }
+
+    private function sut(array $deps = []): Repository
+    {
+        return new Repository(
+            "vfs://test/coco/",
+            "",
+            $deps["pages"] ?? $this->pages(),
+            $this->idGenerator()
+        );
     }
 
     private function pages(bool $new = false): Pages

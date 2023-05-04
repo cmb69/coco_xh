@@ -29,11 +29,16 @@ class PagesTest extends TestCase
 {
     public function testContents(): void
     {
+        $sut = $this->sut();
+        $actual = $sut->contents();
+        $this->assertEquals(["foo", "bar", "baz"], $actual);
+    }
+
+    private function sut(): Pages
+    {
         $xhPages = $this->createMock(XhPages::class);
         $xhPages->method("getCount")->willReturn(3);
         $xhPages->method("content")->willReturnMap([[0, "foo"], [1, "bar"], [2, "baz"]]);
-        $sut = new Pages($xhPages);
-        $actual = $sut->contents();
-        $this->assertEquals(["foo", "bar", "baz"], $actual);
+        return new Pages($xhPages);
     }
 }
