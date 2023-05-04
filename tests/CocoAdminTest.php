@@ -24,6 +24,7 @@ namespace Coco;
 use ApprovalTests\Approvals;
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
+use Coco\Infra\RepositoryException;
 use Coco\Infra\RequestStub;
 use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
@@ -84,7 +85,9 @@ class CocoAdminTest extends TestCase
         $repository = $this->createMock(Repository::class);
         $repository->method("findAllNames")->willReturn(["foo", "bar"]);
         $repository->method("findAllBackups")->willReturn([["foo", "20230306_120000"]]);
-        $repository->method("delete")->willReturn($deleted);
+        if (!$deleted) {
+            $repository->method("delete")->willThrowException(new RepositoryException());
+        }
         $repository->method("filename")->willReturnOnConsecutiveCalls(
             "./content/coco/20230306_120000_foo.htm",
             "./content/coco/foo.htm"

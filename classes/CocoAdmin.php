@@ -23,6 +23,7 @@ namespace Coco;
 
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
+use Coco\Infra\RepositoryException;
 use Coco\Infra\Request;
 use Coco\Infra\View;
 use Coco\Value\Response;
@@ -80,11 +81,15 @@ class CocoAdmin
         $errors = [];
         foreach ($request->cocoNames() as $name) {
             foreach ($this->repository->findAllBackups($name) as $backup) {
-                if (!$this->repository->delete(...$backup)) {
+                try {
+                    $this->repository->delete(...$backup);
+                } catch (RepositoryException $ex) {
                     $errors[] = ["key" => "error_delete", "arg" => $this->repository->filename(...$backup)];
                 }
             }
-            if (!$this->repository->delete($name)) {
+            try {
+                $this->repository->delete($name);
+            } catch (RepositoryException $ex) {
                 $errors[] = ["key" => "error_delete", "arg" => $this->repository->filename($name)];
             }
         }

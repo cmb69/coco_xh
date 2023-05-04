@@ -22,6 +22,7 @@
 namespace Coco\Infra;
 
 use ApprovalTests\Approvals;
+use Exception;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamFile;
 use PHPUnit\Framework\TestCase;
@@ -74,8 +75,8 @@ class RepositoryTest extends TestCase
         mkdir("vfs://test/coco/");
         mkdir("vfs://test/coco/foo.htm");
         $sut = $this->sut(["pages" => $this->pages(true)]);
-        $result = $sut->save("foo", 0, "<p>some content</p>");
-        $this->assertFalse($result);
+        $this->expectException(RepositoryException::class);
+        $sut->save("foo", 0, "<p>some content</p>");
     }
 
     public function testFindsAllNames(): void
@@ -170,8 +171,7 @@ class RepositoryTest extends TestCase
         mkdir("vfs://test/coco/");
         touch("vfs://test/coco/test.htm");
         $sut = $this->sut();
-        $result = $sut->backup("test", "20230309_224602");
-        $this->assertTrue($result);
+        $sut->backup("test", "20230309_224602");
         $this->assertFileExists("vfs://test/coco/20230309_224602_test.htm");
     }
 
@@ -181,8 +181,7 @@ class RepositoryTest extends TestCase
         mkdir("vfs://test/coco/");
         touch("vfs://test/coco/test.htm");
         $sut = $this->sut();
-        $actual = $sut->delete("test");
-        $this->assertTrue($actual);
+        $sut->delete("test");
         $this->assertFileDoesNotExist("vfs://test/coco/test.htm");
     }
 
@@ -192,8 +191,7 @@ class RepositoryTest extends TestCase
         mkdir("vfs://test/coco/");
         touch("vfs://test/coco/20230306_120000_test.htm");
         $sut = $this->sut();
-        $actual = $sut->delete("test", "20230306_120000");
-        $this->assertTrue($actual);
+        $sut->delete("test", "20230306_120000");
         $this->assertFileDoesNotExist("vfs://test/coco/20230306_120000_test.htm");
     }
 

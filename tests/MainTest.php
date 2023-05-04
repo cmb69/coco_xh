@@ -23,6 +23,7 @@ namespace Coco;
 
 use ApprovalTests\Approvals;
 use Coco\Infra\Repository;
+use Coco\Infra\RepositoryException;
 use Coco\Infra\RequestStub;
 use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
@@ -77,8 +78,12 @@ class MainTest extends TestCase
         $repository->method("filename")->willReturnCallback(function ($coconame, $date = null) {
             return "./content/coco/" . ($date !== null ? "{$date}_" : "") . "$coconame.htm";
         });
-        $repository->method("backup")->willReturn($create);
-        $repository->method("delete")->willReturn($delete);
+        if (!$create) {
+            $repository->method("backup")->willThrowException(new RepositoryException());
+        }
+        if (!$delete) {
+            $repository->method("delete")->willThrowException(new RepositoryException());
+        }
         $repository->method("findAllBackups")->willReturnOnConsecutiveCalls([
             ["foo", "20230304_120000"],
             ["foo", "20230305_120000"],

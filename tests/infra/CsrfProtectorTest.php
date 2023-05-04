@@ -22,6 +22,7 @@
 namespace Coco\Infra;
 
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use XH\CSRFProtection;
 
 class CsrfProtectorTest extends TestCase
@@ -43,8 +44,8 @@ class CsrfProtectorTest extends TestCase
         $xhCsrfProtection->method("tokenInput")->willReturn(
             "<input type=\"hidden\" name=\"xh_csrf_token\" value=\"Christoph M. Becker\">"
         );
-        $this->expectExceptionMessage("CSRF protection is broken");
         $sut = new CsrfProtector($xhCsrfProtection);
+        $this->expectException(RuntimeException::class);
         $sut->token();
     }
 }

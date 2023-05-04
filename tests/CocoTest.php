@@ -24,6 +24,7 @@ namespace Coco;
 use ApprovalTests\Approvals;
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
+use Coco\Infra\RepositoryException;
 use Coco\Infra\RequestStub;
 use Coco\Infra\View;
 use Coco\Infra\XhStuff;
@@ -102,7 +103,10 @@ class CocoTest extends TestCase
         $repository = $this->createMock(Repository::class);
         $repository->method("find")->willReturn("<p>some HTML with {{{trim('scripting')}}}</p>");
         $repository->method("filename")->willReturn("./content/coco/foo.htm");
-        $repository->expects($save !== null ? $this->once() : $this->never())->method("save")->willReturn((bool) $save);
+        $method = $repository->expects($save !== null ? $this->once() : $this->never())->method("save");
+        if ($save === false) {
+            $method->willThrowException(new RepositoryException());
+        }
         return $repository;
     }
 

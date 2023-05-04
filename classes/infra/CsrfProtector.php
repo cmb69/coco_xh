@@ -21,7 +21,7 @@
 
 namespace Coco\Infra;
 
-use Exception;
+use RuntimeException;
 use XH\CSRFProtection;
 
 class CsrfProtector
@@ -39,7 +39,7 @@ class CsrfProtector
     {
         $input = $this->tokenInput();
         if (!preg_match('/value=\"([0-9a-z]+)\"/', $input, $matches)) {
-            throw new Exception("CSRF protection is broken");
+            throw new RuntimeException("CSRF protection is broken");
         }
         return $matches[1];
     }

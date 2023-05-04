@@ -23,6 +23,7 @@ namespace Coco;
 
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
+use Coco\Infra\RepositoryException;
 use Coco\Infra\Request;
 use Coco\Infra\XhStuff;
 use Coco\Infra\View;
@@ -97,13 +98,15 @@ class Coco
     {
         $this->csrfProtector->check();
         $text = $request->cocoText($name);
-        if ($this->repository->save($name, $request->s(), $text)) {
-            return Response::redirect($request->url()->absolute());
+        try {
+            $this->repository->save($name, $request->s(), $text);
+        } catch (RepositoryException $ex) {
+            return Response::create(
+                $this->view->message("fail", "error_save", $this->repository->filename($name))
+                . $this->renderEditor($name, $config, $height, $text)
+            );
         }
-        return Response::create(
-            $this->view->message("fail", "error_save", $this->repository->filename($name))
-            . $this->renderEditor($name, $config, $height, $text)
-        );
+        return Response::redirect($request->url()->absolute());
     }
 
     private function renderEditor(string $name, string $config, string $height, string $content): string

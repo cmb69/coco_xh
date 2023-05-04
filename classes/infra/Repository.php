@@ -137,7 +137,11 @@ class Repository
         return Util::cocoContent($text, $pd['coco_id']);
     }
 
-    public function save(string $name, int $index, string $text): bool
+    /**
+     * @return void
+     * @throws RepositoryException
+     */
+    public function save(string $name, int $index, string $text)
     {
         $oldContent = $this->readContents($name);
         $content = "<html>\n<body>\n";
@@ -151,10 +155,9 @@ class Repository
         $content .= "</body>\n</html>\n";
         $filename = $this->filename($name);
         if (is_dir($filename) || XH_writeFile($filename, $content) === false) {
-            return false;
+            throw new RepositoryException("can't save");
         }
         touch($this->contentFile);
-        return true;
     }
 
     private function readContents(string $coconame): string
@@ -193,13 +196,25 @@ class Repository
         return "";
     }
 
-    public function backup(string $coconame, string $date): bool
+    /**
+     * @return void
+     * @throws RepositoryException
+     */
+    public function backup(string $coconame, string $date)
     {
-        return copy($this->filename($coconame), $this->filename($coconame, $date));
+        if (!copy($this->filename($coconame), $this->filename($coconame, $date))) {
+            throw new RepositoryException("can't backup");
+        }
     }
 
-    public function delete(string $coconame, ?string $date = null): bool
+    /**
+     * @return void
+     * @throws RepositoryException
+     */
+    public function delete(string $coconame, ?string $date = null)
     {
-        return unlink($this->filename($coconame, $date));
+        if (!unlink($this->filename($coconame, $date))) {
+            throw new RepositoryException("can't delete");
+        }
     }
 }

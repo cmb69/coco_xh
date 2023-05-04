@@ -22,6 +22,7 @@
 namespace Coco;
 
 use Coco\Infra\Repository;
+use Coco\Infra\RepositoryException;
 use Coco\Infra\Request;
 use Coco\Infra\View;
 use Coco\Logic\Util;
@@ -60,16 +61,19 @@ class Main
 
     private function backup(string $coconame, string $backupDate): string
     {
-        if (!$this->repository->backup($coconame, $backupDate)) {
+        try {
+            $this->repository->backup($coconame, $backupDate);
+        } catch (RepositoryException $ex) {
             return $this->view->message("fail", "error_save", $this->repository->filename($coconame, $backupDate));
         }
         $o = $this->view->message("info", "info_created", $this->repository->filename($coconame, $backupDate));
         $backups = $this->repository->findAllBackups($coconame);
         $backups = array_slice($backups, 0, count($backups) - (int) $this->conf['backup_numberoffiles']);
         foreach ($backups as $backup) {
-            if ($this->repository->delete(...$backup)) {
+            try {
+                $this->repository->delete(...$backup);
                 $o .= $this->view->message("info", "info_deleted", $this->repository->filename(...$backup));
-            } else {
+            } catch (RepositoryException $ex) {
                 $o .= $this->view->message("fail", "error_delete", $this->repository->filename(...$backup));
             }
         }

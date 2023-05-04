@@ -16,3 +16,11 @@ parameters:
     - ../../cmsimple/adminfuncs.php
     - ../../cmsimple/functions.php
     - ../../cmsimple/utf8.php
+  exceptions:
+    implicitThrows: false
+    uncheckedExceptionClasses:
+      - Error
+      - RuntimeException
+    check:
+      missingCheckedExceptionInThrows: true
+      tooWideThrowType: true
