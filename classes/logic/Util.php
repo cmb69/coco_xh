@@ -45,6 +45,8 @@ class Util
     {
         assert(self::isBackup($filename));
         preg_match('/^(\d{8}_\d{6})_([a-z_0-9]+)\.htm$/u', $filename, $matches);
+        assert(isset($matches[1]));
+        assert(isset($matches[2]));
         return [$matches[2], $matches[1]];
     }
 
