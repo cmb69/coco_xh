@@ -151,16 +151,43 @@ class Repository
         }
         $content .= "</body>\n</html>\n";
         $filename = $this->filename($name);
-        if (is_dir($filename) || XH_writeFile($filename, $content) === false) {
+        if (is_dir($filename) || !$this->writeFile($filename, $content)) {
             throw new RepositoryException("can't save");
         }
         touch($this->contentFile);
     }
 
+    private static function writeFile(string $filename, string $content): bool
+    {
+        $res = false;
+        if (($stream = fopen($filename, "cb"))) {
+            if (flock($stream, LOCK_EX)) {
+                ftruncate($stream, 0);
+                $res = fwrite($stream, $content) !== false;
+                flock($stream, LOCK_UN);
+            }
+            fclose($stream);
+        }
+        return $res;
+    }
+
     private function readContents(string $coconame): string
     {
         $filename = $this->filename($coconame);
-        return is_file($filename) && is_readable($filename) ? (string) XH_readFile($filename) : "";
+        return is_file($filename) && is_readable($filename) ? $this->readFile($filename) : "";
+    }
+
+    private static function readFile(string $filename): string
+    {
+        $res = "";
+        if (($stream = fopen($filename, "rb"))) {
+            if (flock($stream, LOCK_SH)) {
+                $res = (string) stream_get_contents($stream);
+                flock($stream, LOCK_UN);
+            }
+            fclose($stream);
+        }
+        return $res;
     }
 
     private function cocoId(int $index, bool $current): ?string
