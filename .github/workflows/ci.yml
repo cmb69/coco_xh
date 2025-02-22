@@ -20,12 +20,12 @@ jobs:
       - name: Patch CMSimple_XH
         run: cd cmsimplexh/cmsimple && sed -i 's/@return int The number of bytes written, or false on failure\./@return int\|false/g' functions.php
       - name: Checkout Coco_XH
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: 'cmsimplexh/plugins/coco'
       - name: Cache tools
         id: cache-tools
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: cmsimplexh/plugins/coco/tools
           key: tools-${{matrix.php}}-${{hashFiles('cmsimplexh/plugins/coco/.phive')}}
