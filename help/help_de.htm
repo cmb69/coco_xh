@@ -36,7 +36,7 @@
 </head>
 <body>
 <h1 id="coco_xh">Coco_XH</h1>
-<p>Coco_XH ermöglicht eine beliebige Anzahl so genannter Co-Contents auf Ihrer Website zu nutzen. Diese sind vergleichbar mit Newsboxen, aber haben unterschiedlichen Inhalt auf jeder Seite. Coco_XH wurde inspiriert vom <a href="http://cmsimplewiki-com.keil-portal.de/doku.php?id=plugins:also">Also Plugin</a>, erlaubt aber das Bearbeiten mit dem gewählten Editor anstelle einer Textarea und der Verwendung von Skripting.</p>
+<p>Coco_XH ermöglicht eine beliebige Anzahl so genannter Co-Contents auf Ihrer Website zu nutzen. Diese sind vergleichbar mit Newsboxen, aber haben unterschiedlichen Inhalt auf jeder Seite. Coco_XH wurde inspiriert vom alten Also Plugin, erlaubt aber das Bearbeiten mit dem gewählten Editor anstelle einer Textarea und der Verwendung von Skripting.</p>
 <ul>
 <li><a href="#voraussetzungen">Voraussetzungen</a></li>
 <li><a href="#download">Download</a></li>
@@ -70,23 +70,23 @@
 <p>Das Aussehen von Coco_XH kann unter <code>Stylesheet</code> angepasst werden. Das ist hauptsächlich für das Gestalten des Administrationsbereichs gedacht. Das Gestalten der Co-Contents sollte durch Änderungen am Template und dessen Stylesheet durchgeführt werden.</p>
 <h2 id="verwendung">Verwendung</h2>
 <p>Um Co-Content auf Ihrer Hompage zu nutzen, fügen Sie einfach an der gewünschten Stelle in Ihr Template</p>
-<pre><code>&lt;?php echo coco(&#39;mein_content&#39;);?&gt;</code></pre>
+<pre><code>&lt;?=coco(&#39;mein_content&#39;);?&gt;</code></pre>
 <p>ein, z.B. anstelle einer Newsbox. Statt <code>mein_content</code> können Sie jeden Namen wählen, der nur Kleinbuchstaben (<code>a</code>-<code>z</code>), Ziffern und Unterstriche enthält. Sie können so viele Co-Contents verwenden wie Sie möchten, solange Sie diesen unterschiedliche Namen geben.</p>
 <p>Der folgende Screenshot zeigt zwei Co-Contents:</p>
 <figure>
 <img src="https://github.com/cmb69/coco_xh/raw/master/help/view-mode.png" alt="" /><figcaption>Ansichtmodus</figcaption>
 </figure>
 <p>Wenn Sie sich im Bearbeitungsmodus befinden, können Sie den Co-Content mit dem eingestellten Editor bearbeiten. Möchten Sie eine andere Toolbar verwenden als diejenige, die für den Haupt-Content-Editor konfiguriert wurde, geben Sie einfach den Namen der Toolbar als zweiten Parameter an, z.B.</p>
-<pre><code>&lt;?php echo coco(&#39;kleiner_content&#39;, &#39;sidebar&#39;);?&gt;</code></pre>
-<p>Als Toolbar sind üblicherweise “full”, “medium”, “minimal” und “sidebar” verfügbar. Wie die Toolbars des TinyMCE angepasst werden können, wird im <a href="https://www.cmsimple-xh.org/wiki/doku.php/de:tinymce#customization">CMSimple_XH-Wiki</a> erklärt.</p>
+<pre><code>&lt;?=coco(&#39;kleiner_content&#39;, &#39;sidebar&#39;);?&gt;</code></pre>
+<p>Als Toolbar sind üblicherweise “full”, “medium”, “minimal” und “sidebar” verfügbar.</p>
 <p>Der folgende Screenshot zeigt die Co-Contents im Bearbeitungsmodus:</p>
 <figure>
 <img src="https://github.com/cmb69/coco_xh/raw/master/help/edit-mode.png" alt="" /><figcaption>Bearbeitungsmodus</figcaption>
 </figure>
 <p>Die Breite und Höhe der Textarea bzw. des Editors sind auf 100% der Größes ihres Containers voreingestellt. Die Höhe kann durch einen dritten Parameter für den <code>coco()</code> Aufruf geändert werden, z.B.</p>
-<pre><code>&lt;?php echo coco(&#39;mein_content&#39;, &#39;sidebar&#39;, &#39;500px&#39;);?&gt;</code></pre>
+<pre><code>&lt;?=coco(&#39;mein_content&#39;, &#39;sidebar&#39;, &#39;500px&#39;);?&gt;</code></pre>
 <p>Wenn Sie diesen Parameter übergeben, dann müssen Sie auch den Toolbar-Parameter übergeben. Wenn Sie bei der Standard-Toolbar bleiben möchten, schreiben Sie einfach:</p>
-<pre><code>&lt;?php echo coco(&#39;mein_content&#39;, false, &#39;500px&#39;);&gt;</code></pre>
+<pre><code>&lt;?=coco(&#39;mein_content&#39;, false, &#39;500px&#39;);&gt;</code></pre>
 <p>Möchten Sie die Breite ändern, können Sie das im Stylesheet tun.</p>
 <p>Die Co-Contents werden im Unterordner <code>coco/</code> des <code>content/</code> Ordners von CMSimple_XH in einer HTML-Datei mit dem Namen, der als erster Parameter angegeben wurde, gespeichert, z.B. <code>mein_content.htm</code>. Die Struktur ist ähnlich zu derjenigen der CMSimple_XH <code>content.htm</code>-Datei von Version 1.7 und höher, aber aus historischen Gründen werden die Seiten entsprechend Ihrer Menüebene durch <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code> … <code>&lt;h9&gt;</code> getrennt, statt durch die entsprechenden HTML-Kommentare. Die Namen der Seitenüberschriften werden nur zur besseren Lesbarkeit eingefügt; sie werden von Coco_XH ignoriert. Statt dessen wird die Verknüpfung zur Seite durch die id der Überschrift hergestellt. Sie dürfen diese ids auf keinen Fall ändern! Das Erstellen neuer Seiten durch Einfügen neuer Überschriften ist nicht möglich; diese werden einfach ignoriert.</p>
 <p>Beachten Sie, dass beim Logout eine Sicherungskopie aller Co-Contents automatisch erstellt wird. Dies wird auf die gleiche Art gemacht, wie CMSimple_XH Sicherungskopien des Inhalt anlegt. Möchten Sie eine Sicherungskopie wiederherstellen, müssen Sie dies per FTP tun.</p>
@@ -104,7 +104,7 @@
 <p>Slovakische Übersetzung © 2012 Dr. Martin Sereday<br />
 Tschechische Übersetzung © 2012 Josef Němec</p>
 <h2 id="danksagung">Danksagung</h2>
-<p>Coco_XH wurde vom <a href="http://cmsimplewiki-com.keil-portal.de/doku.php?id=plugins:also">Also Plugin</a> von Ricardo Serpell inspiriert.</p>
+<p>Coco_XH wurde vom Also Plugin von Ricardo Serpell inspiriert.</p>
 <p>Das Plugin-Icon wurde von <a href="https://gongea.com/">Andy Gongea</a> gestaltet. Vielen Dank für die Veröffentlichung als Freeware.</p>
 <p>Vielen Dank an die Community im <a href="https://www.cmsimpleforum.com/">CMSimple_XH-Forum</a> für Tipps, Vorschläge und das Testen. Besonders möchte ich <em>snafu</em> und <em>Ulrich</em> danken, die auf die Nützlichkeit von Also hingewiesen haben, und die mich bezüglich des Speicherorts für solche Daten umgestimmt haben, sowie an <em>Gert</em> und <em>snafu</em>, die die ersten Bugs gemeldet und den neuen Namen vorgeschlagen haben.</p>
 <p>Und zu guter Letzt vielen Dank an <a href="https://www.harteg.dk/">Peter Harteg</a>, den „Vater“ von CMSimple, und alle Entwickler von <a href="https://www.cmsimple-xh.org/de/">CMSimple_XH</a>, ohne die dieses phantastische CMS nicht existieren würde.</p>

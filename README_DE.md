@@ -4,8 +4,8 @@ Coco_XH ermöglicht eine beliebige Anzahl so genannter Co-Contents
 auf Ihrer Website zu nutzen.
 Diese sind vergleichbar mit Newsboxen,
 aber haben unterschiedlichen Inhalt auf jeder Seite.
-Coco_XH wurde inspiriert vom
-[Also Plugin](http://cmsimplewiki-com.keil-portal.de/doku.php?id=plugins:also),
+Coco_XH wurde inspiriert vom alten
+Also Plugin,
 erlaubt aber das Bearbeiten mit dem gewählten Editor anstelle einer
 Textarea und der Verwendung von Skripting.
 
@@ -64,7 +64,7 @@ und dessen Stylesheet durchgeführt werden.
 Um Co-Content auf Ihrer Hompage zu nutzen,
 fügen Sie einfach an der gewünschten Stelle in Ihr Template
 
-    <?php echo coco('mein_content');?>
+    <?=coco('mein_content');?>
 
 ein, z.B. anstelle einer Newsbox.
 Statt `mein_content` können Sie jeden Namen wählen,
@@ -82,12 +82,9 @@ Möchten Sie eine andere Toolbar verwenden als diejenige,
 die für den Haupt-Content-Editor konfiguriert wurde,
 geben Sie einfach den Namen der Toolbar als zweiten Parameter an, z.B.
 
-    <?php echo coco('kleiner_content', 'sidebar');?>
+    <?=coco('kleiner_content', 'sidebar');?>
 
 Als Toolbar sind üblicherweise "full", "medium", "minimal" und "sidebar" verfügbar.
-Wie die Toolbars des TinyMCE angepasst werden können, wird im
-[CMSimple_XH-Wiki](https://www.cmsimple-xh.org/wiki/doku.php/de:tinymce#customization)
-erklärt.
 
 Der folgende Screenshot zeigt die Co-Contents im Bearbeitungsmodus:
 
@@ -98,14 +95,14 @@ sind auf 100% der Größes ihres Containers voreingestellt.
 Die Höhe kann durch einen dritten Parameter für
 den `coco()` Aufruf geändert werden, z.B.
 
-    <?php echo coco('mein_content', 'sidebar', '500px');?>
+    <?=coco('mein_content', 'sidebar', '500px');?>
 
 Wenn Sie diesen Parameter übergeben,
 dann müssen Sie auch den Toolbar-Parameter übergeben.
 Wenn Sie bei der Standard-Toolbar bleiben möchten,
 schreiben Sie einfach:
 
-    <?php echo coco('mein_content', false, '500px');>
+    <?=coco('mein_content', false, '500px');>
 
 Möchten Sie die Breite ändern, können Sie das im Stylesheet tun.
 
@@ -173,8 +170,7 @@ Tschechische Übersetzung © 2012 Josef Němec
 
 ## Danksagung
 
-Coco_XH wurde vom
-[Also Plugin](http://cmsimplewiki-com.keil-portal.de/doku.php?id=plugins:also)
+Coco_XH wurde vom Also Plugin
 von Ricardo Serpell inspiriert.
 
 Das Plugin-Icon wurde von [Andy Gongea](https://gongea.com/) gestaltet. 
