@@ -21,6 +21,7 @@ parameters:
     uncheckedExceptionClasses:
       - Error
       - RuntimeException
+      - Random\RandomException
     check:
       missingCheckedExceptionInThrows: true
       tooWideThrowType: true

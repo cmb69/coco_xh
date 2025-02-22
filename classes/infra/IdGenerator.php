@@ -21,11 +21,22 @@
 
 namespace Coco\Infra;
 
-/** @codeCoverageIgnore */
 class IdGenerator
 {
     public function newId(): string
     {
-        return uniqid();
+        $rand = $this->randomBytes();
+        $rand[6] = chr(ord($rand[6]) & 0x0f | 0x40);
+        $rand[8] = chr(ord($rand[8]) & 0x3f | 0x80);
+        $uuid = strtoupper(bin2hex($rand));
+        return substr($uuid, 0, 8) . "-" . substr($uuid, 8, 4) . "-"
+            . substr($uuid, 12, 4) . "-" . substr($uuid, 16, 4) . "-"
+            . substr($uuid, 20, 12);
+    }
+
+    /** @codeCoverageIgnore */
+    protected function randomBytes(): string
+    {
+        return random_bytes(16);
     }
 }
