@@ -25,7 +25,6 @@ use Coco\Value\Url;
 
 class Request
 {
-    /** @codeCoverageIgnore */
     public static function current(): self
     {
         return new self();
@@ -49,27 +48,23 @@ class Request
         return $search;
     }
 
-    /** @codeCoverageIgnore */
     protected function edit(): bool
     {
         global $edit;
         return defined("XH_ADM") && XH_ADM && $edit;
     }
 
-    /** @codeCoverageIgnore */
     public function s(): int
     {
         global $s;
         return $s;
     }
 
-    /** @codeCoverageIgnore */
     public function time(): int
     {
         return (int) $_SERVER["REQUEST_TIME"];
     }
 
-    /** @codeCoverageIgnore */
     protected function query(): string
     {
         return $_SERVER["QUERY_STRING"];
@@ -131,16 +126,12 @@ class Request
         return true;
     }
 
-    /**
-     * @return array<string,string|array<string>>
-     * @codeCoverageIgnore
-     */
+    /** @return array<string,string|array<string>> */
     protected function post(): array
     {
         return $_POST;
     }
 
-    /** @codeCoverageIgnore */
     public function logOut(): bool
     {
         global $f;

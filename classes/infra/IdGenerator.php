@@ -34,7 +34,6 @@ class IdGenerator
             . substr($uuid, 20, 12);
     }
 
-    /** @codeCoverageIgnore */
     protected function randomBytes(): string
     {
         return random_bytes(16);

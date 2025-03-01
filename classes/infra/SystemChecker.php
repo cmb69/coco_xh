@@ -23,13 +23,11 @@ namespace Coco\Infra;
 
 class SystemChecker
 {
-    /** @codeCoverageIgnore */
     public function checkVersion(string $actual, string $minimum): bool
     {
         return version_compare($actual, $minimum) >= 0;
     }
 
-    /** @codeCoverageIgnore */
     public function checkWritability(string $path): bool
     {
         return is_writable($path);

@@ -23,7 +23,6 @@ namespace Coco\Infra;
 
 use Coco\Value\Response;
 
-/** @codeCoverageIgnore */
 class Responder
 {
     /** @return string|never */

@@ -44,17 +44,13 @@ class CsrfProtector
         return $matches[1];
     }
 
-    /** @codeCoverageIgnore */
     public function tokenInput(): string
     {
         assert($this->xhCsrfProtection !== null);
         return $this->xhCsrfProtection->tokenInput();
     }
 
-    /**
-     * @return void|never
-     * @codeCoverageIgnore
-     */
+    /** @return void|never */
     public function check()
     {
         assert($this->xhCsrfProtection !== null);
