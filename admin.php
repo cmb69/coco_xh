@@ -26,7 +26,6 @@ if (!defined("CMSIMPLE_XH_VERSION")) {
 
 use Coco\Dic;
 use Coco\Infra\Request;
-use Coco\Infra\Responder;
 
 /**
  * @var string $admin
@@ -39,10 +38,10 @@ if (XH_wantsPluginAdministration("coco")) {
     $o .= print_plugin_admin("on");
     switch ($admin) {
         case "":
-            $o .= Responder::respond(Dic::makePluginInfo()());
+            $o .= Dic::makePluginInfo()()();
             break;
         case "plugin_main":
-            $o .= Responder::respond(Dic::makeCocoAdmin()(Request::current()));
+            $o .= Dic::makeCocoAdmin()(Request::current())();
             break;
         default:
             $o .= plugin_admin_common();

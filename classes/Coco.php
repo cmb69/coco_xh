@@ -28,7 +28,7 @@ use Coco\Infra\Request;
 use Coco\Infra\XhStuff;
 use Coco\Logic\Searcher;
 use Coco\Logic\Util;
-use Coco\Value\Response;
+use Plib\Response;
 use Plib\View;
 
 class Coco

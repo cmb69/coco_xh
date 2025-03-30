@@ -23,7 +23,6 @@
 
 use Coco\Dic;
 use Coco\Infra\Request;
-use Coco\Infra\Responder;
 
 const COCO_VERSION = "2.0-dev";
 
@@ -35,7 +34,7 @@ const COCO_VERSION = "2.0-dev";
  */
 function coco($name, $config = false, $height = "100%")
 {
-    return Responder::respond(Dic::makeCoco()(Request::current(), $name, (string) $config, $height));
+    return Dic::makeCoco()(Request::current(), $name, (string) $config, $height)();
 }
 
 if (!defined("CMSIMPLE_XH_VERSION")) {
@@ -51,4 +50,4 @@ if (!defined("CMSIMPLE_XH_VERSION")) {
 
 $pd_router->add_interest("coco_id");
 
-$o .= Responder::respond(Dic::makeMain()(Request::current()));
+$o .= Dic::makeMain()(Request::current())();

@@ -26,8 +26,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {
 
 use Coco\Dic;
 use Coco\Infra\Request;
-use Coco\Infra\Responder;
 
 /** @var string $o */
 
-$o .= Responder::respond(Dic::makeSearch()(Request::current()));
+$o .= Dic::makeSearch()(Request::current())();

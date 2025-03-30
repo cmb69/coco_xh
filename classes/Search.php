@@ -26,8 +26,8 @@ use Coco\Infra\Repository;
 use Coco\Infra\Request;
 use Coco\Infra\XhStuff;
 use Coco\Logic\Searcher;
-use Coco\Value\Response;
 use Coco\Value\Url;
+use Plib\Response;
 use Plib\View;
 
 class Search
