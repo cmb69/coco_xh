@@ -23,6 +23,8 @@ $plugin_tx['coco']['search_title']="Search Results";
 
 $plugin_tx['coco']['syscheck_phpversion']="PHP version is at least %s";
 $plugin_tx['coco']['syscheck_phpversion_no']="PHP version is not at least %s";
+$plugin_tx['coco']['syscheck_plibversion']="Plib_XH version is at least %s";
+$plugin_tx['coco']['syscheck_plibversion_no']="Plib_XH version is not at least %s";
 $plugin_tx['coco']['syscheck_title']="System check";
 $plugin_tx['coco']['syscheck_writable']="Folder '%s' is writable";
 $plugin_tx['coco']['syscheck_writable_no']="Folder '%s' is not writable";

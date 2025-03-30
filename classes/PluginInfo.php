@@ -68,6 +68,7 @@ class PluginInfo
         return [
             $this->checkPhpVersion("7.4.0"),
             $this->checkXhVersion("1.7.0"),
+            $this->checkPlibVersion("1.6"),
             $this->checkWritability($this->pluginFolder . "css/"),
             $this->checkWritability($this->pluginFolder . "languages/"),
             $this->checkWritability($this->repository->dataFolder())
@@ -91,6 +92,16 @@ class PluginInfo
         return [
             "class" => $state ? "xh_success" : "xh_fail",
             "message" => $this->view->plain($state ? "syscheck_xhversion" : "syscheck_xhversion_no", $version),
+        ];
+    }
+
+    /** @return array{class:string,message:string} */
+    private function checkPlibVersion(string $version): array
+    {
+        $state = $this->systemChecker->checkPlugin("plib", $version);
+        return [
+            "class" => $state ? "xh_success" : "xh_fail",
+            "message" => $this->view->plain($state ? "syscheck_plibversion" : "syscheck_plibversion_no", $version),
         ];
     }
 

@@ -23,6 +23,8 @@ $plugin_tx['coco']['search_title']="Suchergebnis";
 
 $plugin_tx['coco']['syscheck_phpversion']="PHP Version ist wenigstens %s";
 $plugin_tx['coco']['syscheck_phpversion_no']="PHP Version ist nicht wenigstens %s";
+$plugin_tx['coco']['syscheck_plibversion']="Plib_XH Version ist wenigstens %s";
+$plugin_tx['coco']['syscheck_plibversion_no']="Plib_XH Version ist nicht wenigstens %s";
 $plugin_tx['coco']['syscheck_title']="System-Prüfung";
 $plugin_tx['coco']['syscheck_writable']="Ordner '%s' ist schreibbar";
 $plugin_tx['coco']['syscheck_writable_no']="Ordner '%s' ist nicht schreibbar";
