@@ -176,11 +176,13 @@ class RepositoryTest extends TestCase
 
     private function sut(array $deps = []): Repository
     {
+        $random = $this->createStub(Random::class);
+        $random->method("bytes")->willReturnOnConsecutiveCalls("0123456789ABCDEF", "123456789ABCDEF0");
         return new Repository(
             "vfs://root/coco/",
             "",
             $deps["pages"] ?? $this->pages(),
-            $this->idGenerator()
+            $random
         );
     }
 
@@ -196,22 +198,6 @@ class RepositoryTest extends TestCase
             $pages->method("data")->willReturnMap([[0, ["coco_id" => "30313233-3435-4637-B839-414243444546"]], [1, ["coco_id" => "31323334-3536-4738-B941-424344454630"]]]);
         }
         return $pages;
-    }
-
-    private function idGenerator(): IdGenerator
-    {
-        $random = $this->createStub(Random::class);
-        $random->method("bytes")->willReturnOnConsecutiveCalls("0123456789ABCDEF", "123456789ABCDEF0");
-        return new IdGenerator($random);
-        // return new class() extends IdGenerator {
-        //     private $ids = ["12345", "23456"];
-        //     public function newId(): string
-        //     {
-        //         $id = current($this->ids);
-        //         next($this->ids);
-        //         return $id; 
-        //     }
-        // };
     }
 
     private function coco(): string

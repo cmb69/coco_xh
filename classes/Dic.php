@@ -89,7 +89,7 @@ class Dic
             $pth['folder']['content'] . "coco/",
             $pth['file']['content'],
             new Pages(),
-            new IdGenerator(new Random())
+            new Random()
         );
     }
 

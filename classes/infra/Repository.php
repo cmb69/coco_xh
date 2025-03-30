@@ -22,6 +22,7 @@
 namespace Coco\Infra;
 
 use Coco\Logic\Util;
+use Plib\Random;
 
 class Repository
 {
@@ -34,15 +35,15 @@ class Repository
     /** @var Pages */
     private $pages;
 
-    /** @var IdGenerator */
-    private $idGenerator;
+    /** @var Random */
+    private $random;
 
-    public function __construct(string $dataFolder, string $contentFile, Pages $pages, IdGenerator $idGenerator)
+    public function __construct(string $dataFolder, string $contentFile, Pages $pages, Random $random)
     {
         $this->dataFolder = $dataFolder;
         $this->contentFile = $contentFile;
         $this->pages = $pages;
-        $this->idGenerator = $idGenerator;
+        $this->random = $random;
     }
 
     public function dataFolder(): string
@@ -197,10 +198,21 @@ class Repository
             if (!$current) {
                 return null;
             }
-            $pd["coco_id"] = $this->idGenerator->newId();
+            $pd["coco_id"] = $this->newId();
             $this->pages->updateData($index, $pd);
         }
         return $pd["coco_id"];
+    }
+
+    private function newId(): string
+    {
+        $rand = $this->random->bytes(16);
+        $rand[6] = chr(ord($rand[6]) & 0x0f | 0x40);
+        $rand[8] = chr(ord($rand[8]) & 0x3f | 0x80);
+        $uuid = strtoupper(bin2hex($rand));
+        return substr($uuid, 0, 8) . "-" . substr($uuid, 8, 4) . "-"
+            . substr($uuid, 12, 4) . "-" . substr($uuid, 16, 4) . "-"
+            . substr($uuid, 20, 12);
     }
 
     private function headingLine(int $level, string $id, string $heading): string
