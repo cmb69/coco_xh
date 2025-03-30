@@ -21,7 +21,6 @@
 
 namespace Coco;
 
-use Coco\Infra\IdGenerator;
 use Coco\Infra\Pages;
 use Coco\Infra\Repository;
 use Coco\Infra\XhStuff;

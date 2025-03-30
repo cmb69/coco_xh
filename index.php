@@ -26,13 +26,8 @@ use Plib\Request;
 
 const COCO_VERSION = "2.0-dev";
 
-/**
- * @param string $name
- * @param string|false $config
- * @param string $height
- * @return string
- */
-function coco($name, $config = false, $height = "100%")
+/** @param string|false $config */
+function coco(string $name, $config = false, string $height = "100%"): string
 {
     return Dic::makeCoco()(Request::current(), $name, (string) $config, $height)();
 }

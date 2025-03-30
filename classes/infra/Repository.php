@@ -232,22 +232,16 @@ class Repository
         return "";
     }
 
-    /**
-     * @return void
-     * @throws RepositoryException
-     */
-    public function backup(string $coconame, string $date)
+    /** @throws RepositoryException */
+    public function backup(string $coconame, string $date): void
     {
         if (!copy($this->filename($coconame), $this->filename($coconame, $date))) {
             throw new RepositoryException("can't backup");
         }
     }
 
-    /**
-     * @return void
-     * @throws RepositoryException
-     */
-    public function delete(string $coconame, ?string $date = null)
+    /** @throws RepositoryException */
+    public function delete(string $coconame, ?string $date = null): void
     {
         if (!unlink($this->filename($coconame, $date))) {
             throw new RepositoryException("can't delete");

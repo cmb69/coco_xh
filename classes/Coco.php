@@ -59,8 +59,6 @@ class Coco
 
     public function __invoke(Request $request, string $name, string $config, string $height): Response
     {
-        global $s;
-
         if (!Util::isValidCocoName($name)) {
             return Response::create($this->view->message("fail", "error_invalid_name") . "\n");
         }
