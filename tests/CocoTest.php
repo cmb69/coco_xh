@@ -24,7 +24,7 @@ class CocoTest extends TestCase
     public function testRendersCocoEditor(): void
     {
         $sut = $this->sut();
-        $request = new FakeRequest(["edit" => true]);
+        $request = new FakeRequest(["admin" => true, "edit" => true]);
         $response = $sut($request, "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
@@ -32,7 +32,7 @@ class CocoTest extends TestCase
     public function testRendersSaveButtonIfNoEditorIsConfigured(): void
     {
         $sut = $this->sut(["xhStuff" => $this->xhStuff(false)]);
-        $request = new FakeRequest(["edit" => true]);
+        $request = new FakeRequest(["admin" => true, "edit" => true]);
         $response = $sut($request, "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
@@ -40,7 +40,11 @@ class CocoTest extends TestCase
     public function testRedirectsAfterSavingContent(): void
     {
         $sut = $this->sut(["repository" => $this->repository(true), "csrfProtector" => $this->csrfProtector(true)]);
-        $request = new FakeRequest(["edit" => true, "post" => ["coco_text_foo" => "some content"]]);
+        $request = new FakeRequest([
+            "admin" => true,
+            "edit" => true,
+            "post" => ["coco_text_foo" => "some content"]],
+        );
         $response = $sut($request, "foo", false, "100%");
         $this->assertEquals("http://example.com/", $response->location());
     }
@@ -48,7 +52,11 @@ class CocoTest extends TestCase
     public function testReportsErrorOnFailureToSaveContent(): void
     {
         $sut = $this->sut(["repository" => $this->repository(false), "csrfProtector" => $this->csrfProtector(true)]);
-        $request = new FakeRequest(["edit" => true, "post" => ["coco_text_foo" => "some content"]]);
+        $request = new FakeRequest([
+            "admin" => true,
+            "edit" => true,
+            "post" => ["coco_text_foo" => "some content"]],
+        );
         $response = $sut($request, "foo", false, "100%");
         $this->assertStringContainsString("./content/coco/foo.htm could not be saved!", $response->output());
     }

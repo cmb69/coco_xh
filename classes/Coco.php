@@ -65,7 +65,7 @@ class Coco
         if ($request->s() < 0) {
             return Response::create("");
         }
-        if (!$request->admin() && !$request->edit()) {
+        if (!$request->admin() || !$request->edit()) {
             return $this->show($request, $name);
         }
         if ($request->post("coco_text_$name") === null) {
