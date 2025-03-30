@@ -26,6 +26,7 @@ use Coco\Infra\Pages;
 use Coco\Infra\Repository;
 use Coco\Infra\XhStuff;
 use Plib\CsrfProtector;
+use Plib\Random;
 use Plib\SystemChecker;
 use Plib\View;
 
@@ -88,7 +89,7 @@ class Dic
             $pth['folder']['content'] . "coco/",
             $pth['file']['content'],
             new Pages(),
-            new IdGenerator()
+            new IdGenerator(new Random())
         );
     }
 

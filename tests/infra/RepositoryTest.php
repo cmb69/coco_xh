@@ -23,6 +23,7 @@ namespace Coco\Infra;
 
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Plib\Random;
 
 class RepositoryTest extends TestCase
 {
@@ -190,24 +191,27 @@ class RepositoryTest extends TestCase
         $pages->method("level")->willReturnMap([[0, 1], [1, 2]]);
         $pages->method("heading")->willReturnMap([[0, "Start"], [1, "Sub"]]);
         if ($new) {
-            $pages->method("data")->willReturnOnConsecutiveCalls([], [], ["coco_id" => "12345"], ["coco_id" => "23456"]);
+            $pages->method("data")->willReturnOnConsecutiveCalls([], [], ["coco_id" => "30313233-3435-4637-B839-414243444546"], ["coco_id" => "31323334-3536-4738-B941-424344454630"]);
         } else {
-            $pages->method("data")->willReturnMap([[0, ["coco_id" => "12345"]], [1, ["coco_id" => "23456"]]]);
+            $pages->method("data")->willReturnMap([[0, ["coco_id" => "30313233-3435-4637-B839-414243444546"]], [1, ["coco_id" => "31323334-3536-4738-B941-424344454630"]]]);
         }
         return $pages;
     }
 
     private function idGenerator(): IdGenerator
     {
-        return new class() extends IdGenerator {
-            private $ids = ["12345", "23456"];
-            public function newId(): string
-            {
-                $id = current($this->ids);
-                next($this->ids);
-                return $id; 
-            }
-        };
+        $random = $this->createStub(Random::class);
+        $random->method("bytes")->willReturnOnConsecutiveCalls("0123456789ABCDEF", "123456789ABCDEF0");
+        return new IdGenerator($random);
+        // return new class() extends IdGenerator {
+        //     private $ids = ["12345", "23456"];
+        //     public function newId(): string
+        //     {
+        //         $id = current($this->ids);
+        //         next($this->ids);
+        //         return $id; 
+        //     }
+        // };
     }
 
     private function coco(): string
@@ -215,9 +219,9 @@ class RepositoryTest extends TestCase
         return <<<'HTML'
         <html>
         <body>
-        <h1 id="12345">Start</h1>
+        <h1 id="30313233-3435-4637-B839-414243444546">Start</h1>
         <p>some content</p>
-        <h2 id="23456">Sub</h2>
+        <h2 id="31323334-3536-4738-B941-424344454630">Sub</h2>
         <p>other content</p>
         </body>
         </html>
@@ -230,7 +234,7 @@ class RepositoryTest extends TestCase
         return <<<'HTML'
         <html>
         <body>
-        <h1 id="12345">Start</h1>
+        <h1 id="30313233-3435-4637-B839-414243444546">Start</h1>
         </body>
         </html>
 
