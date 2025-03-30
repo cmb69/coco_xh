@@ -23,8 +23,8 @@ namespace Coco;
 
 use ApprovalTests\Approvals;
 use Coco\Infra\Repository;
-use Coco\Infra\SystemChecker;
 use PHPUnit\Framework\TestCase;
+use Plib\FakeSystemChecker;
 use Plib\View;
 
 class PluginInfoTest extends TestCase
@@ -41,21 +41,11 @@ class PluginInfoTest extends TestCase
     {
         $repository = $this->createStub(Repository::class);
         $repository->method("dataFolder")->willReturn("./content/coco/");
-        $systemChecker = new class() extends SystemChecker {
-            public function checkVersion(string $actual, string $minimum): bool
-            {
-                return false;
-            }
-            public function checkWritability(string $path): bool
-            {
-                return false;
-            }
-        };
         $text = XH_includeVar("./languages/en.php", "plugin_tx")["coco"];
         return new PluginInfo(
             "./plugins/coco/",
             $repository,
-            $systemChecker,
+            new FakeSystemChecker(),
             new View("./views/", $text)
         );
     }

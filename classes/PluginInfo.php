@@ -22,8 +22,8 @@
 namespace Coco;
 
 use Coco\Infra\Repository;
-use Coco\Infra\SystemChecker;
 use Plib\Response;
+use Plib\SystemChecker;
 use Plib\View;
 
 class PluginInfo

@@ -25,8 +25,8 @@ use Coco\Infra\CsrfProtector;
 use Coco\Infra\IdGenerator;
 use Coco\Infra\Pages;
 use Coco\Infra\Repository;
-use Coco\Infra\SystemChecker;
 use Coco\Infra\XhStuff;
+use Plib\SystemChecker;
 use Plib\View;
 
 class Dic
