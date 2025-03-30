@@ -24,10 +24,10 @@ namespace Coco;
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
 use Coco\Infra\RepositoryException;
-use Coco\Infra\Request;
 use Coco\Infra\XhStuff;
 use Coco\Logic\Searcher;
 use Coco\Logic\Util;
+use Plib\Request;
 use Plib\Response;
 use Plib\View;
 
@@ -59,27 +59,28 @@ class Coco
 
     public function __invoke(Request $request, string $name, string $config, string $height): Response
     {
+        global $s;
+
         if (!Util::isValidCocoName($name)) {
             return Response::create($this->view->message("fail", "error_invalid_name") . "\n");
         }
         if ($request->s() < 0) {
             return Response::create("");
         }
-        switch ($request->cocoAction($name)) {
-            default:
-                return $this->show($request, $name);
-            case "edit":
-                return $this->edit($request, $name, $config, $height);
-            case "do_edit":
-                return $this->update($request, $name, $config, $height);
+        if (!$request->admin() && !$request->edit()) {
+            return $this->show($request, $name);
         }
+        if ($request->post("coco_text_$name") === null) {
+            return $this->edit($request, $name, $config, $height);
+        }
+        return $this->update($request, $name, $config, $height);
     }
 
     private function show(Request $request, string $name): Response
     {
         $content = $this->repository->find($name, $request->s());
         $content = $this->xhStuff->evaluateScripting($content);
-        $search = $request->search();
+        $search = $request->get("search") ?? "";
         if ($search !== "") {
             $words = Searcher::parseSearchTerm($search);
             $content = $this->xhStuff->highlightSearchWords($words, $content);
@@ -96,7 +97,7 @@ class Coco
     private function update(Request $request, string $name, string $config, string $height): Response
     {
         $this->csrfProtector->check();
-        $text = $request->cocoText($name);
+        $text = $request->post("coco_text_$name") ?? "";
         try {
             $this->repository->save($name, $request->s(), $text);
         } catch (RepositoryException $ex) {

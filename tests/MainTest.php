@@ -24,23 +24,23 @@ namespace Coco;
 use ApprovalTests\Approvals;
 use Coco\Infra\Repository;
 use Coco\Infra\RepositoryException;
-use Coco\Infra\RequestStub;
 use PHPUnit\Framework\TestCase;
+use Plib\FakeRequest;
 use Plib\View;
 
 class MainTest extends TestCase
 {
-    public function testDoesNothingWhenNotLoggingOut(): void
-    {
-        $sut = $this->sut();
-        $response = $sut(new RequestStub());
-        $this->assertEquals("", $response->output());
-    }
+    // public function testDoesNothingWhenNotLoggingOut(): void
+    // {
+    //     $sut = $this->sut();
+    //     $response = $sut(new FakeRequest());
+    //     $this->assertEquals("", $response->output());
+    // }
 
     public function testReportsBackupSuccess(): void
     {
         $sut = $this->sut();
-        $request = new RequestStub(["time" => strtotime("2023-03-06T12:00:00"), "logOut" => true]);
+        $request = new FakeRequest(["time" => strtotime("2023-03-06T12:00:00")]);
         $response = $sut($request);
         Approvals::verifyHtml($response->output());
     }
@@ -48,7 +48,7 @@ class MainTest extends TestCase
     public function testReportsFailureToCreateBackup(): void
     {
         $sut = $this->sut(["repository" => $this->repository(false)]);
-        $request = new RequestStub(["time" => strtotime("2023-03-06T12:00:00"), "logOut" => true]);
+        $request = new FakeRequest(["time" => strtotime("2023-03-06T12:00:00")]);
         $response = $sut($request);
         Approvals::verifyHtml($response->output());
     }
@@ -56,7 +56,7 @@ class MainTest extends TestCase
     public function testReportsFailureToDeleteSurplusBackups(): void
     {
         $sut = $this->sut(["repository" => $this->repository(true, false)]);
-        $request = new RequestStub(["time" => strtotime("2023-03-06T12:00:00"), "logOut" => true]);
+        $request = new FakeRequest(["time" => strtotime("2023-03-06T12:00:00")]);
         $response = $sut($request);
         Approvals::verifyHtml($response->output());
     }

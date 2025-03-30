@@ -24,7 +24,7 @@ namespace Coco;
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
 use Coco\Infra\RepositoryException;
-use Coco\Infra\Request;
+use Plib\Request;
 use Plib\Response;
 use Plib\View;
 
@@ -48,7 +48,7 @@ class CocoAdmin
 
     public function __invoke(Request $request): Response
     {
-        switch ($request->cocoAdminAction()) {
+        switch ($this->action($request)) {
             default:
                 return $this->show();
             case "delete":
@@ -56,6 +56,18 @@ class CocoAdmin
             case "do_delete":
                 return $this->delete($request);
         }
+    }
+
+    public function action(Request $request): string
+    {
+        $action = $request->get("action");
+        if ($action && $action === $request->post("coco_do") && $request->getArray("coco_name") !== null) {
+            return "do_delete";
+        }
+        if ($action === "delete" && $request->getArray("coco_name") !== null) {
+            return "delete";
+        }
+        return "";
     }
 
     private function show(): Response
@@ -70,7 +82,7 @@ class CocoAdmin
     {
         return Response::create($this->view->render("confirm", [
             "errors" => $errors,
-            "cocos" => $request->cocoNames(),
+            "cocos" => $request->getArray("coco_name"),
             "csrf_token" => $this->csrfProtector->token(),
         ]))->withTitle("Coco – " . $this->view->text("menu_main"));
     }
@@ -79,7 +91,7 @@ class CocoAdmin
     {
         $this->csrfProtector->check();
         $errors = [];
-        foreach ($request->cocoNames() as $name) {
+        foreach (($request->getArray("coco_name") ?? []) as $name) {
             foreach ($this->repository->findAllBackups($name) as $backup) {
                 try {
                     $this->repository->delete(...$backup);
@@ -96,6 +108,6 @@ class CocoAdmin
         if ($errors) {
             return $this->confirmDelete($request, $errors);
         }
-        return Response::redirect($request->url()->withPage("coco")->withParam("admin", "plugin_main")->absolute());
+        return Response::redirect($request->url()->page("coco")->with("admin", "plugin_main")->absolute());
     }
 }

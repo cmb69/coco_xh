@@ -23,11 +23,11 @@ namespace Coco;
 
 use Coco\Infra\Pages;
 use Coco\Infra\Repository;
-use Coco\Infra\Request;
 use Coco\Infra\XhStuff;
 use Coco\Logic\Searcher;
-use Coco\Value\Url;
+use Plib\Request;
 use Plib\Response;
+use Plib\Url;
 use Plib\View;
 
 class Search
@@ -54,7 +54,7 @@ class Search
 
     public function __invoke(Request $request): Response
     {
-        $words = Searcher::parseSearchTerm($request->search());
+        $words = Searcher::parseSearchTerm($request->get("search") ?? "");
         $indexes = Searcher::search($words, $this->contents());
         return Response::create($this->renderSearchResults($indexes, $request->url(), implode(" ", $words)))
             ->withTitle($this->view->text("search_title"));
@@ -95,7 +95,7 @@ class Search
         return array_map(function (int $pageIndex) use ($url, $searchTerm) {
             return [
                 "heading" => $this->pages->heading($pageIndex),
-                "url" => $url->withPage($this->pages->url($pageIndex))->withParam("search", $searchTerm)->relative(),
+                "url" => $url->page($this->pages->url($pageIndex))->with("search", $searchTerm)->relative(),
             ];
         }, $pageIndexes);
     }

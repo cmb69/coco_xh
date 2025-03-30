@@ -23,8 +23,8 @@ namespace Coco;
 
 use Coco\Infra\Repository;
 use Coco\Infra\RepositoryException;
-use Coco\Infra\Request;
 use Coco\Logic\Util;
+use Plib\Request;
 use Plib\Response;
 use Plib\View;
 
@@ -49,9 +49,6 @@ class Main
 
     public function __invoke(Request $request): Response
     {
-        if (!$request->logOut()) {
-            return Response::create("");
-        }
         $o = "";
         foreach ($this->repository->findAllNames() as $coco) {
             $o .= $this->backup($coco, Util::backupPrefix($request->time()));

@@ -22,7 +22,7 @@
 // phpcs:disable PSR1.Files.SideEffects
 
 use Coco\Dic;
-use Coco\Infra\Request;
+use Plib\Request;
 
 const COCO_VERSION = "2.0-dev";
 
@@ -50,4 +50,6 @@ if (!defined("CMSIMPLE_XH_VERSION")) {
 
 $pd_router->add_interest("coco_id");
 
-$o .= Dic::makeMain()(Request::current())();
+if ($f === "xh_loggedout") {
+    $o .= Dic::makeMain()(Request::current())();
+}

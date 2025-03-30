@@ -25,8 +25,8 @@ use ApprovalTests\Approvals;
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
 use Coco\Infra\RepositoryException;
-use Coco\Infra\RequestStub;
 use PHPUnit\Framework\TestCase;
+use Plib\FakeRequest;
 use Plib\View;
 
 class CocoAdminTest extends TestCase
@@ -34,7 +34,7 @@ class CocoAdminTest extends TestCase
     public function testRendersCocoOverview(): void
     {
         $sut = $this->sut();
-        $response = $sut(new RequestStub());
+        $response = $sut(new FakeRequest());
         $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
     }
@@ -42,7 +42,7 @@ class CocoAdminTest extends TestCase
     public function testRendersDeleteConfirmation(): void
     {
         $sut = $this->sut();
-        $request = new RequestStub(["query" => "action=delete&coco_name[]=foo"]);
+        $request = new FakeRequest(["url" => "http://example.com/?&action=delete&coco_name[]=foo"]);
         $response = $sut($request);
         $this->assertEquals("Coco – Co-Contents", $response->title());
         Approvals::verifyHtml($response->output());
@@ -51,8 +51,8 @@ class CocoAdminTest extends TestCase
     public function testSuccessfulDeletionRedirects(): void
     {
         $sut = $this->sut(["csrfProtector" => $this->csrfProtector(true)]);
-        $request = new RequestStub([
-            "query" => "action=delete&coco_name[]=foo",
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&action=delete&coco_name[]=foo",
             "post" => ["coco_do" => "delete"],
         ]);
         $response = $sut($request);
@@ -62,8 +62,8 @@ class CocoAdminTest extends TestCase
     public function testFailureToDeleteIsReported(): void
     {
         $sut = $this->sut(["repository" => $this->repository(false), "csrfProtector" => $this->csrfProtector(true)]);
-        $request = new RequestStub([
-            "query" => "action=delete&coco_name[]=foo",
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&action=delete&coco_name[]=foo",
             "post" => ["coco_do" => "delete"],
         ]);
         $response = $sut($request);

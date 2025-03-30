@@ -25,7 +25,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {
 }
 
 use Coco\Dic;
-use Coco\Infra\Request;
+use Plib\Request;
 
 /**
  * @var string $admin

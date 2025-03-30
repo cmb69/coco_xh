@@ -25,9 +25,9 @@ use ApprovalTests\Approvals;
 use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
 use Coco\Infra\RepositoryException;
-use Coco\Infra\RequestStub;
 use Coco\Infra\XhStuff;
 use PHPUnit\Framework\TestCase;
+use Plib\FakeRequest;
 use Plib\View;
 
 class CocoTest extends TestCase
@@ -35,7 +35,7 @@ class CocoTest extends TestCase
     public function testRendersCoco(): void
     {
         $sut = $this->sut();
-        $request = new RequestStub(["query" => "search=with"]);
+        $request = new FakeRequest(["url" => "http://example.com/?&search=with"]);
         $response = $sut($request, "foo", false, "100%");
         $this->assertEquals("<p>some HTML <span class=\"highlight\">with</span> scripting</p>", $response->output());
     }
@@ -43,7 +43,7 @@ class CocoTest extends TestCase
     public function testRendersCocoEditor(): void
     {
         $sut = $this->sut();
-        $request = new RequestStub(["edit" => true]);
+        $request = new FakeRequest(["edit" => true]);
         $response = $sut($request, "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
@@ -51,7 +51,7 @@ class CocoTest extends TestCase
     public function testRendersSaveButtonIfNoEditorIsConfigured(): void
     {
         $sut = $this->sut(["xhStuff" => $this->xhStuff(false)]);
-        $request = new RequestStub(["edit" => true]);
+        $request = new FakeRequest(["edit" => true]);
         $response = $sut($request, "foo", false, "100%");
         Approvals::verifyHtml($response->output());
     }
@@ -59,7 +59,7 @@ class CocoTest extends TestCase
     public function testRedirectsAfterSavingContent(): void
     {
         $sut = $this->sut(["repository" => $this->repository(true), "csrfProtector" => $this->csrfProtector(true)]);
-        $request = new RequestStub(["edit" => true, "post" => ["coco_text_foo" => "some content"]]);
+        $request = new FakeRequest(["edit" => true, "post" => ["coco_text_foo" => "some content"]]);
         $response = $sut($request, "foo", false, "100%");
         $this->assertEquals("http://example.com/", $response->location());
     }
@@ -67,7 +67,7 @@ class CocoTest extends TestCase
     public function testReportsErrorOnFailureToSaveContent(): void
     {
         $sut = $this->sut(["repository" => $this->repository(false), "csrfProtector" => $this->csrfProtector(true)]);
-        $request = new RequestStub(["edit" => true, "post" => ["coco_text_foo" => "some content"]]);
+        $request = new FakeRequest(["edit" => true, "post" => ["coco_text_foo" => "some content"]]);
         $response = $sut($request, "foo", false, "100%");
         $this->assertStringContainsString("./content/coco/foo.htm could not be saved!", $response->output());
     }
@@ -75,7 +75,7 @@ class CocoTest extends TestCase
     public function testReportsIllegalCocoName(): void
     {
         $sut = $this->sut();
-        $request = new RequestStub(["query" => "search=with"]);
+        $request = new FakeRequest(["query" => "search=with"]);
         $response = $sut($request, "foo bar", false, "100%");
         $this->assertStringContainsString("Co-content names may contain a-z, 0-9 and _ only!", $response->output());
     }
@@ -83,7 +83,7 @@ class CocoTest extends TestCase
     public function testIgnoresSearching(): void
     {
         $sut = $this->sut();
-        $request = new RequestStub(["query" => "search=with", "s" => -1]);
+        $request = new FakeRequest(["query" => "search=with", "s" => -1]);
         $response = $sut($request, "foo", false, "100%");
         $this->assertEquals("", $response->output());
     }

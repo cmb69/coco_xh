@@ -24,9 +24,9 @@ namespace Coco;
 use ApprovalTests\Approvals;
 use Coco\Infra\Pages;
 use Coco\Infra\Repository;
-use Coco\Infra\RequestStub;
 use Coco\Infra\XhStuff;
 use PHPUnit\Framework\TestCase;
+use Plib\FakeRequest;
 use Plib\View;
 
 class SearchTest extends TestCase
@@ -34,7 +34,7 @@ class SearchTest extends TestCase
     public function testRendersSearchResults(): void
     {
         $sut = $this->sut();
-        $request = new RequestStub(["query" => "search=regular"]);
+        $request = new FakeRequest(["url" => "http://example.com/?&search=regular"]);
         $response = $sut($request);
         $this->assertEquals("Search Results", $response->title());
         Approvals::verifyHtml($response->output());
