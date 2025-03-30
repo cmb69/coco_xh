@@ -24,11 +24,11 @@ namespace Coco;
 use Coco\Infra\Pages;
 use Coco\Infra\Repository;
 use Coco\Infra\Request;
-use Coco\Infra\View;
 use Coco\Infra\XhStuff;
 use Coco\Logic\Searcher;
 use Coco\Value\Response;
 use Coco\Value\Url;
+use Plib\View;
 
 class Search
 {

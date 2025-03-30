@@ -26,8 +26,8 @@ use Coco\Infra\IdGenerator;
 use Coco\Infra\Pages;
 use Coco\Infra\Repository;
 use Coco\Infra\SystemChecker;
-use Coco\Infra\View;
 use Coco\Infra\XhStuff;
+use Plib\View;
 
 class Dic
 {

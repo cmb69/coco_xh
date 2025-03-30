@@ -25,8 +25,8 @@ use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
 use Coco\Infra\RepositoryException;
 use Coco\Infra\Request;
-use Coco\Infra\View;
 use Coco\Value\Response;
+use Plib\View;
 
 class CocoAdmin
 {

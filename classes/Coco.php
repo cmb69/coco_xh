@@ -26,11 +26,10 @@ use Coco\Infra\Repository;
 use Coco\Infra\RepositoryException;
 use Coco\Infra\Request;
 use Coco\Infra\XhStuff;
-use Coco\Infra\View;
 use Coco\Logic\Searcher;
 use Coco\Logic\Util;
-use Coco\Value\Html;
 use Coco\Value\Response;
+use Plib\View;
 
 class Coco
 {
@@ -118,7 +117,7 @@ class Coco
             "name" => $name,
             "style" => "width:100%; height:$height",
             "content" => $content,
-            "editor" => $editor !== false ? Html::of($editor) : false,
+            "editor" => $editor !== false ? $editor : false,
             "csrf_token" => $this->csrfProtector->token(),
         ]);
     }

@@ -23,8 +23,8 @@ namespace Coco;
 
 use Coco\Infra\Repository;
 use Coco\Infra\SystemChecker;
-use Coco\Infra\View;
 use Coco\Value\Response;
+use Plib\View;
 
 class PluginInfo
 {

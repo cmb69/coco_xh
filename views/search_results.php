@@ -1,6 +1,6 @@
 <?php
 
-use Coco\Infra\View;
+use Plib\View;
 
 if (!defined("CMSIMPLE_XH_VERSION")) {header("HTTP/1.0 403 Forbidden"); exit;}
 
@@ -16,7 +16,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("HTTP/1.0 403 Forbidden"); exit;}
 <?if (!empty($pages)):?>
 <ul>
 <?  foreach ($pages as $page):?>
-  <li><a href="<?=$page['url']?>"><?=$page['heading']?></a></li>
+  <li><a href="<?=$this->esc($page['url'])?>"><?=$this->esc($page['heading'])?></a></li>
 <?  endforeach?>
 </ul>
 <?endif?>

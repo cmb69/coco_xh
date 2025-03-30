@@ -26,9 +26,9 @@ use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
 use Coco\Infra\RepositoryException;
 use Coco\Infra\RequestStub;
-use Coco\Infra\View;
 use Coco\Infra\XhStuff;
 use PHPUnit\Framework\TestCase;
+use Plib\View;
 
 class CocoTest extends TestCase
 {

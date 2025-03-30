@@ -24,8 +24,8 @@ namespace Coco;
 use ApprovalTests\Approvals;
 use Coco\Infra\Repository;
 use Coco\Infra\SystemChecker;
-use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
+use Plib\View;
 
 class PluginInfoTest extends TestCase
 {

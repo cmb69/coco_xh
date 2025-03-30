@@ -26,8 +26,8 @@ use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
 use Coco\Infra\RepositoryException;
 use Coco\Infra\RequestStub;
-use Coco\Infra\View;
 use PHPUnit\Framework\TestCase;
+use Plib\View;
 
 class CocoAdminTest extends TestCase
 {

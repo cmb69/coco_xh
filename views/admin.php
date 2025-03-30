@@ -1,6 +1,6 @@
 <?php
 
-use Coco\Infra\View;
+use Plib\View;
 
 if (!defined("CMSIMPLE_XH_VERSION")) {header("HTTP/1.0 403 Forbidden"); exit;}
 
@@ -22,8 +22,8 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("HTTP/1.0 403 Forbidden"); exit;}
     <tr>
       <td>
         <label>
-          <input type="checkbox" name="coco_name[]" value="<?=$coco?>">
-          <span><?=$coco?></span>
+          <input type="checkbox" name="coco_name[]" value="<?=$this->esc($coco)?>">
+          <span><?=$this->esc($coco)?></span>
         </label>
       </td>
     </tr>

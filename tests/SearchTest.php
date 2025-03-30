@@ -25,9 +25,9 @@ use ApprovalTests\Approvals;
 use Coco\Infra\Pages;
 use Coco\Infra\Repository;
 use Coco\Infra\RequestStub;
-use Coco\Infra\View;
 use Coco\Infra\XhStuff;
 use PHPUnit\Framework\TestCase;
+use Plib\View;
 
 class SearchTest extends TestCase
 {

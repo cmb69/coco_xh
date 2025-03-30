@@ -1,6 +1,6 @@
 <?php
 
-use Coco\Infra\View;
+use Plib\View;
 
 if (!defined("CMSIMPLE_XH_VERSION")) {header("HTTP/1.0 403 Forbidden"); exit;}
 
@@ -11,10 +11,10 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("HTTP/1.0 403 Forbidden"); exit;}
  */
 ?>
 <!-- coco info -->
-<h1>Coco <?=$version?></h1>
+<h1>Coco <?=$this->esc($version)?></h1>
 <div class="coco_syscheck">
   <h2><?=$this->text('syscheck_title')?></h2>
 <?foreach ($checks as $check):?>
-  <p class="<?=$check['class']?>"><?=$check['message']?></p>
+  <p class="<?=$this->esc($check['class'])?>"><?=$this->esc($check['message'])?></p>
 <?endforeach?>
 </div>
