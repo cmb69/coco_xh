@@ -159,10 +159,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Coco_XH.  If not, see <https://www.gnu.org/licenses/>.
 
-Copyright 2012-2023 Christoph M. Becker
+Copyright © Christoph M. Becker
 
-Slovak translation © 2012 Dr. Martin Sereday  
-Czech translation © 2012 Josef Němec  
+Slovak translation © Dr. Martin Sereday<br>
+Czech translation © Josef Němec  
 
 ## Credits
 
