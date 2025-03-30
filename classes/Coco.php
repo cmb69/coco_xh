@@ -21,12 +21,12 @@
 
 namespace Coco;
 
-use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
 use Coco\Infra\RepositoryException;
 use Coco\Infra\XhStuff;
 use Coco\Logic\Searcher;
 use Coco\Logic\Util;
+use Plib\CsrfProtector;
 use Plib\Request;
 use Plib\Response;
 use Plib\View;
@@ -96,7 +96,7 @@ class Coco
 
     private function update(Request $request, string $name, string $config, string $height): Response
     {
-        $this->csrfProtector->check();
+        $this->csrfProtector->check($request->post("xh_csrf_token"));
         $text = $request->post("coco_text_$name") ?? "";
         try {
             $this->repository->save($name, $request->s(), $text);

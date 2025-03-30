@@ -21,9 +21,9 @@
 
 namespace Coco;
 
-use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
 use Coco\Infra\RepositoryException;
+use Plib\CsrfProtector;
 use Plib\Request;
 use Plib\Response;
 use Plib\View;
@@ -89,7 +89,7 @@ class CocoAdmin
 
     private function delete(Request $request): Response
     {
-        $this->csrfProtector->check();
+        $this->csrfProtector->check($request->post("xh_csrf_token"));
         $errors = [];
         foreach (($request->getArray("coco_name") ?? []) as $name) {
             foreach ($this->repository->findAllBackups($name) as $backup) {

@@ -29,6 +29,7 @@ require_once "../../cmsimple/classes/CSRFProtection.php";
 require_once "../../cmsimple/classes/PageDataRouter.php";
 require_once "../../cmsimple/classes/Pages.php";
 
+require_once "../plib/classes/CsrfProtector.php";
 require_once "../plib/classes/Request.php";
 require_once "../plib/classes/Response.php";
 require_once "../plib/classes/SystemChecker.php";

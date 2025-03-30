@@ -22,11 +22,11 @@
 namespace Coco;
 
 use ApprovalTests\Approvals;
-use Coco\Infra\CsrfProtector;
 use Coco\Infra\Repository;
 use Coco\Infra\RepositoryException;
 use Coco\Infra\XhStuff;
 use PHPUnit\Framework\TestCase;
+use Plib\CsrfProtector;
 use Plib\FakeRequest;
 use Plib\View;
 

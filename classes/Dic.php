@@ -21,11 +21,11 @@
 
 namespace Coco;
 
-use Coco\Infra\CsrfProtector;
 use Coco\Infra\IdGenerator;
 use Coco\Infra\Pages;
 use Coco\Infra\Repository;
 use Coco\Infra\XhStuff;
+use Plib\CsrfProtector;
 use Plib\SystemChecker;
 use Plib\View;
 
