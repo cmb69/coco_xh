@@ -13,6 +13,7 @@ $plugin_tx['coco']['info_deleted']="%s deleted";
 $plugin_tx['coco']['error_invalid_name']="Co-content names may contain a-z, 0-9 and _ only!";
 $plugin_tx['coco']['error_save']="%s could not be saved!";
 $plugin_tx['coco']['error_delete']="%s could not be deleted!";
+$plugin_tx['coco']['error_unauthorized']="You are not authorized for this action!";
 
 $plugin_tx['coco']['search_found_0']="\"%2\$s\" was not found";
 $plugin_tx['coco']['search_found_1']="\"%2\$s\" found in one page:";

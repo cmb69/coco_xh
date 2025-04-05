@@ -94,7 +94,9 @@ class Coco
 
     private function update(Request $request, string $name, string $config, string $height): Response
     {
-        $this->csrfProtector->check($request->post("xh_csrf_token"));
+        if (!$this->csrfProtector->check($request->post("xh_csrf_token"))) {
+            return Response::create($this->view->message("fail", "error_unauthorized"));
+        }
         $text = $request->post("coco_text_$name") ?? "";
         try {
             $this->repository->save($name, $request->s(), $text);

@@ -103,7 +103,7 @@ class CocoTest extends TestCase
     {
         $csrfProtector = $this->createMock(CsrfProtector::class);
         $csrfProtector->method("token")->willReturn("eee5e668b3bcc9b71a9e4cc1aa76393f");
-        $csrfProtector->expects($check ? $this->once() : $this->never())->method("check");
+        $csrfProtector->method("check")->willReturn($check);
         return $csrfProtector;
     }
 

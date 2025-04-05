@@ -89,7 +89,9 @@ class CocoAdmin
 
     private function delete(Request $request): Response
     {
-        $this->csrfProtector->check($request->post("xh_csrf_token"));
+        if (!$this->csrfProtector->check($request->post("xh_csrf_token"))) {
+            return Response::create($this->view->message("fail", "error_unauthorized"));
+        }
         $errors = [];
         foreach (($request->getArray("coco_name") ?? []) as $name) {
             foreach ($this->repository->findAllBackups($name) as $backup) {
