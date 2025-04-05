@@ -66,7 +66,7 @@ class PluginInfo
     public function getChecks(): array
     {
         return [
-            $this->checkPhpVersion("7.4.0"),
+            $this->checkPhpVersion("7.1.0"),
             $this->checkXhVersion("1.7.0"),
             $this->checkPlibVersion("1.6"),
             $this->checkWritability($this->pluginFolder . "css/"),
