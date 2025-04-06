@@ -24,7 +24,7 @@
 use Coco\Dic;
 use Plib\Request;
 
-const COCO_VERSION = "2.0-dev";
+const COCO_VERSION = "2.0";
 
 /** @param string|false $config */
 function coco(string $name, $config = false, string $height = "100%"): string

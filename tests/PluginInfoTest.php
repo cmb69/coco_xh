@@ -14,7 +14,7 @@ class PluginInfoTest extends TestCase
     {
         $sut = $this->sut();
         $response = $sut();
-        $this->assertEquals("Coco 2.0-dev", $response->title());
+        $this->assertEquals("Coco 2.0", $response->title());
         Approvals::verifyHtml($response->output());
     }
 
