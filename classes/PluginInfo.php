@@ -61,7 +61,7 @@ class PluginInfo
     }
 
     /**
-     * @return list<array{class:string,message:string}>
+     * @return list<object{class:string,message:string}>
      */
     public function getChecks(): array
     {
@@ -75,41 +75,41 @@ class PluginInfo
         ];
     }
 
-    /** @return array{class:string,message:string} */
-    private function checkPhpVersion(string $version): array
+    /** @return object{class:string,message:string} */
+    private function checkPhpVersion(string $version): object
     {
         $state = $this->systemChecker->checkVersion(PHP_VERSION, $version);
-        return [
+        return (object) [
             "class" => $state ? "xh_success" : "xh_fail",
             "message" => $this->view->plain($state ? "syscheck_phpversion" : "syscheck_phpversion_no", $version),
         ];
     }
 
-    /** @return array{class:string,message:string} */
-    private function checkXhVersion(string $version): array
+    /** @return object{class:string,message:string} */
+    private function checkXhVersion(string $version): object
     {
         $state = $this->systemChecker->checkVersion(CMSIMPLE_XH_VERSION, "CMSimple_XH $version");
-        return [
+        return (object) [
             "class" => $state ? "xh_success" : "xh_fail",
             "message" => $this->view->plain($state ? "syscheck_xhversion" : "syscheck_xhversion_no", $version),
         ];
     }
 
-    /** @return array{class:string,message:string} */
-    private function checkPlibVersion(string $version): array
+    /** @return object{class:string,message:string} */
+    private function checkPlibVersion(string $version): object
     {
         $state = $this->systemChecker->checkPlugin("plib", $version);
-        return [
+        return (object) [
             "class" => $state ? "xh_success" : "xh_fail",
             "message" => $this->view->plain($state ? "syscheck_plibversion" : "syscheck_plibversion_no", $version),
         ];
     }
 
-    /** @return array{class:string,message:string} */
-    private function checkWritability(string $folder): array
+    /** @return object{class:string,message:string} */
+    private function checkWritability(string $folder): object
     {
         $state = $this->systemChecker->checkWritability($folder);
-        return [
+        return (object) [
             "class" => $state ? "xh_success" : "xh_warning",
             "message" => $this->view->plain($state ? "syscheck_writable" : "syscheck_writable_no", $folder),
         ];

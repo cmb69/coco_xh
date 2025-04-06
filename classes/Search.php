@@ -88,12 +88,12 @@ class Search
 
     /**
      * @param list<int> $pageIndexes
-     * @return list<array{heading:string,url:string}>
+     * @return list<object{heading:string,url:string}>
      */
     private function pageRecords(array $pageIndexes, Url $url, string $searchTerm): array
     {
         return array_map(function (int $pageIndex) use ($url, $searchTerm) {
-            return [
+            return (object) [
                 "heading" => $this->pages->heading($pageIndex),
                 "url" => $url->page($this->pages->url($pageIndex))->with("search", $searchTerm)->relative(),
             ];
