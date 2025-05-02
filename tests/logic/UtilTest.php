@@ -87,16 +87,20 @@ class UtilTest extends TestCase
     public function cocoContents(): array
     {
         $content = <<<EOT
+            <html>
+            <body>
             <h1 id="123456">Blah</h1>
             <p>some co-content</p>
             <h2 id="234567">Yada Yada</h2>
             <p>some other co-content</p>
             <h1>Blub</h1>
             <p>some content without ID</p>
+            </body>
+            </html>
             EOT;
         return [
             [$content, "123456", "<p>some co-content</p>"],
-            [$content, "234567", "<p>some other co-content</p>"],
+            [$content, "234567", "<p>some other co-content</p>\n<h1>Blub</h1>\n<p>some content without ID</p>"],
             [$content, "345678", ""],
         ];
     }

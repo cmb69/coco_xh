@@ -58,7 +58,7 @@ class Util
     public static function cocoContent(string $content, string $id): string
     {
         $pattern = sprintf(
-            '/<h[1-9][^>]+id="%s"[^>]*>[^<]*<\/h[1-9]>(.*?)<(?:h[1-9]|\/body)/isu',
+            '/<h[1-9][^>]+id="%s"[^>]*>[^<]*<\/h[1-9]>(.*?)<(?:h[1-9][^>]+id=|\/body)/isu',
             preg_quote($id, "/")
         );
         if (!preg_match($pattern, $content, $matches)) {
