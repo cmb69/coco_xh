@@ -45,11 +45,11 @@
   <!-- the name of the Plugin -->
   <name type="plugin">Coco_XH</name>
   <!-- Date this xml-file was updated, yyyy.mm.dd -->
-  <date_update>2025.04.06</date_update>
+  <date_update>2025.05.02</date_update>
   <!-- version of Plugin -->
-  <version>2.1-dev</version>
+  <version>2.1</version>
   <!-- date of publication, yyyy.mm.dd -->
-  <date_version>2025.04.06</date_version>
+  <date_version>2025.05.02</date_version>
   <!-- the name of the programmer -->
   <coder>Christoph M. Becker</coder>
   <!-- Categories must be written in lower case. More than one possible, separated by comma without spaces. -->
@@ -62,7 +62,7 @@
   <url>
     <!-- URL where you can download the plugin -->
     <!-- If there no Download-URL, enter this follows! - <download_url></download_url> -->
-    <download_url>https://github.com/cmb69/coco_xh/releases/2.1-dev</download_url>
+    <download_url>https://github.com/cmb69/coco_xh/releases/2.1</download_url>
     <!-- URL of the programmer's website -->
     <!-- If there no Website, enter this follows! - <coder_url></coder_url> -->
     <coder_url>https://3-magi.net/</coder_url>
@@ -71,10 +71,10 @@
     <demo_url></demo_url>
   </url>
   <!-- compatibility with versions of XH, i.e. 1.6, 1.6.7 - 1.7.2, ≥ 1.7, ... -->
-  <compatibility>≥ 1.5.4</compatibility>
+  <compatibility>≥ 1.7.0</compatibility>
   <!-- minimum version of PHP that is required, i.e. 5.3, 5.6, 7, ≥ 5.6, ... -->
   <!-- If there no specification, e.g. for templates, enter this follows! - <php_ver></php_ver> -->
-  <php_ver>≥ 5.0.0</php_ver>
+  <php_ver>≥ 7.1.0</php_ver>
   <!-- the License for the Plugin, GPLv3, AGPL, LGPL, GPLv2 ... -->
   <license>GPLv3</license>
   <!-- Description in English is mandatory -->
