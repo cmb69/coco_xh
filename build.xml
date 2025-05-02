@@ -77,4 +77,31 @@
     <delete dir="dist"/>
   </target>
 
+  <target name="build-patch" description="builds a distributable update package">
+    <fail unless="patchee" message="patchee is not defined!"/>
+    <unzip file="Coco_XH-2.1-dev.zip" todir="current"/>
+    <unzip file="${patchee}" todir="patchee"/>
+    <copy todir="dist">
+      <fileset dir="current">
+        <different targetdir="patchee" ignoreFileTimes="true"/>
+      </fileset>
+    </copy>
+    <delete>
+      <fileset dir="dist/coco">
+        <include name="config/config.php"/>
+        <include name="languages/??.php"/>
+      </fileset>
+    </delete>
+    <if>
+      <available file="dist/coco/css/stylesheet.css"/>
+      <then>
+        <move file="dist/coco/css/stylesheet.css" tofile="dist/coco/css/stylesheet-2.1-dev.css"/>
+      </then>
+    </if>
+    <zip destfile="Coco_XH-2.1-dev-update-from-2.x.zip" basedir="dist" includeemptydirs="false"/>
+    <delete dir="patchee" quiet="true"/>
+    <delete dir="current" quiet="true"/>
+    <delete dir="dist" quiet="true"/>
+  </target>
+
 </project>
