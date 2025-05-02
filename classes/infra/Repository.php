@@ -57,6 +57,11 @@ class Repository
 
     public function filename(string $name, ?string $date = null): string
     {
+        return $this->dataFolder() . ($date !== null ? "{$date}_" : "") . "$name.2.1.htm";
+    }
+
+    public function oldFilename(string $name, ?string $date = null): string
+    {
         return $this->dataFolder() . ($date !== null ? "{$date}_" : "") . "$name.htm";
     }
 
@@ -65,6 +70,20 @@ class Repository
     {
         $predicate = function ($filename) {
             return Util::isCocoFilename($filename) && !Util::isBackup($filename);
+        };
+        $namer = function ($filename) {
+            return basename($filename, '.2.1.htm');
+        };
+        return $this->doFindAllNames($predicate, $namer, function ($a, $b) {
+            return $a <=> $b;
+        });
+    }
+
+    /** @return list<string> */
+    public function findAllOldNames(): array
+    {
+        $predicate = function ($filename) {
+            return Util::isOldCocoFilename($filename) && !Util::isBackup($filename);
         };
         $namer = function ($filename) {
             return basename($filename, '.htm');
@@ -135,11 +154,8 @@ class Repository
         return Util::cocoContent($text, $pd['coco_id']);
     }
 
-    /**
-     * @return void
-     * @throws RepositoryException
-     */
-    public function save(string $name, int $index, string $text)
+    /** @throws RepositoryException */
+    public function save(string $name, int $index, string $text): void
     {
         $oldContent = $this->readContents($name);
         $content = "<html>\n<body>\n";
@@ -156,6 +172,25 @@ class Repository
             throw new RepositoryException("can't save");
         }
         touch($this->contentFile);
+    }
+
+    /** @throws RepositoryException */
+    public function migrate(string $name): void
+    {
+        $oldContent = $this->readOldContents($name);
+        $content = "<html>\n<body>\n";
+        for ($i = 0; $i < $this->pages->count(); $i++) {
+            if (($id = $this->cocoId($i, false)) === null) {
+                continue;
+            }
+            $content .= $this->headingLine($this->pages->level($i), $id, $this->pages->heading($i)) . "\n"
+                . Util::oldCocoContent($oldContent, $id) . "\n";
+        }
+        $content .= "</body>\n</html>\n";
+        $filename = $this->filename($name);
+        if (is_dir($filename) || !$this->writeFile($filename, $content)) {
+            throw new RepositoryException("can't save");
+        }
     }
 
     private static function writeFile(string $filename, string $content): bool
@@ -175,6 +210,12 @@ class Repository
     private function readContents(string $coconame): string
     {
         $filename = $this->filename($coconame);
+        return is_file($filename) && is_readable($filename) ? $this->readFile($filename) : "";
+    }
+
+    private function readOldContents(string $coconame): string
+    {
+        $filename = $this->oldFilename($coconame);
         return is_file($filename) && is_readable($filename) ? $this->readFile($filename) : "";
     }
 
@@ -217,7 +258,8 @@ class Repository
 
     private function headingLine(int $level, string $id, string $heading): string
     {
-        return "<h$level id=\"$id\">$heading</h$level>";
+        return "<!--Coco_ml$level($heading):$id-->";
+        // return "<h$level id=\"$id\">$heading</h$level>";
     }
 
     private function content(bool $current, string $id, string $text, string $oldContent): string

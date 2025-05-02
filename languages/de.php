@@ -2,15 +2,20 @@
 
 $plugin_tx['coco']['menu_main']="Co-Contents";
 
+$plugin_tx['coco']['label_coco']="Co-Content";
 $plugin_tx['coco']['label_delete']="Löschen";
+$plugin_tx['coco']['label_migrate']="Migrieren";
+$plugin_tx['coco']['label_old_coco']="Alter Co-Content";
 $plugin_tx['coco']['label_save']="Speichern";
 
 $plugin_tx['coco']['confirm_delete']="Der gesamte Inhalt und alle Sicherheitskopien der folgenden Co-Contents wird gelöscht!";
+$plugin_tx['coco']['confirm_migrate']="Der gesamte Inhalt der folgenden Co-Contents wird migriert!";
 
 $plugin_tx['coco']['info_created']="%s angelegt";
 $plugin_tx['coco']['info_deleted']="%s gelöscht";
 
 $plugin_tx['coco']['error_invalid_name']="Co-Content-Namen dürfen nur a-z, 0-9 and _ enthalten!";
+$plugin_tx['coco']['error_migrate']="%s konnte nicht migriert werden!";
 $plugin_tx['coco']['error_save']="%s konnte nicht gespeichert werden!";
 $plugin_tx['coco']['error_delete']="%s konnte nicht gelöscht werden!";
 $plugin_tx['coco']['error_unauthorized']="Sie sind nicht befugt diese Aktion auszuführen!";

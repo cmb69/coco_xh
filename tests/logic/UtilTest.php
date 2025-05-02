@@ -33,6 +33,23 @@ class UtilTest extends TestCase
     public function cocoFilenames(): array
     {
         return [
+            ["test.2.1.htm", true],
+            ["something else.2.1.htm", false],
+            ["test.txt", false],
+            ["20230310_131500_test.2.1.htm", true],
+        ];
+    }
+
+    /** @dataProvider oldCocoFilenames */
+    public function testIsOldCocoFilename(string $filename, bool $expected): void
+    {
+        $result = Util::isOldCocoFilename($filename);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function oldCocoFilenames(): array
+    {
+        return [
             ["test.htm", true],
             ["something else.htm", false],
             ["test.txt", false],
@@ -85,6 +102,34 @@ class UtilTest extends TestCase
     }
 
     public function cocoContents(): array
+    {
+        $content = <<<EOT
+            <html>
+            <body>
+            <!--Coco_ml1(Blah):123456-->
+            <p>some co-content</p>
+            <!--Coco_ml2(Yada Yada):234567-->
+            <p>some other co-content</p>
+            <h1>Blub</h1>
+            <p>some content without ID</p>
+            </body>
+            </html>
+            EOT;
+        return [
+            [$content, "123456", "<p>some co-content</p>"],
+            [$content, "234567", "<p>some other co-content</p>\n<h1>Blub</h1>\n<p>some content without ID</p>"],
+            [$content, "345678", ""],
+        ];
+    }
+
+    /** @dataProvider oldCocoContents */
+    public function testOldCocoContent(string $content, string $id, string $expected): void
+    {
+        $result = Util::oldCocoContent($content, $id);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function oldCocoContents(): array
     {
         $content = <<<EOT
             <html>

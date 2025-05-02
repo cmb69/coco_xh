@@ -20,7 +20,7 @@ class RepositoryTest extends TestCase
     {
         vfsStream::setup("root");
         $sut = $this->sut();
-        $this->assertSame("vfs://root/coco/foo.htm", $sut->filename("foo"));
+        $this->assertSame("vfs://root/coco/foo.2.1.htm", $sut->filename("foo"));
     }
 
     public function testBackupFilenameIsCorrect(): void
@@ -28,7 +28,7 @@ class RepositoryTest extends TestCase
         vfsStream::setup("root");
         $sut = $this->sut();
         $filename = $sut->filename("test", "20230309_224602");
-        $this->assertEquals("vfs://root/coco/20230309_224602_test.htm", $filename);
+        $this->assertEquals("vfs://root/coco/20230309_224602_test.2.1.htm", $filename);
     }
 
     public function testSavesCoco(): void
@@ -37,7 +37,7 @@ class RepositoryTest extends TestCase
         $sut = $this->sut(["pages" => $this->pages(true)]);
         $sut->save("foo", 0, "<p>some content</p>");
         $sut->save("foo", 1, "<p>other content</p>");
-        $this->assertStringEqualsFile("vfs://root/coco/foo.htm", $this->coco());
+        $this->assertStringEqualsFile("vfs://root/coco/foo.2.1.htm", $this->coco());
     }
 
     public function testCanSaveEmptyContent(): void
@@ -45,28 +45,54 @@ class RepositoryTest extends TestCase
         vfsStream::setup("root");
         $sut = $this->sut(["pages" => $this->pages(true)]);
         $sut->save("foo", 0, "");
-        $this->assertStringEqualsFile("vfs://root/coco/foo.htm", $this->emptyCoco());
+        $this->assertStringEqualsFile("vfs://root/coco/foo.2.1.htm", $this->emptyCoco());
     }
 
     public function testSavingFailsIfFileIsNotWritable(): void
     {
-        vfsStream::setup("root", null, ["coco" => ["foo.htm" => []]]);
+        vfsStream::setup("root", null, ["coco" => ["foo.2.1.htm" => []]]);
         $sut = $this->sut(["pages" => $this->pages(true)]);
         $this->expectException(RepositoryException::class);
         $sut->save("foo", 0, "<p>some content</p>");
     }
 
+    public function testMigratesCoco(): void
+    {
+        vfsStream::setup("root");
+        mkdir(vfsStream::url("root/coco"));
+        file_put_contents(vfsStream::url("root/coco/foo.htm"), $this->oldCoco());
+        $sut = $this->sut(["pages" => $this->pages(false)]);
+        $sut->migrate("foo");
+        $this->assertStringEqualsFile("vfs://root/coco/foo.2.1.htm", $this->coco());
+    }
+
+    public function testMigrationFailsIfFileIsNotWritable(): void
+    {
+        vfsStream::setup("root", null, ["coco" => ["foo.2.1.htm" => []]]);
+        $sut = $this->sut(["pages" => $this->pages(false)]);
+        $this->expectException(RepositoryException::class);
+        $sut->migrate("foo");
+    }
+
     public function testFindsAllNames(): void
     {
-        vfsStream::setup("root", null, ["coco" => ["foo.htm" => "", "bar.htm" => ""]]);
+        vfsStream::setup("root", null, ["coco" => ["foo.2.1.htm" => "", "bar.2.1.htm" => ""]]);
         $sut = $this->sut();
         $names = $sut->findAllNames();
         $this->assertSame(["bar", "foo"], $names);
     }
 
+    public function testFindsAllOldNames(): void
+    {
+        vfsStream::setup("root", null, ["coco" => ["foo.htm" => "", "bar.htm" => ""]]);
+        $sut = $this->sut();
+        $names = $sut->findAllOldNames();
+        $this->assertSame(["bar", "foo"], $names);
+    }
+
     public function testFindsAllCoContents(): void
     {
-        vfsStream::setup("root", null, ["coco" => ["foo.htm" => $this->coco()]]);
+        vfsStream::setup("root", null, ["coco" => ["foo.2.1.htm" => $this->coco()]]);
         $sut = $this->sut();
         $result = $sut->findAll("foo");
         $this->assertSame(["<p>some content</p>", "<p>other content</p>"], iterator_to_array($result));
@@ -74,7 +100,7 @@ class RepositoryTest extends TestCase
 
     public function testFindsEmptyCoContensIfIdsAreMissing(): void
     {
-        vfsStream::setup("root", null, ["coco" => ["foo.htm" => $this->coco()]]);
+        vfsStream::setup("root", null, ["coco" => ["foo.2.1.htm" => $this->coco()]]);
         $sut = $this->sut(["pages" => $this->pages(true)]);
         $result = $sut->findAll("foo");
         $this->assertSame(["", ""], iterator_to_array($result));
@@ -109,7 +135,7 @@ class RepositoryTest extends TestCase
 
     public function testFindsCoContent(): void
     {
-        vfsStream::setup("root", null, ["coco" => ["foo.htm" => $this->coco()]]);
+        vfsStream::setup("root", null, ["coco" => ["foo.2.1.htm" => $this->coco()]]);
         $sut = $this->sut();
         $result = $sut->find("foo", 0);
         $this->assertSame("<p>some content</p>", $result);
@@ -133,26 +159,26 @@ class RepositoryTest extends TestCase
 
     public function testCreatesBackup(): void
     {
-        vfsStream::setup("root", null, ["coco" => ["test.htm" => ""]]);
+        vfsStream::setup("root", null, ["coco" => ["test.2.1.htm" => ""]]);
         $sut = $this->sut();
         $sut->backup("test", "20230309_224602");
-        $this->assertFileExists("vfs://root/coco/20230309_224602_test.htm");
+        $this->assertFileExists("vfs://root/coco/20230309_224602_test.2.1.htm");
     }
 
     public function testDeletesCoContents(): void
     {
-        vfsStream::setup("root", null, ["coco" => ["test.htm" => ""]]);
+        vfsStream::setup("root", null, ["coco" => ["test.2.1.htm" => ""]]);
         $sut = $this->sut();
         $sut->delete("test");
-        $this->assertFileDoesNotExist("vfs://root/coco/test.htm");
+        $this->assertFileDoesNotExist("vfs://root/coco/test.2.1.htm");
     }
 
     public function testDeletesBackup(): void
     {
-        vfsStream::setup("root", "", ["coco" => ["20230306_120000_test.htm" => ""]]);
+        vfsStream::setup("root", "", ["coco" => ["20230306_120000_test.2.1.htm" => ""]]);
         $sut = $this->sut();
         $sut->delete("test", "20230306_120000");
-        $this->assertFileDoesNotExist("vfs://root/coco/20230306_120000_test.htm");
+        $this->assertFileDoesNotExist("vfs://root/coco/20230306_120000_test.2.1.htm");
     }
 
     private function sut(array $deps = []): Repository
@@ -186,6 +212,21 @@ class RepositoryTest extends TestCase
         return <<<'HTML'
         <html>
         <body>
+        <!--Coco_ml1(Start):30313233-3435-4637-B839-414243444546-->
+        <p>some content</p>
+        <!--Coco_ml2(Sub):31323334-3536-4738-B941-424344454630-->
+        <p>other content</p>
+        </body>
+        </html>
+
+        HTML;
+    }
+
+    private function oldCoco(): string
+    {
+        return <<<'HTML'
+        <html>
+        <body>
         <h1 id="30313233-3435-4637-B839-414243444546">Start</h1>
         <p>some content</p>
         <h2 id="31323334-3536-4738-B941-424344454630">Sub</h2>
@@ -201,7 +242,7 @@ class RepositoryTest extends TestCase
         return <<<'HTML'
         <html>
         <body>
-        <h1 id="30313233-3435-4637-B839-414243444546">Start</h1>
+        <!--Coco_ml1(Start):30313233-3435-4637-B839-414243444546-->
         </body>
         </html>
 

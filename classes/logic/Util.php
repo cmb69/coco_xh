@@ -30,6 +30,11 @@ class Util
 
     public static function isCocoFilename(string $filename): bool
     {
+        return (bool) preg_match('/^[a-z_0-9]+\.2\.1\.htm$/u', $filename);
+    }
+
+    public static function isOldCocoFilename(string $filename): bool
+    {
         return (bool) preg_match('/^[a-z_0-9]+\.htm$/u', $filename);
     }
 
@@ -56,6 +61,18 @@ class Util
     }
 
     public static function cocoContent(string $content, string $id): string
+    {
+        $pattern = sprintf(
+            '/<!--Coco_ml(?:.*?):%s-->(.*?)<(?:!--Coco_ml|\/body)/isu',
+            preg_quote($id, "/")
+        );
+        if (!preg_match($pattern, $content, $matches)) {
+            return "";
+        }
+        return trim($matches[1]);
+    }
+
+    public static function oldCocoContent(string $content, string $id): string
     {
         $pattern = sprintf(
             '/<h[1-9][^>]+id="%s"[^>]*>[^<]*<\/h[1-9]>(.*?)<(?:h[1-9][^>]+id=|\/body)/isu',

@@ -105,17 +105,15 @@ If you want to stick with the default toolbar, you can write:
     <?=coco('my_content', false, '500px');?>
 
 If you want to change the width, you can do so in the stylesheet.
+
 The co-contents are stored in the subfolder `coco/` of the `content/` folder
 of CMSimple_XH in an HTML file with the name given as first parameter,
-e.g. `my_content.htm`.
-The structure is similar to that of the content.htm file of CMSimple_XH 1.7 and up,
-but for historic reasons,
-the pages are separated by `<h1>`, `<h2>` … `<h9>` according to their menu level,
-instead of respective HTML comments.
-The names of the page headings are inserted for better readability only;
+e.g. `my_content.2.1.htm`.
+The structure is similar to that of the content.htm file of CMSimple_XH 1.7 and up.
+The names and levels of the page headings are inserted for better readability only;
 they are ignored by Coco_XH.
-Instead the link to the page is made with the id given for the heading.
-You must not alter these ids in any way!
+Instead the link to the page is made with the ID given for the heading.
+You must not alter these IDs in any way!
 Creating new pages by inserting new headings is not possible;
 these will simply be ignored.
 

@@ -20,6 +20,38 @@ class CocoAdminTest extends TestCase
         Approvals::verifyHtml($response->output());
     }
 
+    public function testRendersMigrationConfirmation(): void
+    {
+        $sut = $this->sut();
+        $request = new FakeRequest(["url" => "http://example.com/?&action=migrate&coco_name[]=foo"]);
+        $response = $sut($request);
+        $this->assertEquals("Coco – Co-Contents", $response->title());
+        Approvals::verifyHtml($response->output());
+    }
+
+    public function testSuccessfulMigrationRedirects(): void
+    {
+        $sut = $this->sut(["csrfProtector" => $this->csrfProtector(true)]);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&action=migrate&coco_name[]=foo",
+            "post" => ["coco_do" => "migrate"],
+        ]);
+        $response = $sut($request);
+        $this->assertEquals("http://example.com/?coco&admin=plugin_main", $response->location());
+    }
+
+    public function testFailureToMigrateIsReported(): void
+    {
+        $sut = $this->sut(["repository" => $this->repository(false), "csrfProtector" => $this->csrfProtector(true)]);
+        $request = new FakeRequest([
+            "url" => "http://example.com/?&action=migrate&coco_name[]=foo",
+            "post" => ["coco_do" => "migrate"],
+        ]);
+        $response = $sut($request);
+        $this->assertEquals("Coco – Co-Contents", $response->title());
+        $this->assertStringContainsString("./content/coco/foo.htm could not be migrated!", $response->output());
+    }
+
     public function testRendersDeleteConfirmation(): void
     {
         $sut = $this->sut();
@@ -49,7 +81,7 @@ class CocoAdminTest extends TestCase
         ]);
         $response = $sut($request);
         $this->assertEquals("Coco – Co-Contents", $response->title());
-        $this->assertStringContainsString("./content/coco/foo.htm could not be deleted!", $response->output());
+        $this->assertStringContainsString("./content/coco/foo.2.1.htm could not be deleted!", $response->output());
     }
 
     private function sut(array $deps = []): CocoAdmin
@@ -65,12 +97,17 @@ class CocoAdminTest extends TestCase
     {
         $repository = $this->createMock(Repository::class);
         $repository->method("findAllNames")->willReturn(["foo", "bar"]);
+        $repository->method("findAllOldNames")->willReturn(["baz"]);
         $repository->method("findAllBackups")->willReturn([["foo", "20230306_120000"]]);
         if (!$deleted) {
+            $repository->method("migrate")->willThrowException(new RepositoryException());
             $repository->method("delete")->willThrowException(new RepositoryException());
         }
         $repository->method("filename")->willReturnOnConsecutiveCalls(
-            "./content/coco/20230306_120000_foo.htm",
+            "./content/coco/20230306_120000_foo.2.1.htm",
+            "./content/coco/foo.2.1.htm"
+        );
+        $repository->method("oldFilename")->willReturn(
             "./content/coco/foo.htm"
         );
         return $repository;
